@@ -23,7 +23,7 @@ public class User {
 
 	@Column(name = "room_idx", nullable = false)
 	@ColumnDefault("0")
-	private String roomIdx;
+	private Integer roomIdx;
 
 	@Column(name = "email", nullable = false)
 	private String email;
