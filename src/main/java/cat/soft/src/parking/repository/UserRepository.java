@@ -1,9 +1,12 @@
 package cat.soft.src.parking.repository;
 
+import cat.soft.domain.Users;
 import org.springframework.data.jpa.repository.JpaRepository;
 
-import cat.soft.src.parking.model.User;
 
-public interface UserRepository extends JpaRepository<User, Integer> {
+import java.util.Optional;
+
+public interface UserRepository extends JpaRepository<Users, Long> {
+    Optional<Users> findByEmail(String Email);
 }
 
