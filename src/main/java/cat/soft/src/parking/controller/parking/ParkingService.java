@@ -1,4 +1,4 @@
-package cat.soft.src.parking.controller;
+package cat.soft.src.parking.controller.parking;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
