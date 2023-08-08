@@ -6,8 +6,15 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.RequiredArgsConstructor;
+import lombok.Setter;
 
 @Entity
+@RequiredArgsConstructor
+@Getter
+@Setter
 @Table(name = "Room")
 public class Room {
 
@@ -16,24 +23,11 @@ public class Room {
 	@Column(name = "idx", nullable = false)
 	private Integer idx;
 
-	@Column(name = "room_idx", nullable = false)
-	private Integer roomIdx;
+	@Column(name = "admin_idx", nullable = false)
+	private Integer adminIdx;
 
-	@Column(name = "slot", nullable = false)
-	private Integer slot;
-
-	@Column(name = "top", nullable = false)
-	private String top;
-
-	@Column(name = "bottom", nullable = false)
-	private String bottom;
-
-	@Column(name = "left_side", nullable = false)
-	private String left;
-
-	@Column(name = "right_side", nullable = false)
-	private String right;
-
-	@Column(name = "direction", nullable = false)
-	private String direction;
+	@Builder
+	public Room(Integer idx) {
+		this.adminIdx = idx;
+	}
 }
