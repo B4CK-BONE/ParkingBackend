@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 
 import cat.soft.src.parking.model.Room;
 import cat.soft.src.parking.model.User;
+import cat.soft.src.parking.model.room.GetQrCheckReq;
 import cat.soft.src.parking.model.room.PostCreateRoomReq;
 import cat.soft.src.parking.model.room.PutJoinRoomReq;
 import cat.soft.src.parking.repository.RoomRepository;
@@ -56,5 +57,18 @@ public class RoomService {
 		user.setRoomIdx(roomId);
 		userRepository.save(user);
 		return userRepository.findById(req.getUserIdx()).get().getRoomIdx();
+	}
+
+	public Integer joinRoom(GetQrCheckReq req) {
+		User user;
+		try {
+			user = userRepository.findById(req.getUserIdx()).get();
+		} catch (NoSuchElementException e) {
+			return 0;
+		}
+		if (user.getRoomIdx() == 0) {
+			return 0;
+		}
+		return user.getRoomIdx();
 	}
 }
