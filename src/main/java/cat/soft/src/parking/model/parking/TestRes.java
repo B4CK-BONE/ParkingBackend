@@ -1,4 +1,4 @@
-package cat.soft.src.parking.model;
+package cat.soft.src.parking.model.parking;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

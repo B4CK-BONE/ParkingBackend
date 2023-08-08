@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import cat.soft.config.BaseResponse;
 import cat.soft.config.BaseResponseStatus;
-import cat.soft.src.parking.model.TestRes;
+import cat.soft.src.parking.model.parking.TestRes;
 
 @RestController
 @RequestMapping("/api")
@@ -18,8 +18,8 @@ public class ParkingController {
 	private ParkingService parkingService;
 
 	@GetMapping(value = {"/test/{test}", "/test/", "/test"})
-	public BaseResponse<TestRes> testRes(@PathVariable(required = false) String test){
-		if(test == null) {
+	public BaseResponse<TestRes> testRes(@PathVariable(required = false) String test) {
+		if (test == null) {
 			return new BaseResponse<>(BaseResponseStatus.DATABASE_ERROR);
 		}
 		TestRes testRes = parkingService.testText(test);
