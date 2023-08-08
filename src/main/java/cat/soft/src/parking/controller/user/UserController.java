@@ -12,7 +12,7 @@ public class UserController {
 	@Autowired
 	private UserService userService;
 
-	@GetMapping("/")
+	@GetMapping("/a")
 	public String testRes() {
 		return "hi";
 	}

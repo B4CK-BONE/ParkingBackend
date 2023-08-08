@@ -12,7 +12,7 @@ public class RoomController {
 	@Autowired
 	private RoomService roomService;
 
-	@GetMapping("/")
+	@GetMapping("/a")
 	public String testRes() {
 		return "hi";
 	}
