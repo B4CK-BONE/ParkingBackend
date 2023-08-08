@@ -11,6 +11,8 @@ import org.springframework.web.bind.annotation.RestController;
 
 import cat.soft.config.BaseResponse;
 import cat.soft.config.BaseResponseStatus;
+import cat.soft.src.parking.model.room.GetQrCheckReq;
+import cat.soft.src.parking.model.room.GetQrCheckRes;
 import cat.soft.src.parking.model.room.PostCreateRoomReq;
 import cat.soft.src.parking.model.room.PostCreateRoomRes;
 import cat.soft.src.parking.model.room.PutJoinRoomReq;
@@ -44,5 +46,14 @@ public class RoomController {
 			return new BaseResponse<>(BaseResponseStatus.INVALID_USER_JWT); // 해당 유저 없음
 		}
 		return new BaseResponse<>(putJoinRoomRes);
+	}
+
+	@GetMapping("/qr")
+	public BaseResponse<GetQrCheckRes> qrCheck(@RequestBody GetQrCheckReq req) {
+		GetQrCheckRes getQrCheckRes = new GetQrCheckRes(roomService.joinRoom(req));
+		if (getQrCheckRes.getRoomIdx() == 0) {
+			return new BaseResponse<>(BaseResponseStatus.INVALID_USER_JWT); // 방정보 없음
+		}
+		return new BaseResponse<>(getQrCheckRes);
 	}
 }
