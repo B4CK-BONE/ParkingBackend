@@ -18,16 +18,16 @@ public class Time {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "idx", nullable = false)
-	private long idx;
+	private Integer idx;
 
 	@Column(name = "user_idx", nullable = false)
-	private long userIdx;
+	private Integer userIdx;
 
 	@Column(name = "room_idx", nullable = false)
-	private long roomIdx;
+	private Integer roomIdx;
 
 	@Column(name = "parking_lot_idx", nullable = false)
-	private long parkingLotIdx;
+	private Integer parkingLotIdx;
 
 	@CreationTimestamp
 	@Column(name = "start", nullable = false)

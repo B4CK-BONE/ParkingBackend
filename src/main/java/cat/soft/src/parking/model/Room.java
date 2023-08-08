@@ -14,13 +14,13 @@ public class Room {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "idx", nullable = false)
-	private long idx;
+	private Integer idx;
 
 	@Column(name = "room_idx", nullable = false)
-	private long roomIdx;
+	private Integer roomIdx;
 
 	@Column(name = "slot", nullable = false)
-	private long slot;
+	private Integer slot;
 
 	@Column(name = "top", nullable = false)
 	private String top;
