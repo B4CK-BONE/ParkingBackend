@@ -32,6 +32,7 @@ public class RoomService {
 		}
 		Room room = roomRepository.save(req.toEntity());
 		user.setRoomIdx(room.getIdx());
+		user.setRole(1L);
 		userRepository.save(user);
 		return room.getIdx();
 	}
