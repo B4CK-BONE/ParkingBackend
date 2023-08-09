@@ -13,6 +13,8 @@ import cat.soft.config.BaseResponse;
 import cat.soft.config.BaseResponseStatus;
 import cat.soft.src.parking.model.room.GetQrCheckReq;
 import cat.soft.src.parking.model.room.GetQrCheckRes;
+import cat.soft.src.parking.model.room.GetUserListByAdminReq;
+import cat.soft.src.parking.model.room.GetUserListByAdminRes;
 import cat.soft.src.parking.model.room.PostCreateRoomReq;
 import cat.soft.src.parking.model.room.PostCreateRoomRes;
 import cat.soft.src.parking.model.room.PutJoinRoomReq;
@@ -55,5 +57,12 @@ public class RoomController {
 			return new BaseResponse<>(BaseResponseStatus.INVALID_USER_JWT); // 방정보 없음
 		}
 		return new BaseResponse<>(getQrCheckRes);
+	}
+
+	@GetMapping("/{roomId}/admin")
+	public BaseResponse<GetUserListByAdminRes> userListByAdmin(@PathVariable Integer roomId,
+		@RequestBody GetUserListByAdminReq req) {
+		GetUserListByAdminRes getUserListByAdminRes = roomService.userListByAdmin(roomId, req);
+		return new BaseResponse<>(getUserListByAdminRes);
 	}
 }
