@@ -19,6 +19,8 @@ import cat.soft.src.parking.model.room.PostCreateRoomReq;
 import cat.soft.src.parking.model.room.PostCreateRoomRes;
 import cat.soft.src.parking.model.room.PutJoinRoomReq;
 import cat.soft.src.parking.model.room.PutJoinRoomRes;
+import cat.soft.src.parking.model.room.PutUserApproveReq;
+import cat.soft.src.parking.model.room.PutUserApproveRes;
 
 @RestController
 @RequestMapping("/api/room")
@@ -64,5 +66,15 @@ public class RoomController {
 		@RequestBody GetUserListByAdminReq req) {
 		GetUserListByAdminRes getUserListByAdminRes = roomService.userListByAdmin(roomId, req);
 		return new BaseResponse<>(getUserListByAdminRes);
+	}
+
+	@PutMapping("/{roomId}/admin")
+	public BaseResponse<PutUserApproveRes> approveUser(@PathVariable Integer roomId,
+		@RequestBody PutUserApproveReq req) {
+		PutUserApproveRes putUserApproveRes = roomService.approveUser(roomId, req);
+		if (putUserApproveRes.getUserIdx() == null) {
+			return new BaseResponse<>(BaseResponseStatus.INVALID_USER_JWT); // 방정보 없음
+		}
+		return new BaseResponse<>(putUserApproveRes);
 	}
 }
