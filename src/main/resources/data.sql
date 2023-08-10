@@ -9,3 +9,6 @@ VALUES ('104', '11다1345', 'aqe123rdfc@naver.com', '01021111211', DEFAULT, DEFA
 
 INSERT INTO cat.room (admin_idx)
 VALUES (1);
+
+INSERT INTO cat.parking_lot (bottom, direction, left_side, right_side, room_idx, slot, top)
+VALUES ('a', 'a', 'a', 'a', 1, 1, 'a');
