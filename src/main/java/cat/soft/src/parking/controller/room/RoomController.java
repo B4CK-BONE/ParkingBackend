@@ -29,14 +29,9 @@ public class RoomController {
 	@Autowired
 	private RoomService roomService;
 
-	@GetMapping("/")
-	public String testRes() {
-		return "hi";
-	}
-
 	@PostMapping("/")
 	public BaseResponse<PostCreateRoomRes> createRoom(@RequestBody PostCreateRoomReq postCreateRoomReq) {
-		PostCreateRoomRes postCreateRoomRes = new PostCreateRoomRes(roomService.createRoom(postCreateRoomReq));
+		PostCreateRoomRes postCreateRoomRes = roomService.createRoom(postCreateRoomReq);
 		if (postCreateRoomRes.getRoom_idx() == 0) {
 			return new BaseResponse<>(BaseResponseStatus.INVALID_USER_JWT); // 해당 유저 없음
 		}
@@ -45,7 +40,7 @@ public class RoomController {
 
 	@PutMapping("/{roomId}")
 	public BaseResponse<PutJoinRoomRes> joinRoom(@PathVariable Integer roomId, @RequestBody PutJoinRoomReq req) {
-		PutJoinRoomRes putJoinRoomRes = new PutJoinRoomRes(roomService.joinRoom(roomId, req));
+		PutJoinRoomRes putJoinRoomRes = roomService.joinRoom(roomId, req);
 		if (putJoinRoomRes.getRoomIdx() == 0) {
 			return new BaseResponse<>(BaseResponseStatus.INVALID_USER_JWT); // 해당 유저 없음
 		}
@@ -54,7 +49,7 @@ public class RoomController {
 
 	@GetMapping("/qr")
 	public BaseResponse<GetQrCheckRes> qrCheck(@RequestBody GetQrCheckReq req) {
-		GetQrCheckRes getQrCheckRes = new GetQrCheckRes(roomService.joinRoom(req));
+		GetQrCheckRes getQrCheckRes = roomService.joinRoom(req);
 		if (getQrCheckRes.getRoomIdx() == 0) {
 			return new BaseResponse<>(BaseResponseStatus.INVALID_USER_JWT); // 방정보 없음
 		}

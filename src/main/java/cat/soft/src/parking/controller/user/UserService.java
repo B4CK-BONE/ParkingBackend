@@ -1,7 +1,5 @@
 package cat.soft.src.parking.controller.user;
 
-import java.util.NoSuchElementException;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -19,10 +17,8 @@ public class UserService {
 	private UserRepository userRepository;
 
 	public PutUserInfoRes updateUserInfo(@PathVariable Integer id, @RequestBody PutUserInfoReq userInfoReq) {
-		User user;
-		try {
-			user = userRepository.findById(id).get();
-		} catch (NoSuchElementException e) {
+		User user = userRepository.findById(id).orElse(null);
+		if (user == null) {
 			return new PutUserInfoRes(0);
 		}
 		user.setCar(userInfoReq.getCar());

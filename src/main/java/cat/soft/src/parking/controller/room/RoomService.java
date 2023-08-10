@@ -1,7 +1,6 @@
 package cat.soft.src.parking.controller.room;
 
 import java.util.List;
-import java.util.NoSuchElementException;
 import java.util.Objects;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,10 +9,13 @@ import org.springframework.stereotype.Service;
 import cat.soft.src.parking.model.Room;
 import cat.soft.src.parking.model.User;
 import cat.soft.src.parking.model.room.GetQrCheckReq;
+import cat.soft.src.parking.model.room.GetQrCheckRes;
 import cat.soft.src.parking.model.room.GetUserListByAdminReq;
 import cat.soft.src.parking.model.room.GetUserListByAdminRes;
 import cat.soft.src.parking.model.room.PostCreateRoomReq;
+import cat.soft.src.parking.model.room.PostCreateRoomRes;
 import cat.soft.src.parking.model.room.PutJoinRoomReq;
+import cat.soft.src.parking.model.room.PutJoinRoomRes;
 import cat.soft.src.parking.model.room.PutUserApproveReq;
 import cat.soft.src.parking.model.room.PutUserApproveRes;
 import cat.soft.src.parking.repository.RoomRepository;
@@ -27,62 +29,52 @@ public class RoomService {
 	@Autowired
 	private UserRepository userRepository;
 
-	public Integer createRoom(PostCreateRoomReq req) {
-		User user;
-		try {
-			user = userRepository.findById(req.getIdx()).get();
-		} catch (NoSuchElementException e) {
-			return 0;
+	public PostCreateRoomRes createRoom(PostCreateRoomReq req) {
+		User user = userRepository.findById(req.getIdx()).orElse(null);
+		if (user == null) {
+			return new PostCreateRoomRes(0);
 		}
 		if (user.getRoomIdx() != 0) {
-			return 0;
+			return new PostCreateRoomRes(0);
 		}
 		Room room = roomRepository.save(req.toEntity());
 		user.setRoomIdx(room.getIdx());
 		user.setRole(2L);
 		userRepository.save(user);
-		return room.getIdx();
+		return new PostCreateRoomRes(room.getIdx());
 	}
 
-	public Integer joinRoom(Integer roomId, PutJoinRoomReq req) {
-		User user;
-		try {
-			user = userRepository.findById(req.getUserIdx()).get();
-		} catch (NoSuchElementException e) {
-			return 0;
+	public PutJoinRoomRes joinRoom(Integer roomId, PutJoinRoomReq req) {
+		User user = userRepository.findById(req.getUserIdx()).orElse(null);
+		Room room = roomRepository.findById(roomId).orElse(null);
+		if (user == null) {
+			return new PutJoinRoomRes(0);
 		}
 		if (user.getRoomIdx() != 0) {
-			return 0;
+			return new PutJoinRoomRes(0);
 		}
-		Room room;
-		try {
-			room = roomRepository.findById(roomId).get();
-		} catch (NoSuchElementException e) {
-			return 0;
+		if (room == null) {
+			return new PutJoinRoomRes(0);
 		}
 		user.setRoomIdx(roomId);
 		userRepository.save(user);
-		return userRepository.findById(req.getUserIdx()).get().getRoomIdx();
+		return new PutJoinRoomRes(user.getRoomIdx());
 	}
 
-	public Integer joinRoom(GetQrCheckReq req) {
-		User user;
-		try {
-			user = userRepository.findById(req.getUserIdx()).get();
-		} catch (NoSuchElementException e) {
-			return 0;
+	public GetQrCheckRes joinRoom(GetQrCheckReq req) {
+		User user = userRepository.findById(req.getUserIdx()).orElse(null);
+		if (user == null) {
+			return new GetQrCheckRes(0);
 		}
 		if (user.getRoomIdx() == 0) {
-			return 0;
+			return new GetQrCheckRes(0);
 		}
-		return user.getRoomIdx();
+		return new GetQrCheckRes(user.getRoomIdx());
 	}
 
 	public GetUserListByAdminRes userListByAdmin(Integer roomId, GetUserListByAdminReq req) {
-		User user;
-		try {
-			user = userRepository.findById(req.getUserIdx()).get();
-		} catch (NoSuchElementException e) {
+		User user = userRepository.findById(req.getUserIdx()).orElse(null);
+		if (user == null) {
 			return new GetUserListByAdminRes(null, null);
 		}
 		if (!Objects.equals(user.getRoomIdx(), roomId) || user.getRole() != 2) {
@@ -95,14 +87,10 @@ public class RoomService {
 	}
 
 	public PutUserApproveRes approveUser(Integer roomId, PutUserApproveReq req) {
-		Room room;
-		User admin;
-		User user;
-		try {
-			room = roomRepository.findById(roomId).get();
-			user = userRepository.findById(req.getUserIdx()).get();
-			admin = userRepository.findById(req.getAdminIdx()).get();
-		} catch (NoSuchElementException e) {
+		Room room = roomRepository.findById(roomId).orElse(null);
+		User admin = userRepository.findById(req.getUserIdx()).orElse(null);
+		User user = userRepository.findById(req.getAdminIdx()).orElse(null);
+		if (room == null || admin == null || user == null) {
 			return new PutUserApproveRes(null);
 		}
 		if (!Objects.equals(room.getAdminIdx(), admin.getIdx())) {
