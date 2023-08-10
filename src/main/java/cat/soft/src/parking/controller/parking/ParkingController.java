@@ -1,5 +1,7 @@
 package cat.soft.src.parking.controller.parking;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -10,6 +12,8 @@ import org.springframework.web.bind.annotation.RestController;
 
 import cat.soft.config.BaseResponse;
 import cat.soft.config.BaseResponseStatus;
+import cat.soft.src.parking.model.parking.GetTimeReq;
+import cat.soft.src.parking.model.parking.GetTimeRes;
 import cat.soft.src.parking.model.parking.PostAddTimeReq;
 import cat.soft.src.parking.model.parking.PostAddTimeRes;
 import cat.soft.src.parking.model.parking.TestRes;
@@ -37,5 +41,14 @@ public class ParkingController {
 			return new BaseResponse<>(BaseResponseStatus.DATABASE_ERROR);
 		}
 		return new BaseResponse<>(postAddTimeRes);
+	}
+
+	@GetMapping("/time")
+	public BaseResponse<List<GetTimeRes>> getTime(@RequestBody GetTimeReq req) {
+		List<GetTimeRes> getTimeRes = parkingService.getTime(req);
+		if (getTimeRes == null) {
+			return new BaseResponse<>(BaseResponseStatus.DATABASE_ERROR);
+		}
+		return new BaseResponse<>(getTimeRes);
 	}
 }

@@ -1,6 +1,8 @@
 package cat.soft.src.parking.controller.parking;
 
 import java.time.ZonedDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -10,6 +12,8 @@ import cat.soft.src.parking.model.ParkingLot;
 import cat.soft.src.parking.model.Room;
 import cat.soft.src.parking.model.Time;
 import cat.soft.src.parking.model.User;
+import cat.soft.src.parking.model.parking.GetTimeReq;
+import cat.soft.src.parking.model.parking.GetTimeRes;
 import cat.soft.src.parking.model.parking.PostAddTimeReq;
 import cat.soft.src.parking.model.parking.PostAddTimeRes;
 import cat.soft.src.parking.model.parking.TestRes;
@@ -55,5 +59,23 @@ public class ParkingService {
 		time.setRoomIdx(room.getIdx());
 		timeRepository.save(time);
 		return new PostAddTimeRes(time.getStart());
+	}
+
+	public List<GetTimeRes> getTime(GetTimeReq req) {
+		User user = userRepository.findById(req.getUserIdx()).orElse(null);
+		List<GetTimeRes> getTimeRes = new ArrayList<>();
+		if (user == null || user.getRole() == 0)
+			return null;
+		List<ParkingLot> parkingLotList = parkingRepository.findAllByRoomIdx(user.getRoomIdx());
+		if (parkingLotList == null)
+			return null;
+		for (ParkingLot parkingLot : parkingLotList) {
+			Time time = timeRepository.findTimeByParkingLotIdxAndEndAfter(parkingLot.getSlot(), ZonedDateTime.now());
+			User usingUser = null;
+			if (time != null)
+				usingUser = userRepository.findById(time.getUserIdx()).orElse(null);
+			getTimeRes.add(new GetTimeRes(usingUser, parkingLot, time));
+		}
+		return getTimeRes;
 	}
 }
