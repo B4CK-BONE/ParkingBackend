@@ -1,6 +1,6 @@
 package cat.soft.src.parking.model;
 
-import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
 
 import org.hibernate.annotations.CreationTimestamp;
 
@@ -10,8 +10,15 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.RequiredArgsConstructor;
+import lombok.Setter;
 
 @Entity
+@RequiredArgsConstructor
+@Getter
+@Setter
 @Table(name = "Time")
 public class Time {
 
@@ -31,8 +38,17 @@ public class Time {
 
 	@CreationTimestamp
 	@Column(name = "start", nullable = false)
-	private LocalDateTime start;
+	private ZonedDateTime start;
 
 	@Column(name = "end", nullable = false)
-	private LocalDateTime end;
+	private ZonedDateTime end;
+
+	@Builder
+	public Time(Integer userIdx, Integer parkingLotIdx, ZonedDateTime start,
+		ZonedDateTime end) {
+		this.userIdx = userIdx;
+		this.parkingLotIdx = parkingLotIdx;
+		this.start = start;
+		this.end = end;
+	}
 }
