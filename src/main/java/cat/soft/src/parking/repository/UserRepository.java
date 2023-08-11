@@ -1,12 +1,12 @@
 package cat.soft.src.parking.repository;
 
-import java.util.List;
 
 import org.springframework.data.jpa.repository.JpaRepository;
+import cat.soft.oauth.user.model.User;
 
-import cat.soft.src.parking.model.User;
+import java.util.Optional;
 
-public interface UserRepository extends JpaRepository<User, Integer> {
-	List<User> findUsersByRoomIdxAndRole(Integer roomIdx, Long role);
+public interface UserRepository extends JpaRepository<User, Long> {
+    Optional<User> findByEmail(String Email);
 }
 
