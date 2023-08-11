@@ -16,6 +16,8 @@ import cat.soft.src.parking.model.parking.GetTimeReq;
 import cat.soft.src.parking.model.parking.GetTimeRes;
 import cat.soft.src.parking.model.parking.PostAddTimeReq;
 import cat.soft.src.parking.model.parking.PostAddTimeRes;
+import cat.soft.src.parking.model.parking.PostReportReq;
+import cat.soft.src.parking.model.parking.PostReportRes;
 import cat.soft.src.parking.model.parking.TestRes;
 
 @RestController
@@ -50,5 +52,14 @@ public class ParkingController {
 			return new BaseResponse<>(BaseResponseStatus.DATABASE_ERROR);
 		}
 		return new BaseResponse<>(getTimeRes);
+	}
+
+	@PostMapping("/report")
+	public BaseResponse<PostReportRes> report(@RequestBody PostReportReq req) {
+		PostReportRes postReportRes = parkingService.report(req);
+		if (postReportRes == null) {
+			return new BaseResponse<>(BaseResponseStatus.DATABASE_ERROR);
+		}
+		return new BaseResponse<>(postReportRes);
 	}
 }
