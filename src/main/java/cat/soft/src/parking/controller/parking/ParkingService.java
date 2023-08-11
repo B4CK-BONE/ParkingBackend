@@ -3,12 +3,14 @@ package cat.soft.src.parking.controller.parking;
 import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.PathVariable;
 
 import cat.soft.src.parking.model.ParkingLot;
+import cat.soft.src.parking.model.Report;
 import cat.soft.src.parking.model.Room;
 import cat.soft.src.parking.model.Time;
 import cat.soft.src.parking.model.User;
@@ -16,8 +18,11 @@ import cat.soft.src.parking.model.parking.GetTimeReq;
 import cat.soft.src.parking.model.parking.GetTimeRes;
 import cat.soft.src.parking.model.parking.PostAddTimeReq;
 import cat.soft.src.parking.model.parking.PostAddTimeRes;
+import cat.soft.src.parking.model.parking.PostReportReq;
+import cat.soft.src.parking.model.parking.PostReportRes;
 import cat.soft.src.parking.model.parking.TestRes;
 import cat.soft.src.parking.repository.ParkingRepository;
+import cat.soft.src.parking.repository.ReportRepository;
 import cat.soft.src.parking.repository.RoomRepository;
 import cat.soft.src.parking.repository.TimeRepository;
 import cat.soft.src.parking.repository.UserRepository;
@@ -33,6 +38,8 @@ public class ParkingService {
 	private UserRepository userRepository;
 	@Autowired
 	private RoomRepository roomRepository;
+	@Autowired
+	private ReportRepository reportRepository;
 
 	public TestRes testText(@PathVariable("test") String test) {
 		return new TestRes("test text" + test);
@@ -77,5 +84,24 @@ public class ParkingService {
 			getTimeRes.add(new GetTimeRes(usingUser, parkingLot, time));
 		}
 		return getTimeRes;
+	}
+
+	public PostReportRes report(PostReportReq req) {
+		User victim = userRepository.findById(req.getVictim()).orElse(null);
+		User suspcet = userRepository.findById(req.getSuspect()).orElse(null);
+		if (Objects.equals(req.getVictim(), req.getSuspect()))
+			return null;
+		if (victim == null || suspcet == null) { // 존재x 오류
+			return null;
+		}
+		if (!Objects.equals(victim.getRoomIdx(), suspcet.getRoomIdx())) // 같은 공간 아니면 신고 불가
+			return null;
+		Time parkingTime = timeRepository.findTimeByUserIdxAndEndAfter(suspcet.getIdx(), ZonedDateTime.now());
+		if (parkingTime == null) // 주차 안함
+			return null;
+		Report report = reportRepository.findReportByTimeAfter(ZonedDateTime.now().minusHours(24));
+		if (report != null) // 기존 신고
+			return null;
+		return new PostReportRes(reportRepository.save(req.toEntity()).getTime());
 	}
 }
