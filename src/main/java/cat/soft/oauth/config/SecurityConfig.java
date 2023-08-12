@@ -9,7 +9,6 @@ import cat.soft.oauth.auth.jwt.config.OAuth2SuccessHandler;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -43,8 +42,12 @@ public class SecurityConfig{
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
                 .csrf().disable()
-                .formLogin().disable()
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+
+                .and()
+
+                .authorizeHttpRequests()
+                .anyRequest().authenticated()
 
                 .and()
 
@@ -61,8 +64,7 @@ public class SecurityConfig{
                 .and()
 
                 .successHandler(new OAuth2SuccessHandler(jwtTokenProvider, authService));
-
-        return null;
+        return http.build();
     }
 }
 
