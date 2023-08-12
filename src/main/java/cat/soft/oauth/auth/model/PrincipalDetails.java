@@ -30,14 +30,15 @@ public class PrincipalDetails implements UserDetails, OAuth2User {
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return new ArrayList<>();
     }
+
     @Override
     public String getPassword() {
-        return user.getPassword();
+        return null;
     }
 
     @Override
     public String getUsername() {
-        return null;
+        return "none";
     }
 
     @Override
