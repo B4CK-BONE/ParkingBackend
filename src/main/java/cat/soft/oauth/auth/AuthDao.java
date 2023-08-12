@@ -16,8 +16,8 @@ public class AuthDao {
     }
 
     public String insertRefreshToken(String useremail, String refreshToken) {
-        String insertRefreshTokenQuery = "insert into token(user_email, refresh_token) values (?,?)";
-        Object[] insertRefreshTokenParams = new Object[]{useremail, refreshToken};
+        String insertRefreshTokenQuery = "insert into User(refresh_token) values (?) where email=?";
+        Object[] insertRefreshTokenParams = new Object[]{refreshToken, useremail};
 
         this.jdbcTemplate.update(insertRefreshTokenQuery, insertRefreshTokenParams);
 
@@ -25,7 +25,7 @@ public class AuthDao {
     }
 
     public String updateRefreshToken(String useremail, String newRefreshToken) {
-        String updateRefreshTokenQuery = "update token set refresh_token = ? where user_email=?";
+        String updateRefreshTokenQuery = "update User set refresh_token = ? where email=?";
         Object[] updateRefreshTokenParams = new Object[]{newRefreshToken,useremail};
 
         this.jdbcTemplate.update(updateRefreshTokenQuery, updateRefreshTokenParams);
@@ -34,7 +34,7 @@ public class AuthDao {
     }
 
     public boolean checkRefreshToken(String token) {
-        String checkRefreshTokenQuery = "select exists(select refresh_token from token where refresh_token = ?)";
+        String checkRefreshTokenQuery = "select exists(select refresh_token from User where refresh_token = ?)";
 
         int result = this.jdbcTemplate.queryForObject(checkRefreshTokenQuery,int.class,token);
 
@@ -42,7 +42,7 @@ public class AuthDao {
     }
 
     public boolean checkUser(String useremail) {
-        String checkUserQuery = "select exists(select useremail from token where useremail=?)";
+        String checkUserQuery = "select exists(select email from User where email=?)";
 
         int result = this.jdbcTemplate.queryForObject(checkUserQuery, int.class, useremail);
 
