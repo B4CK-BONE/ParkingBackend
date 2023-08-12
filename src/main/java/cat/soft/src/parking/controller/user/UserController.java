@@ -8,8 +8,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import cat.soft.config.BaseResponse;
-import cat.soft.config.BaseResponseStatus;
+import cat.soft.oauth.util.BaseResponse;
+import cat.soft.oauth.util.BaseResponseStatus;
 import cat.soft.src.parking.model.user.GetUserInfoReq;
 import cat.soft.src.parking.model.user.GetUserInfoRes;
 import cat.soft.src.parking.model.user.PutUserInfoReq;
@@ -29,8 +29,7 @@ public class UserController {
 
 	@PutMapping("/{id}")
 	public BaseResponse<PutUserInfoRes> putUserInfo(@PathVariable Integer id, @RequestBody PutUserInfoReq userInfoReq) {
-		if (userInfoReq.getCar() == null || userInfoReq.getAddress() == null || userInfoReq.getPhone() == null
-			|| userInfoReq.getKakao() == null) {
+		if (userInfoReq.getCar() == null || userInfoReq.getAddress() == null || userInfoReq.getPhone() == null) {
 			return new BaseResponse<>(BaseResponseStatus.DATABASE_ERROR); // 입력정보 없음
 		}
 		PutUserInfoRes putUserInfoRes = userService.updateUserInfo(id, userInfoReq);
