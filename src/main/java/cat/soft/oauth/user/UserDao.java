@@ -9,6 +9,8 @@ import org.springframework.stereotype.Repository;
 
 import javax.sql.DataSource;
 
+import static cat.soft.oauth.util.EncryptionUtils.encryptSHA256;
+
 @Repository
 public class UserDao {
 
@@ -21,12 +23,12 @@ public class UserDao {
 
 
     public User insertUser(User user) {
-        String insertUserQuery = "insert into user (email,provider,provider_id) values (?,?,?)";
-        Object[] insertUserParams = new Object[]{user.getEmail(), user.getProvider(), user.getProvider_id()};
+        String insertUserQuery = "insert into User (email, pw) values (?,?)";
+        Object[] insertUserParams = new Object[]{user.getEmail(), encryptSHA256(user.getEmail())};
 
         this.jdbcTemplate.update(insertUserQuery, insertUserParams);
 
-        String lastInsertEmail = this.jdbcTemplate.queryForObject("select last_insert_email()", String.class);
+        String lastInsertEmail = this.jdbcTemplate.queryForObject("select last_insert_id()", String.class);
 
         user.setEmail(lastInsertEmail);
 
@@ -34,15 +36,12 @@ public class UserDao {
     }
 
     public User selectByEmail(String email) {
-        String selectByEmailQuery = "select email, provider, provider_id from user where email = ?";
+        String selectByEmailQuery = "select email from User where email = ?";
         Object[] selectByEmailParams = new Object[]{email};
         try {
             return this.jdbcTemplate.queryForObject(selectByEmailQuery,
                     (rs, rowNum) -> new User(
-                            rs.getString("email"),
-                            rs.getString("password"),
-                            rs.getString("provider"),
-                            rs.getString("provider_id")),
+                            rs.getString("email")),
                     selectByEmailParams);
         } catch (EmptyResultDataAccessException e) {
             return null;
@@ -50,7 +49,7 @@ public class UserDao {
     }
 
     public int checkEmail(String email) {
-        String checkEmailQuery = "select exists(select email from user where email = ?)";
+        String checkEmailQuery = "select exists(select email from User where email = ?)";
         Object[] checkEmailParams = new Object[]{email};
         return this.jdbcTemplate.queryForObject(checkEmailQuery, int.class, checkEmailParams);
     }
