@@ -29,8 +29,7 @@ public class UserController {
 
 	@PutMapping("/{id}")
 	public BaseResponse<PutUserInfoRes> putUserInfo(@PathVariable Integer id, @RequestBody PutUserInfoReq userInfoReq) {
-		if (userInfoReq.getCar() == null || userInfoReq.getAddress() == null || userInfoReq.getPhone() == null
-			|| userInfoReq.getKakao() == null) {
+		if (userInfoReq.getCar() == null || userInfoReq.getAddress() == null || userInfoReq.getPhone() == null) {
 			return new BaseResponse<>(BaseResponseStatus.DATABASE_ERROR); // 입력정보 없음
 		}
 		PutUserInfoRes putUserInfoRes = userService.updateUserInfo(id, userInfoReq);
