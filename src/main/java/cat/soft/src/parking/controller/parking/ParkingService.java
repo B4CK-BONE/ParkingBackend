@@ -14,6 +14,7 @@ import cat.soft.src.parking.model.Report;
 import cat.soft.src.parking.model.Room;
 import cat.soft.src.parking.model.Time;
 import cat.soft.src.parking.model.User;
+import cat.soft.src.parking.model.UserInfo;
 import cat.soft.src.parking.model.parking.GetTimeReq;
 import cat.soft.src.parking.model.parking.GetTimeRes;
 import cat.soft.src.parking.model.parking.PostAddTimeReq;
@@ -25,6 +26,7 @@ import cat.soft.src.parking.repository.ParkingRepository;
 import cat.soft.src.parking.repository.ReportRepository;
 import cat.soft.src.parking.repository.RoomRepository;
 import cat.soft.src.parking.repository.TimeRepository;
+import cat.soft.src.parking.repository.UserInfoRepository;
 import cat.soft.src.parking.repository.UserRepository;
 
 @Service
@@ -40,6 +42,8 @@ public class ParkingService {
 	private RoomRepository roomRepository;
 	@Autowired
 	private ReportRepository reportRepository;
+	@Autowired
+	private UserInfoRepository userInfoRepository;
 
 	public TestRes testText(@PathVariable("test") String test) {
 		return new TestRes("test text" + test);
@@ -78,9 +82,9 @@ public class ParkingService {
 			return null;
 		for (ParkingLot parkingLot : parkingLotList) {
 			Time time = timeRepository.findTimeByParkingLotIdxAndEndAfter(parkingLot.getSlot(), ZonedDateTime.now());
-			User usingUser = null;
+			UserInfo usingUser = null;
 			if (time != null)
-				usingUser = userRepository.findById(time.getUserIdx()).orElse(null);
+				usingUser = userInfoRepository.findById(time.getUserIdx()).orElse(null);
 			getTimeRes.add(new GetTimeRes(usingUser, parkingLot, time));
 		}
 		return getTimeRes;

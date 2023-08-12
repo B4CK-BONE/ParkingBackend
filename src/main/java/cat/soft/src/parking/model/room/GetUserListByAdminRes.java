@@ -2,7 +2,7 @@ package cat.soft.src.parking.model.room;
 
 import java.util.List;
 
-import cat.soft.src.parking.model.User;
+import cat.soft.src.parking.model.UserInfo;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
@@ -11,6 +11,6 @@ import lombok.Setter;
 @Getter
 @Setter
 public class GetUserListByAdminRes {
-	private List<User> newUser;
-	private List<User> oldUser;
+	private List<UserInfo> newUser;
+	private List<UserInfo> oldUser;
 }
