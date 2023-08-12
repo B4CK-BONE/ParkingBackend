@@ -1,4 +1,4 @@
-package cat.soft.oauth.config;
+package cat.soft.config;
 
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;
