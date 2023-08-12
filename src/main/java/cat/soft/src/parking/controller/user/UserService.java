@@ -7,6 +7,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 
 import cat.soft.src.parking.model.User;
 import cat.soft.src.parking.model.UserInfo;
+import cat.soft.src.parking.model.user.GetUserInfoReq;
+import cat.soft.src.parking.model.user.GetUserInfoRes;
 import cat.soft.src.parking.model.user.PutUserInfoReq;
 import cat.soft.src.parking.model.user.PutUserInfoRes;
 import cat.soft.src.parking.repository.UserInfoRepository;
@@ -35,5 +37,14 @@ public class UserService {
 		userInfo.setKakao(userInfoReq.getKakao());
 		userRepository.save(user);
 		return new PutUserInfoRes(user.getIdx());
+	}
+
+	public GetUserInfoRes getUserInfo(Integer id, GetUserInfoReq req) {
+		User user = userRepository.findById(id).orElse(null);
+		if (user == null) {
+			return null;
+		}
+		UserInfo userInfo = userInfoRepository.findById(user.getIdx()).get();
+		return new GetUserInfoRes(userInfo.getCar(), userInfo.getPhone(), userInfo.getAddress(), userInfo.getKakao());
 	}
 }
