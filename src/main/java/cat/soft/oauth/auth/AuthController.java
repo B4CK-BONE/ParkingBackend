@@ -40,7 +40,7 @@ public class AuthController {
 
     @PostMapping("/signup")
     public BaseResponse<String> join(@RequestBody PostSignupReq postUserReq) throws BaseException {
-        User user = new User(postUserReq.getEmail(), encryptSHA256(postUserReq.getEmail()), "ROLE_USER", "none");
+        User user = new User(postUserReq.getEmail());
         userService.createUser(user);
         return new BaseResponse<>("회원가입에 성공하였습니다.");
     }
