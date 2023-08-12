@@ -31,7 +31,7 @@ public class PrincipalOAuth2DetailsService extends DefaultOAuth2UserService {
     @Override
     public OAuth2User loadUser(OAuth2UserRequest userRequest) throws OAuth2AuthenticationException {
         OAuth2User oAuth2User = super.loadUser(userRequest);
-
+        System.out.println(oAuth2User.getAttributes());
 
         String email = oAuth2User.getAttributes().get("email").toString();
         String provider = userRequest.getClientRegistration().getRegistrationId();
@@ -42,7 +42,7 @@ public class PrincipalOAuth2DetailsService extends DefaultOAuth2UserService {
         try {
             if ( userProvider.checkEmail(email) == 0) {
                 log.info("구글 로그인이 최초입니다. 회원가입을 진행합니다.");
-                user = new User(email, encryptSHA256(email), provider, provider_id);
+                user = new User(email);
                 userService.createUser(user);
             }else {
                 log.info("구글 로그인 기록이 있습니다.");
