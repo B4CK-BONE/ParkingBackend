@@ -1,10 +1,10 @@
 package cat.soft.src.parking.model.parking;
 
-import java.time.ZonedDateTime;
+import java.time.format.DateTimeFormatter;
 
 import cat.soft.src.parking.model.ParkingLot;
 import cat.soft.src.parking.model.Time;
-import cat.soft.src.parking.model.User;
+import cat.soft.src.parking.model.UserInfo;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -12,34 +12,42 @@ import lombok.Setter;
 @Setter
 public class GetTimeRes {
 
-	private String top;
+	private String height;
 	private String bottom;
-	private String left;
+	private String width;
 	private String right;
 	private String direction;
-	private ZonedDateTime start;
-	private ZonedDateTime end;
+	private String endDate;
+	private String endTime;
 	private String car;
+
+	private Integer userIdx;
 	private Integer slot;
 	private Boolean use;
 
-	public GetTimeRes(User user, ParkingLot parkingLot, Time time) {
-		this.top = parkingLot.getTop();
+	private String kakao;
+
+	public GetTimeRes(UserInfo userInfo, ParkingLot parkingLot, Time time) {
+		this.height = parkingLot.getTop();
 		this.bottom = parkingLot.getBottom();
-		this.left = parkingLot.getLeft();
+		this.width = parkingLot.getLeft();
 		this.right = parkingLot.getRight();
 		this.direction = parkingLot.getDirection();
 		this.slot = parkingLot.getSlot();
 		if (time != null) {
-			this.start = time.getStart();
-			this.end = time.getEnd();
+			this.endDate = time.getEnd().format(DateTimeFormatter.ofPattern("MM/dd"));
+			this.endTime = time.getEnd().format(DateTimeFormatter.ofPattern("HH:mm"));
 			this.use = true;
-			this.car = user.getCar();
+			this.car = userInfo.getCar();
+			this.userIdx = userInfo.getIdx();
+			this.kakao = userInfo.getKakao();
 		} else {
-			this.start = null;
-			this.end = null;
+			this.endDate = null;
+			this.endTime = null;
 			this.use = false;
 			this.car = null;
+			this.userIdx = null;
+			this.kakao = null;
 		}
 	}
 }

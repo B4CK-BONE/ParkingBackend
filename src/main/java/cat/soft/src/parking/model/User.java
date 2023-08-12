@@ -28,14 +28,14 @@ public class User {
 	@Column(name = "email", nullable = false)
 	private String email;
 
-	@Column(name = "car", length = 10)
-	private String car;
-
-	@Column(name = "phone", length = 11)
-	private String phone;
-
-	@Column(name = "address", length = 5)
-	private String address;
+	// @Column(name = "car", length = 10)
+	// private String car;
+	//
+	// @Column(name = "phone", length = 11)
+	// private String phone;
+	//
+	// @Column(name = "address", length = 5)
+	// private String address;
 
 	@Column(name = "role", nullable = false)
 	@ColumnDefault("0")

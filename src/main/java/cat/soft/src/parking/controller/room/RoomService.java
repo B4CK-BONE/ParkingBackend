@@ -1,5 +1,6 @@
 package cat.soft.src.parking.controller.room;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
@@ -8,6 +9,7 @@ import org.springframework.stereotype.Service;
 
 import cat.soft.src.parking.model.Room;
 import cat.soft.src.parking.model.User;
+import cat.soft.src.parking.model.UserInfo;
 import cat.soft.src.parking.model.room.GetQrCheckReq;
 import cat.soft.src.parking.model.room.GetQrCheckRes;
 import cat.soft.src.parking.model.room.GetUserListByAdminReq;
@@ -18,7 +20,9 @@ import cat.soft.src.parking.model.room.PutJoinRoomReq;
 import cat.soft.src.parking.model.room.PutJoinRoomRes;
 import cat.soft.src.parking.model.room.PutUserApproveReq;
 import cat.soft.src.parking.model.room.PutUserApproveRes;
+import cat.soft.src.parking.repository.ReportRepository;
 import cat.soft.src.parking.repository.RoomRepository;
+import cat.soft.src.parking.repository.UserInfoRepository;
 import cat.soft.src.parking.repository.UserRepository;
 
 @Service
@@ -28,6 +32,11 @@ public class RoomService {
 	private RoomRepository roomRepository;
 	@Autowired
 	private UserRepository userRepository;
+
+	@Autowired
+	private UserInfoRepository userInfoRepository;
+	@Autowired
+	private ReportRepository reportRepository;
 
 	public PostCreateRoomRes createRoom(PostCreateRoomReq req) {
 		User user = userRepository.findById(req.getIdx()).orElse(null);
@@ -73,17 +82,32 @@ public class RoomService {
 	}
 
 	public GetUserListByAdminRes userListByAdmin(Integer roomId, GetUserListByAdminReq req) {
-		User user = userRepository.findById(req.getUserIdx()).orElse(null);
-		if (user == null) {
+		User admin = userRepository.findById(req.getUserIdx()).orElse(null);
+		if (admin == null) {
 			return new GetUserListByAdminRes(null, null);
 		}
-		if (!Objects.equals(user.getRoomIdx(), roomId) || user.getRole() != 2) {
+		if (!Objects.equals(admin.getRoomIdx(), roomId) || admin.getRole() != 2) {
 			return new GetUserListByAdminRes(null, null);
 		}
-		List<User> newUser = userRepository.findUsersByRoomIdxAndRole(user.getRoomIdx(), 0L);
-		List<User> oldUser = userRepository.findUsersByRoomIdxAndRole(user.getRoomIdx(), 1L);
-		oldUser.add(user);
-		return new GetUserListByAdminRes(newUser, oldUser);
+		List<User> newUser = userRepository.findUsersByRoomIdxAndRole(admin.getRoomIdx(), 0L);
+		List<UserInfo> newUserInfo = new ArrayList<>();
+		for (User findUser : newUser) {
+			UserInfo userInfo = userInfoRepository.findById(findUser.getIdx()).get();
+			userInfo.setReportCount(reportRepository.countBysuspect(findUser.getIdx()));
+			newUserInfo.add(userInfo);
+		}
+		List<User> oldUser = userRepository.findUsersByRoomIdxAndRole(admin.getRoomIdx(), 1L);
+		List<UserInfo> oldUserInfo = new ArrayList<>();
+		
+		UserInfo adminInfo = userInfoRepository.findById(admin.getIdx()).get();
+		adminInfo.setReportCount(reportRepository.countBysuspect(admin.getIdx()));
+		oldUserInfo.add(adminInfo); // 방장 추가
+		for (User findUser : oldUser) {
+			UserInfo userInfo = userInfoRepository.findById(findUser.getIdx()).get();
+			userInfo.setReportCount(reportRepository.countBysuspect(findUser.getIdx()));
+			oldUserInfo.add(userInfo);
+		}
+		return new GetUserListByAdminRes(newUserInfo, oldUserInfo);
 	}
 
 	public PutUserApproveRes approveUser(Integer roomId, PutUserApproveReq req) {

@@ -11,4 +11,5 @@ public class PutUserInfoReq {
 	private String car;
 	private String phone;
 	private String address;
+	private String kakao;
 }
