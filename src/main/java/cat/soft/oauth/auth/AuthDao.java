@@ -1,10 +1,14 @@
 package cat.soft.oauth.auth;
 
+import cat.soft.oauth.auth.dto.PostUserAuthRes;
+import cat.soft.oauth.user.model.User;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
 import javax.sql.DataSource;
+import java.util.Map;
 
 @Repository
 public class AuthDao {
@@ -16,7 +20,7 @@ public class AuthDao {
     }
 
     public String insertRefreshToken(String useremail, String refreshToken) {
-        String insertRefreshTokenQuery = "insert into User(refresh_token) values (?) where email=?";
+        String insertRefreshTokenQuery = "update User set refresh_token = ? where email=?";
         Object[] insertRefreshTokenParams = new Object[]{refreshToken, useremail};
 
         this.jdbcTemplate.update(insertRefreshTokenQuery, insertRefreshTokenParams);

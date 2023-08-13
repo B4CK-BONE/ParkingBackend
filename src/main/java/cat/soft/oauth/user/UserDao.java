@@ -1,6 +1,7 @@
 package cat.soft.oauth.user;
 
 
+import cat.soft.oauth.auth.dto.PostUserAuthRes;
 import cat.soft.oauth.user.model.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;
@@ -52,5 +53,21 @@ public class UserDao {
         String checkEmailQuery = "select exists(select email from User where email = ?)";
         Object[] checkEmailParams = new Object[]{email};
         return this.jdbcTemplate.queryForObject(checkEmailQuery, int.class, checkEmailParams);
+    }
+
+    public PostUserAuthRes userInfo(String email){
+        String getUserInfoQuery = "select idx, room_idx, role from User where email=?";
+        Object[] getUserInfoParams = new Object[]{email};
+
+        try {
+            return this.jdbcTemplate.queryForObject(getUserInfoQuery,
+                    (rs, rowNum) -> new PostUserAuthRes(
+                            rs.getInt("idx"),
+                            rs.getInt("room_idx"),
+                            rs.getInt("role")),
+                    getUserInfoParams);
+        } catch (EmptyResultDataAccessException e) {
+            return null;
+        }
     }
 }

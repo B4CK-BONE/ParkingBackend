@@ -1,9 +1,10 @@
 package cat.soft.oauth.user;
 
+import cat.soft.oauth.auth.dto.PostUserAuthRes;
+import cat.soft.oauth.auth.jwt.JwtTokenProvider;
+import io.jsonwebtoken.Claims;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import cat.soft.oauth.user.dto.GetUserRes;
 import cat.soft.oauth.user.model.User;
@@ -14,13 +15,14 @@ import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 @RestController
-@RequestMapping("/users")
+@RequestMapping("/api/users")
 public class UsersController {
-
+	private final JwtTokenProvider jwtTokenProvider;
 	private final UserProvider userProvider;
 
 	@Autowired
-	public UsersController(UserProvider userProvider) {
+	public UsersController(JwtTokenProvider jwtTokenProvider, UserProvider userProvider) {
+		this.jwtTokenProvider = jwtTokenProvider;
 		this.userProvider = userProvider;
 	}
 
@@ -30,5 +32,14 @@ public class UsersController {
 		User user = userProvider.retrieveByEmail(user_email);
 		GetUserRes getUserRes = new GetUserRes(user.getEmail());
 		return new BaseResponse<>(getUserRes);
+	}
+
+	@GetMapping("/auth")
+	public BaseResponse<PostUserAuthRes> UserAuth(@RequestHeader("Authorization") String token) throws BaseException {
+		Claims claims = jwtTokenProvider.getJwtContents(token);
+
+		PostUserAuthRes postUserAuthRes = userProvider.UserInfoProvider(String.valueOf(claims.get("email")));
+
+		return new BaseResponse<>(postUserAuthRes);
 	}
 }
