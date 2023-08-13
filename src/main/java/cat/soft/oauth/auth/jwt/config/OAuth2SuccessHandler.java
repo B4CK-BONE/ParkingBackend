@@ -27,10 +27,10 @@ public class OAuth2SuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
             throws IOException, ServletException {
         PrincipalDetails oAuth2User = (PrincipalDetails) authentication.getPrincipal();
         String targetUrl;
-        String accessToken =  jwtTokenProvider.createAccessToken(oAuth2User.getUser().getEmail());
-        String refreshToken =  jwtTokenProvider.createRefreshToken(oAuth2User.getUser().getEmail());
+        String accessToken =  jwtTokenProvider.createAccessToken(oAuth2User.getAttribute("email"));
+        String refreshToken =  jwtTokenProvider.createRefreshToken(oAuth2User.getAttribute("email"));
 
-        authService.registerRefreshToken(oAuth2User.getUser().getEmail(),refreshToken);
+        authService.registerRefreshToken(oAuth2User.getAttribute("email"),refreshToken);
 
         targetUrl = UriComponentsBuilder.fromUriString("https://backboneproject-okwcj.run.goorm.site/login")
                 .queryParam("accessToken",accessToken)
