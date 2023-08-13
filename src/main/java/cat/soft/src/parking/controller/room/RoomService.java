@@ -13,7 +13,6 @@ import cat.soft.src.parking.model.User;
 import cat.soft.src.parking.model.UserInfo;
 import cat.soft.src.parking.model.room.GetQrCheckRes;
 import cat.soft.src.parking.model.room.GetUserListByAdminRes;
-import cat.soft.src.parking.model.room.PostCreateRoomReq;
 import cat.soft.src.parking.model.room.PostCreateRoomRes;
 import cat.soft.src.parking.model.room.PutJoinRoomRes;
 import cat.soft.src.parking.model.room.PutUserApproveReq;
@@ -37,15 +36,15 @@ public class RoomService {
 	private ReportRepository reportRepository;
 	private JwtTokenProvider jwtTokenProvider;
 
-	public PostCreateRoomRes createRoom(PostCreateRoomReq req) {
-		User user = userRepository.findById(req.getIdx()).orElse(null);
+	public PostCreateRoomRes createRoom(String token) {
+		User user = userRepository.findUsersByEmail(jwtTokenProvider.getEmail(token));
 		if (user == null) {
 			return new PostCreateRoomRes(0);
 		}
 		if (user.getRoomIdx() != 0) {
 			return new PostCreateRoomRes(0);
 		}
-		Room room = roomRepository.save(req.toEntity());
+		Room room = roomRepository.save(Room.builder().idx(user.getIdx()).build());
 		user.setRoomIdx(room.getIdx());
 		user.setRole(2L);
 		userRepository.save(user);
