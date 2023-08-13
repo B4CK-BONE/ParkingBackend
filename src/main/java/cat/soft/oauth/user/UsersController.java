@@ -9,11 +9,19 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestHeader;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
+import cat.soft.oauth.auth.dto.PostUserAuthRes;
+import cat.soft.oauth.auth.jwt.JwtTokenProvider;
 import cat.soft.oauth.user.dto.GetUserRes;
 import cat.soft.oauth.user.model.User;
 import cat.soft.oauth.util.BaseException;
 import cat.soft.oauth.util.BaseResponse;
+import io.jsonwebtoken.Claims;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
 
@@ -21,7 +29,7 @@ import static cat.soft.oauth.util.BaseResponseStatus.*;
 
 @Slf4j
 @RestController
-@RequestMapping("/api/users")
+@RequestMapping("/api/user")
 public class UsersController {
 	private final JwtTokenProvider jwtTokenProvider;
 	private final UserProvider userProvider;

@@ -1,6 +1,8 @@
 package cat.soft.src.parking.controller.room;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.MethodArgumentNotValidException;
+import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -14,7 +16,6 @@ import cat.soft.oauth.util.BaseResponse;
 import cat.soft.oauth.util.BaseResponseStatus;
 import cat.soft.src.parking.model.room.GetQrCheckRes;
 import cat.soft.src.parking.model.room.GetUserListByAdminRes;
-import cat.soft.src.parking.model.room.PostCreateRoomReq;
 import cat.soft.src.parking.model.room.PostCreateRoomRes;
 import cat.soft.src.parking.model.room.PutJoinRoomRes;
 import cat.soft.src.parking.model.room.PutUserApproveReq;
@@ -27,9 +28,16 @@ public class RoomController {
 	@Autowired
 	private RoomService roomService;
 
+	@ExceptionHandler(MethodArgumentNotValidException.class)
+	public BaseResponse<MethodArgumentNotValidException> handleValidationExceptions(
+		MethodArgumentNotValidException ex) {
+
+		return new BaseResponse<>(ex);
+	}
+
 	@PostMapping("/")
-	public BaseResponse<PostCreateRoomRes> createRoom(@RequestBody PostCreateRoomReq postCreateRoomReq) {
-		PostCreateRoomRes postCreateRoomRes = roomService.createRoom(postCreateRoomReq);
+	public BaseResponse<PostCreateRoomRes> createRoom(@RequestHeader("Authorization") String token) {
+		PostCreateRoomRes postCreateRoomRes = roomService.createRoom(token);
 		if (postCreateRoomRes.getRoom_idx() == 0) {
 			return new BaseResponse<>(BaseResponseStatus.INVALID_USER_JWT); // 해당 유저 없음
 		}
