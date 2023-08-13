@@ -13,6 +13,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import java.security.Key;
+import java.util.Base64;
 import java.util.Date;
 
 @Component
@@ -53,12 +54,12 @@ public class JwtTokenProvider {
     // JWT 토큰 생성
     public String createAccessToken(String useremail) {
         Claims claims = Jwts.claims().setSubject(useremail); // JWT payload 에 저장되는 정보단위, 보통 여기서 user를 식별하는 값을 넣는다.
-
+        claims.put("email",useremail);
         Date now = new Date();
         return Jwts.builder()
                 .setClaims(claims) // 정보 저장
                 .setIssuedAt(now) // 토큰 발행 시간 정보
-                .setExpiration(new Date(now.getTime() + JWT_ACCESS_TOKEN_EXPTIME)) // set Expire Time
+                .setExpiration(new Date(System.currentTimeMillis() + JWT_ACCESS_TOKEN_EXPTIME)) // set Expire Time
                 .signWith(accessKey, SignatureAlgorithm.HS256)  // 사용할 암호화 알고리즘과
                 // signature 에 들어갈 secret값 세팅
                 .compact();
@@ -67,11 +68,13 @@ public class JwtTokenProvider {
     public String createRefreshToken(String useremail) {
         Claims claims = Jwts.claims().setSubject(useremail); // JWT payload 에 저장되는 정보단위, 보통 여기서 user를 식별하는 값을 넣는다.
 
+        claims.put("email",useremail);
+
         Date now = new Date();
         return Jwts.builder()
                 .setClaims(claims) // 정보 저장
                 .setIssuedAt(now) // 토큰 발행 시간 정보
-                .setExpiration(new Date(now.getTime() + JWT_REFRESH_TOKEN_EXPTIME)) // set Expire Time
+                .setExpiration(new Date(System.currentTimeMillis() + JWT_REFRESH_TOKEN_EXPTIME)) // set Expire Time
                 .signWith(accessKey, SignatureAlgorithm.HS256) // 사용할 암호화 알고리즘과
                 // signature 에 들어갈 secret값 세팅
                 .compact();
@@ -92,6 +95,12 @@ public class JwtTokenProvider {
     public String getUseridFromRef(String token) {
         return Jwts.parserBuilder().setSigningKey(accessKey).build()
                 .parseClaimsJws(token).getBody().getSubject();
+    }
+
+    public Claims getJwtContents(String token){
+        Claims claims = Jwts.parserBuilder().setSigningKey(accessKey).build().parseClaimsJws(token).getBody();
+
+        return claims;
     }
 
     public Long getExpiration(String accessToken) {
