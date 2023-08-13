@@ -11,6 +11,5 @@ import lombok.Setter;
 @Setter
 public class PutUserApproveReq {
 	private Integer userIdx;
-	private Integer adminIdx;
 	private Long role;
 }

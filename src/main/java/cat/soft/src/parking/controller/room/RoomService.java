@@ -7,16 +7,14 @@ import java.util.Objects;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import cat.soft.oauth.auth.jwt.JwtTokenProvider;
 import cat.soft.src.parking.model.Room;
 import cat.soft.src.parking.model.User;
 import cat.soft.src.parking.model.UserInfo;
-import cat.soft.src.parking.model.room.GetQrCheckReq;
 import cat.soft.src.parking.model.room.GetQrCheckRes;
-import cat.soft.src.parking.model.room.GetUserListByAdminReq;
 import cat.soft.src.parking.model.room.GetUserListByAdminRes;
 import cat.soft.src.parking.model.room.PostCreateRoomReq;
 import cat.soft.src.parking.model.room.PostCreateRoomRes;
-import cat.soft.src.parking.model.room.PutJoinRoomReq;
 import cat.soft.src.parking.model.room.PutJoinRoomRes;
 import cat.soft.src.parking.model.room.PutUserApproveReq;
 import cat.soft.src.parking.model.room.PutUserApproveRes;
@@ -37,6 +35,7 @@ public class RoomService {
 	private UserInfoRepository userInfoRepository;
 	@Autowired
 	private ReportRepository reportRepository;
+	private JwtTokenProvider jwtTokenProvider;
 
 	public PostCreateRoomRes createRoom(PostCreateRoomReq req) {
 		User user = userRepository.findById(req.getIdx()).orElse(null);
@@ -53,8 +52,8 @@ public class RoomService {
 		return new PostCreateRoomRes(room.getIdx());
 	}
 
-	public PutJoinRoomRes joinRoom(Integer roomId, PutJoinRoomReq req) {
-		User user = userRepository.findById(req.getUserIdx()).orElse(null);
+	public PutJoinRoomRes joinRoom(Integer roomId, String token) {
+		User user = userRepository.findUsersByEmail(jwtTokenProvider.getEmail(token));
 		Room room = roomRepository.findById(roomId).orElse(null);
 		if (user == null) {
 			return new PutJoinRoomRes(0);
@@ -70,8 +69,8 @@ public class RoomService {
 		return new PutJoinRoomRes(user.getRoomIdx());
 	}
 
-	public GetQrCheckRes joinRoom(GetQrCheckReq req) {
-		User user = userRepository.findById(req.getUserIdx()).orElse(null);
+	public GetQrCheckRes joinRoom(String token) {
+		User user = userRepository.findUsersByEmail(jwtTokenProvider.getEmail(token));
 		if (user == null) {
 			return new GetQrCheckRes(0);
 		}
@@ -81,8 +80,8 @@ public class RoomService {
 		return new GetQrCheckRes(user.getRoomIdx());
 	}
 
-	public GetUserListByAdminRes userListByAdmin(Integer roomId, GetUserListByAdminReq req) {
-		User admin = userRepository.findById(req.getUserIdx()).orElse(null);
+	public GetUserListByAdminRes userListByAdmin(Integer roomId, String token) {
+		User admin = userRepository.findUsersByEmail(jwtTokenProvider.getEmail(token));
 		if (admin == null) {
 			return new GetUserListByAdminRes(null, null);
 		}
@@ -110,10 +109,10 @@ public class RoomService {
 		return new GetUserListByAdminRes(newUserInfo, oldUserInfo);
 	}
 
-	public PutUserApproveRes approveUser(Integer roomId, PutUserApproveReq req) {
+	public PutUserApproveRes approveUser(Integer roomId, PutUserApproveReq req, String token) {
 		Room room = roomRepository.findById(roomId).orElse(null);
-		User admin = userRepository.findById(req.getUserIdx()).orElse(null);
-		User user = userRepository.findById(req.getAdminIdx()).orElse(null);
+		User admin = userRepository.findUsersByEmail(jwtTokenProvider.getEmail(token));
+		User user = userRepository.findById(req.getUserIdx()).orElse(null);
 		if (room == null || admin == null || user == null) {
 			return new PutUserApproveRes(null);
 		}
