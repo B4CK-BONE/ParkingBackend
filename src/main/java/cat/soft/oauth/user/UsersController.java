@@ -51,14 +51,14 @@ public class UsersController {
 	}
 
 	@GetMapping("/refresh")
-	public ResponseEntity<RefreshTokenRes> refRefreshToken(@CookieValue(name = "refreshtoken") String token) throws BaseException{
+	public ResponseEntity<RefreshTokenRes> refRefreshToken(@RequestHeader("Authorization") String token) throws BaseException{
 		Claims claims = jwtTokenProvider.getJwtContents(token);
 		String email = String.valueOf(claims.get("email"));
 		if (userProvider.checkEmail(email) == 0)
 			throw new BaseException(USERS_EMPTY_USER_EMAIL);
 		try {
 			String beforeRefToken = userDao.tokenByEmail(email);
-			if(beforeRefToken != token)
+			if(beforeRefToken == token)
 				throw new BaseException(INVALID_JWT);
 			else {
 				String accessToken = jwtTokenProvider.createAccessToken(email);
