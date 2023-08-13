@@ -98,7 +98,7 @@ public class RoomService {
 		}
 		List<User> oldUser = userRepository.findUsersByRoomIdxAndRole(admin.getRoomIdx(), 1L);
 		List<UserInfo> oldUserInfo = new ArrayList<>();
-		
+
 		UserInfo adminInfo = userInfoRepository.findById(admin.getIdx()).get();
 		adminInfo.setReportCount(reportRepository.countBysuspect(admin.getIdx()));
 		oldUserInfo.add(adminInfo); // 방장 추가
