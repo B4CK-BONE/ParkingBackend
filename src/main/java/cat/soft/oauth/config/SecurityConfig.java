@@ -48,8 +48,11 @@ public class SecurityConfig {
 
 			.and()
 
+			.cors()
+			.and()
+
 			.authorizeHttpRequests()
-			.requestMatchers("/api/users/*").permitAll()
+			.requestMatchers("/api/users/**").permitAll()
 			.anyRequest().authenticated()
 
 			.and()
