@@ -9,13 +9,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.PathVariable;
 
+import cat.soft.oauth.auth.jwt.JwtTokenProvider;
 import cat.soft.src.parking.model.ParkingLot;
 import cat.soft.src.parking.model.Report;
 import cat.soft.src.parking.model.Room;
 import cat.soft.src.parking.model.Time;
 import cat.soft.src.parking.model.User;
 import cat.soft.src.parking.model.UserInfo;
-import cat.soft.src.parking.model.parking.GetTimeReq;
 import cat.soft.src.parking.model.parking.GetTimeRes;
 import cat.soft.src.parking.model.parking.PostAddTimeReq;
 import cat.soft.src.parking.model.parking.PostAddTimeRes;
@@ -45,12 +45,14 @@ public class ParkingService {
 	@Autowired
 	private UserInfoRepository userInfoRepository;
 
+	private JwtTokenProvider jwtTokenProvider;
+
 	public TestRes testText(@PathVariable("test") String test) {
 		return new TestRes("test text" + test);
 	}
 
-	public PostAddTimeRes addTime(PostAddTimeReq req) {
-		User user = userRepository.findById(req.getUserIdx()).orElse(null);
+	public PostAddTimeRes addTime(PostAddTimeReq req, String token) {
+		User user = userRepository.findUsersByEmail(jwtTokenProvider.getEmail(token));
 		if (ZonedDateTime.now().isAfter(req.getTime())) {
 			return null;
 		}
@@ -72,8 +74,8 @@ public class ParkingService {
 		return new PostAddTimeRes(time.getStart());
 	}
 
-	public List<GetTimeRes> getTime(GetTimeReq req) {
-		User user = userRepository.findById(req.getUserIdx()).orElse(null);
+	public List<GetTimeRes> getTime(String token) {
+		User user = userRepository.findUsersByEmail(jwtTokenProvider.getEmail(token));
 		List<GetTimeRes> getTimeRes = new ArrayList<>();
 		if (user == null || user.getRole() == 0)
 			return null;
@@ -90,10 +92,10 @@ public class ParkingService {
 		return getTimeRes;
 	}
 
-	public PostReportRes report(PostReportReq req) {
-		User victim = userRepository.findById(req.getVictim()).orElse(null);
+	public PostReportRes report(PostReportReq req, String token) {
+		User victim = userRepository.findUsersByEmail(jwtTokenProvider.getEmail(token));
 		User suspcet = userRepository.findById(req.getSuspect()).orElse(null);
-		if (Objects.equals(req.getVictim(), req.getSuspect()))
+		if (Objects.equals(victim, suspcet))
 			return null;
 		if (victim == null || suspcet == null) { // 존재x 오류
 			return null;

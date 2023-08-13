@@ -8,5 +8,7 @@ import cat.soft.src.parking.model.User;
 
 public interface UserRepository extends JpaRepository<User, Integer> {
 	List<User> findUsersByRoomIdxAndRole(Integer roomIdx, Long role);
+
+	User findUsersByEmail(String email);
 }
 
