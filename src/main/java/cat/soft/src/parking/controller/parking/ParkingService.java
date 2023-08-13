@@ -7,7 +7,6 @@ import java.util.Objects;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.PathVariable;
 
 import cat.soft.oauth.auth.jwt.JwtTokenProvider;
 import cat.soft.src.parking.model.ParkingLot;
@@ -21,7 +20,6 @@ import cat.soft.src.parking.model.parking.PostAddTimeReq;
 import cat.soft.src.parking.model.parking.PostAddTimeRes;
 import cat.soft.src.parking.model.parking.PostReportReq;
 import cat.soft.src.parking.model.parking.PostReportRes;
-import cat.soft.src.parking.model.parking.TestRes;
 import cat.soft.src.parking.repository.ParkingRepository;
 import cat.soft.src.parking.repository.ReportRepository;
 import cat.soft.src.parking.repository.RoomRepository;
@@ -46,10 +44,6 @@ public class ParkingService {
 	private UserInfoRepository userInfoRepository;
 
 	private JwtTokenProvider jwtTokenProvider;
-
-	public TestRes testText(@PathVariable("test") String test) {
-		return new TestRes("test text" + test);
-	}
 
 	public PostAddTimeRes addTime(PostAddTimeReq req, String token) {
 		User user = userRepository.findUsersByEmail(jwtTokenProvider.getEmail(token));
