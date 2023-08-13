@@ -49,6 +49,19 @@ public class UserDao {
         }
     }
 
+    public String tokenByEmail(String email) {
+        String selectByEmailQuery = "select refresh_token from User where email = ?";
+        Object[] selectByEmailParams = new Object[]{email};
+        try {
+            return this.jdbcTemplate.queryForObject(selectByEmailQuery,
+                    (rs, rowNum) ->
+                            rs.getString("refresh_token"),
+                    selectByEmailParams);
+        } catch (EmptyResultDataAccessException e) {
+            return null;
+        }
+    }
+
     public int checkEmail(String email) {
         String checkEmailQuery = "select exists(select email from User where email = ?)";
         Object[] checkEmailParams = new Object[]{email};
