@@ -11,12 +11,10 @@ import lombok.Setter;
 @Getter
 @Setter
 public class PostReportReq {
-	private Integer victim;
 	private Integer suspect;
 
 	public Report toEntity() {
 		return Report.builder()
-			.victim(victim)
 			.suspect(suspect)
 			.time(ZonedDateTime.now())
 			.build();

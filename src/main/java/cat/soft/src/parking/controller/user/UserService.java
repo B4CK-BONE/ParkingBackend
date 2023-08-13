@@ -1,13 +1,15 @@
 package cat.soft.src.parking.controller.user;
 
+import java.util.Objects;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 
+import cat.soft.oauth.auth.jwt.JwtTokenProvider;
 import cat.soft.src.parking.model.User;
 import cat.soft.src.parking.model.UserInfo;
-import cat.soft.src.parking.model.user.GetUserInfoReq;
 import cat.soft.src.parking.model.user.GetUserInfoRes;
 import cat.soft.src.parking.model.user.PutUserInfoReq;
 import cat.soft.src.parking.model.user.PutUserInfoRes;
@@ -21,12 +23,16 @@ public class UserService {
 	private UserRepository userRepository;
 	@Autowired
 	private UserInfoRepository userInfoRepository;
+	private JwtTokenProvider jwtTokenProvider;
 
-	public PutUserInfoRes updateUserInfo(@PathVariable Integer id, @RequestBody PutUserInfoReq userInfoReq) {
-		User user = userRepository.findById(id).orElse(null);
+	public PutUserInfoRes updateUserInfo(@PathVariable Integer id, @RequestBody PutUserInfoReq userInfoReq,
+		String token) {
+		User user = userRepository.findUsersByEmail(jwtTokenProvider.getEmail(token));
 		if (user == null) {
 			return new PutUserInfoRes(0);
 		}
+		if (!Objects.equals(id, user.getIdx()))
+			return new PutUserInfoRes(0);
 		UserInfo userInfo = userInfoRepository.findById(user.getIdx()).orElse(null);
 		if (userInfo == null) {
 			return new PutUserInfoRes(0);
@@ -39,12 +45,17 @@ public class UserService {
 		return new PutUserInfoRes(user.getIdx());
 	}
 
-	public GetUserInfoRes getUserInfo(Integer id, GetUserInfoReq req) {
-		User user = userRepository.findById(id).orElse(null);
+	public GetUserInfoRes getUserInfo(Integer id, String token) {
+		User user = userRepository.findUsersByEmail(jwtTokenProvider.getEmail(token));
 		if (user == null) {
 			return null;
 		}
-		UserInfo userInfo = userInfoRepository.findById(user.getIdx()).get();
+		if (!Objects.equals(user.getIdx(), id))
+			return null;
+		UserInfo userInfo = userInfoRepository.findById(user.getIdx()).orElse(null);
+		if (userInfo == null) {
+			return null;
+		}
 		return new GetUserInfoRes(userInfo.getCar(), userInfo.getPhone(), userInfo.getAddress(), userInfo.getKakao());
 	}
 }

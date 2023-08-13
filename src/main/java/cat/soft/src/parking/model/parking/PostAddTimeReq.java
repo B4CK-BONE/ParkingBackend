@@ -13,13 +13,11 @@ import lombok.Setter;
 @Getter
 @Setter
 public class PostAddTimeReq {
-	private Integer userIdx;
 	private ZonedDateTime time;
 	private Integer slot;
 
 	public Time toEntity() {
 		return Time.builder()
-			.userIdx(userIdx)
 			.parkingLotIdx(slot)
 			.start(ZonedDateTime.now())
 			.end(time)
