@@ -1,5 +1,6 @@
 package cat.soft.src.oauth.user;
 
+import cat.soft.src.oauth.auth.AuthDao;
 import cat.soft.src.oauth.auth.dto.PostUserAuthRes;
 import cat.soft.src.oauth.auth.dto.RefreshTokenRes;
 import cat.soft.src.oauth.auth.jwt.JwtTokenProvider;
@@ -30,11 +31,13 @@ public class UsersController {
 	private final UserProvider userProvider;
 	private final UserDao userDao;
 
+	private final AuthDao authDao;
 	@Autowired
-	public UsersController(JwtTokenProvider jwtTokenProvider, UserProvider userProvider, UserDao userDao) {
+	public UsersController(JwtTokenProvider jwtTokenProvider, UserProvider userProvider, UserDao userDao, AuthDao authDao) {
 		this.jwtTokenProvider = jwtTokenProvider;
 		this.userProvider = userProvider;
 		this.userDao = userDao;
+		this.authDao = authDao;
 	}
 
 	@GetMapping("")
@@ -63,11 +66,17 @@ public class UsersController {
 			throw new BaseException(USERS_EMPTY_USER_EMAIL);
 		try {
 			String beforeRefToken = userDao.tokenByEmail(email);
-			if (beforeRefToken == token)
+			if (token == "undefined"){
+				throw new BaseException(EMPTY_JWT);
+			}
+			else if (!beforeRefToken.equals(token)) {
 				throw new BaseException(INVALID_JWT);
+			}
 			else {
 				String accessToken = jwtTokenProvider.createAccessToken(email);
 				String refreshToken = jwtTokenProvider.createRefreshToken(email);
+
+				authDao.updateRefreshToken(email, refreshToken);
 
 				HttpHeaders headers = new HttpHeaders();
 				headers.set("Set-Cookie", "refreshToken=" + refreshToken + "; HttpOnly");
