@@ -41,7 +41,11 @@ public class UserService {
 		userInfo.setPhone(userInfoReq.getPhone());
 		userInfo.setAddress(userInfoReq.getAddress());
 		userInfo.setKakao(userInfoReq.getKakao());
-		userRepository.save(user);
+		if (user.getIdx() == -1) {
+			user.setRole(0L);
+			userRepository.save(user);
+		}
+		userInfoRepository.save(userInfo);
 		return new PutUserInfoRes(user.getIdx());
 	}
 
