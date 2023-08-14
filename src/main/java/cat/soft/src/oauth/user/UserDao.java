@@ -35,6 +35,27 @@ public class UserDao {
 		return user;
 	}
 
+	public Integer selectIdxByEmail(String email) {
+		String selectIdxByEmailQuery = "select idx from User where email=?";
+		Object[] selectIdxByEmailParams = new Object[] {email};
+
+		try {
+			return Objects.requireNonNull(this.jdbcTemplate.queryForObject(selectIdxByEmailQuery,
+					(rs, rowNum) ->
+							rs.getInt("idx"),
+					selectIdxByEmailParams));
+		} catch (EmptyResultDataAccessException e) {
+			return null;
+		}
+	}
+
+	public void insertUserInfo(String email) {
+		String insertUserInfoQuery = "insert into user_info (idx) values (?)";
+		Object[] insertUserInfoParams = new Object[] {this.selectIdxByEmail(email)};
+
+		this.jdbcTemplate.update(insertUserInfoQuery, insertUserInfoParams);
+	}
+
 	public User selectByEmail(String email) {
 		String selectByEmailQuery = "select email from User where email = ?";
 		Object[] selectByEmailParams = new Object[] {email};
