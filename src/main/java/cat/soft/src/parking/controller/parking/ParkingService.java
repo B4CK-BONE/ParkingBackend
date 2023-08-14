@@ -47,7 +47,7 @@ public class ParkingService {
 
 	public PostAddTimeRes addTime(PostAddTimeReq req, String token) {
 		User user = userRepository.findUsersByEmail(jwtTokenProvider.getEmail(token));
-		if (ZonedDateTime.now().isAfter(req.getTime())) {
+		if (ZonedDateTime.now().isAfter(req.getTime())) { //
 			return null;
 		}
 		if (user == null || user.getRole() == 0)

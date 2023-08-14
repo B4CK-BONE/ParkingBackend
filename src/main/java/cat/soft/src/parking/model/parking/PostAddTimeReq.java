@@ -18,7 +18,7 @@ import lombok.Setter;
 @Setter
 public class PostAddTimeReq {
 	@NotBlank(message = "시간을 입력하세요")
-	@Future
+	@Future(message = "시간을 확인하세요")
 	private ZonedDateTime time;
 	@NotBlank(message = "주차할 공간을 선택하세요.")
 	@Min(value = 1, message = "주차 공간 위치를 확인하세요.")
