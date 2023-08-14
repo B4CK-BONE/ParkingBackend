@@ -3,6 +3,8 @@ package cat.soft.src.parking.controller.parking;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.MethodArgumentNotValidException;
+import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -17,6 +19,7 @@ import cat.soft.src.parking.model.parking.PostAddTimeReq;
 import cat.soft.src.parking.model.parking.PostAddTimeRes;
 import cat.soft.src.parking.model.parking.PostReportReq;
 import cat.soft.src.parking.model.parking.PostReportRes;
+import jakarta.validation.Valid;
 
 @RestController
 @RequestMapping("/api/parking")
@@ -24,6 +27,13 @@ public class ParkingController {
 
 	@Autowired
 	private ParkingService parkingService;
+
+	@ExceptionHandler(MethodArgumentNotValidException.class)
+	public BaseResponse<MethodArgumentNotValidException> handleValidationExceptions(
+		MethodArgumentNotValidException ex) {
+
+		return new BaseResponse<>(ex);
+	}
 
 	@GetMapping("")
 	public BaseResponse<List<GetTimeRes>> getTime(@RequestHeader("Authorization") String token) {
@@ -35,7 +45,7 @@ public class ParkingController {
 	}
 
 	@PostMapping("/time")
-	public BaseResponse<PostAddTimeRes> addTime(@RequestBody PostAddTimeReq req,
+	public BaseResponse<PostAddTimeRes> addTime(@Valid @RequestBody PostAddTimeReq req,
 		@RequestHeader("Authorization") String token) {
 		PostAddTimeRes postAddTimeRes = parkingService.addTime(req, token);
 		if (postAddTimeRes == null) {
@@ -45,7 +55,7 @@ public class ParkingController {
 	}
 
 	@PostMapping("/report")
-	public BaseResponse<PostReportRes> report(@RequestBody PostReportReq req,
+	public BaseResponse<PostReportRes> report(@Valid @RequestBody PostReportReq req,
 		@RequestHeader("Authorization") String token) {
 		PostReportRes postReportRes = parkingService.report(req, token);
 		if (postReportRes == null) {
