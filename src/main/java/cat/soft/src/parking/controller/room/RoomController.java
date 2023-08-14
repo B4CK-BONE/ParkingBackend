@@ -39,12 +39,12 @@ public class RoomController {
 		return new BaseResponse<>(ex);
 	}
 
-	@PostMapping("/")
+	@PostMapping("")
 	public BaseResponse<PostCreateRoomRes> createRoom(@RequestHeader("Authorization") String token) {
 		jwtTokenProvider.verifySignature(token);
 		PostCreateRoomRes postCreateRoomRes = roomService.createRoom(token);
 		if (postCreateRoomRes.getRoom_idx() == 0) {
-			return new BaseResponse<>(BaseResponseStatus.INVALID_USER_JWT); // 해당 유저 없음
+			return new BaseResponse<>(BaseResponseStatus.AWS_ACCESS_DENIED); // 해당 유저 없음
 		}
 		return new BaseResponse<>(postCreateRoomRes);
 	}
@@ -55,7 +55,7 @@ public class RoomController {
 		jwtTokenProvider.verifySignature(token);
 		PutJoinRoomRes putJoinRoomRes = roomService.joinRoom(roomId, token);
 		if (putJoinRoomRes.getRoomIdx() == 0) {
-			return new BaseResponse<>(BaseResponseStatus.INVALID_USER_JWT); // 해당 유저 없음
+			return new BaseResponse<>(BaseResponseStatus.AWS_ACCESS_DENIED); // 해당 유저 없음
 		}
 		return new BaseResponse<>(putJoinRoomRes);
 	}
