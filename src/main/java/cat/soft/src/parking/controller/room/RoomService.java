@@ -44,6 +44,9 @@ public class RoomService {
 		if (user.getRoomIdx() != 0) {
 			return new PostCreateRoomRes(0);
 		}
+		if (user.getRole() != 0) {
+			return new PostCreateRoomRes(0);
+		}
 		Room room = roomRepository.save(Room.builder().idx(user.getIdx()).build());
 		user.setRoomIdx(room.getIdx());
 		user.setRole(2L);
@@ -81,10 +84,12 @@ public class RoomService {
 
 	public GetUserListByAdminRes userListByAdmin(Integer roomId, String token) {
 		User admin = userRepository.findUsersByEmail(jwtTokenProvider.getEmail(token));
-		if (admin == null) {
+		Room room = roomRepository.findById(roomId).orElse(null);
+		if (admin == null || room == null) {
 			return new GetUserListByAdminRes(null, null);
 		}
-		if (!Objects.equals(admin.getRoomIdx(), roomId) || admin.getRole() != 2) {
+		if (!Objects.equals(admin.getRoomIdx(), room.getIdx()) || !Objects.equals(admin.getIdx(), room.getAdminIdx())
+			|| admin.getRole() != 2) {
 			return new GetUserListByAdminRes(null, null);
 		}
 		List<User> newUser = userRepository.findUsersByRoomIdxAndRole(admin.getRoomIdx(), 0L);
@@ -115,7 +120,8 @@ public class RoomService {
 		if (room == null || admin == null || user == null) {
 			return new PutUserApproveRes(null);
 		}
-		if (!Objects.equals(room.getAdminIdx(), admin.getIdx())) {
+		if (!Objects.equals(room.getAdminIdx(), admin.getIdx()) || !Objects.equals(room.getIdx(), admin.getRoomIdx())
+			|| admin.getRole() != 2) {
 			return new PutUserApproveRes(null);
 		}
 		if (Objects.equals(user.getIdx(), admin.getIdx())) { // 셀프 추방 금지
