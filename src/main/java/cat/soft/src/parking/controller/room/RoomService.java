@@ -52,7 +52,7 @@ public class RoomService {
 		user.setRoomIdx(room.getIdx());
 		user.setRole(2L);
 		userRepository.save(user);
-		return new PostCreateRoomRes(room.getIdx());
+		return new PostCreateRoomRes(user.getIdx());
 	}
 
 	public PutJoinRoomRes joinRoom(Integer roomId, String token) {
