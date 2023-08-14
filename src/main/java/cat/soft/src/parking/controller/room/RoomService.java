@@ -7,7 +7,7 @@ import java.util.Objects;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import cat.soft.oauth.auth.jwt.JwtTokenProvider;
+import cat.soft.src.oauth.auth.jwt.JwtTokenProvider;
 import cat.soft.src.parking.model.Room;
 import cat.soft.src.parking.model.User;
 import cat.soft.src.parking.model.UserInfo;
