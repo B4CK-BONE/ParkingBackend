@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import cat.soft.src.oauth.auth.jwt.JwtTokenProvider;
+import cat.soft.src.oauth.util.ParkingLotCreator;
 import cat.soft.src.parking.model.Room;
 import cat.soft.src.parking.model.User;
 import cat.soft.src.parking.model.UserInfo;
@@ -17,6 +18,7 @@ import cat.soft.src.parking.model.room.GetUserListByAdminRes;
 import cat.soft.src.parking.model.room.PostCreateRoomRes;
 import cat.soft.src.parking.model.room.PutUserApproveReq;
 import cat.soft.src.parking.model.room.PutUserApproveRes;
+import cat.soft.src.parking.repository.ParkingLotRepository;
 import cat.soft.src.parking.repository.ReportRepository;
 import cat.soft.src.parking.repository.RoomRepository;
 import cat.soft.src.parking.repository.UserInfoRepository;
@@ -35,6 +37,8 @@ public class RoomService {
 	@Autowired
 	private ReportRepository reportRepository;
 	@Autowired
+	private ParkingLotRepository parkingLotRepository;
+	@Autowired
 	private JwtTokenProvider jwtTokenProvider;
 
 	public PostCreateRoomRes createRoom(String token) {
@@ -52,6 +56,7 @@ public class RoomService {
 		user.setRoomIdx(room.getIdx());
 		user.setRole(2L);
 		userRepository.save(user);
+		parkingLotRepository.saveAll(ParkingLotCreator.getParkingLotCreator(room.getIdx()));
 		return new PostCreateRoomRes(user.getIdx());
 	}
 

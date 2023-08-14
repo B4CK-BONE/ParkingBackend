@@ -1,5 +1,6 @@
 package cat.soft.src.parking.controller.user;
 
+import java.time.ZonedDateTime;
 import java.util.Objects;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -8,11 +9,13 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 
 import cat.soft.src.oauth.auth.jwt.JwtTokenProvider;
+import cat.soft.src.parking.model.Time;
 import cat.soft.src.parking.model.User;
 import cat.soft.src.parking.model.UserInfo;
 import cat.soft.src.parking.model.user.GetUserInfoRes;
 import cat.soft.src.parking.model.user.PutUserInfoReq;
 import cat.soft.src.parking.model.user.PutUserInfoRes;
+import cat.soft.src.parking.repository.TimeRepository;
 import cat.soft.src.parking.repository.UserInfoRepository;
 import cat.soft.src.parking.repository.UserRepository;
 
@@ -23,6 +26,8 @@ public class UserService {
 	private UserRepository userRepository;
 	@Autowired
 	private UserInfoRepository userInfoRepository;
+	@Autowired
+	private TimeRepository timeRepository;
 	@Autowired
 	private JwtTokenProvider jwtTokenProvider;
 
@@ -61,6 +66,12 @@ public class UserService {
 		if (userInfo == null) {
 			return null;
 		}
-		return new GetUserInfoRes(userInfo.getCar(), userInfo.getPhone(), userInfo.getAddress(), userInfo.getKakao());
+		Time endTime = timeRepository.findTimeByUserIdxAndEndAfter(user.getIdx(), ZonedDateTime.now());
+		if (endTime == null) {
+			return new GetUserInfoRes(userInfo.getCar(), userInfo.getPhone(), userInfo.getAddress(),
+				userInfo.getKakao(), null);
+		}
+		return new GetUserInfoRes(userInfo.getCar(), userInfo.getPhone(), userInfo.getAddress(), userInfo.getKakao(),
+			endTime.getEnd());
 	}
 }

@@ -28,9 +28,9 @@ public class GetTimeRes {
 	private String kakao;
 
 	public GetTimeRes(UserInfo userInfo, ParkingLot parkingLot, Time time) {
-		this.height = parkingLot.getTop();
+		this.height = parkingLot.getHeight();
 		this.bottom = parkingLot.getBottom();
-		this.width = parkingLot.getLeft();
+		this.width = parkingLot.getWidth();
 		this.right = parkingLot.getRight();
 		this.direction = parkingLot.getDirection();
 		this.slot = parkingLot.getSlot();

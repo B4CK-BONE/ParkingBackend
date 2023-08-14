@@ -20,7 +20,7 @@ import cat.soft.src.parking.model.parking.PostAddTimeReq;
 import cat.soft.src.parking.model.parking.PostAddTimeRes;
 import cat.soft.src.parking.model.parking.PostReportReq;
 import cat.soft.src.parking.model.parking.PostReportRes;
-import cat.soft.src.parking.repository.ParkingRepository;
+import cat.soft.src.parking.repository.ParkingLotRepository;
 import cat.soft.src.parking.repository.ReportRepository;
 import cat.soft.src.parking.repository.RoomRepository;
 import cat.soft.src.parking.repository.TimeRepository;
@@ -31,7 +31,7 @@ import cat.soft.src.parking.repository.UserRepository;
 public class ParkingService {
 
 	@Autowired
-	private ParkingRepository parkingRepository;
+	private ParkingLotRepository parkingLotRepository;
 	@Autowired
 	private TimeRepository timeRepository;
 	@Autowired
@@ -55,7 +55,7 @@ public class ParkingService {
 		Room room = roomRepository.findById(user.getRoomIdx()).orElse(null);
 		if (room == null)
 			return null;
-		ParkingLot parkingLot = parkingRepository.findBySlotAndRoomIdx(req.getSlot(), room.getIdx());
+		ParkingLot parkingLot = parkingLotRepository.findBySlotAndRoomIdx(req.getSlot(), room.getIdx());
 		if (parkingLot == null) {
 			return null;
 		}
@@ -73,7 +73,7 @@ public class ParkingService {
 		List<GetTimeRes> getTimeRes = new ArrayList<>();
 		if (user == null || user.getRole() == 0)
 			return null;
-		List<ParkingLot> parkingLotList = parkingRepository.findAllByRoomIdx(user.getRoomIdx());
+		List<ParkingLot> parkingLotList = parkingLotRepository.findAllByRoomIdx(user.getRoomIdx());
 		if (parkingLotList == null)
 			return null;
 		for (ParkingLot parkingLot : parkingLotList) {
