@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import cat.soft.src.oauth.auth.jwt.JwtTokenProvider;
 import cat.soft.src.oauth.util.BaseResponse;
 import cat.soft.src.oauth.util.BaseResponseStatus;
 import cat.soft.src.parking.model.user.GetUserInfoRes;
@@ -24,6 +25,8 @@ public class UserController {
 
 	@Autowired
 	private UserService userService;
+	@Autowired
+	private JwtTokenProvider jwtTokenProvider;
 
 	@ExceptionHandler(MethodArgumentNotValidException.class)
 	public BaseResponse<MethodArgumentNotValidException> handleValidationExceptions(
@@ -35,6 +38,7 @@ public class UserController {
 	@PutMapping("/{id}")
 	public BaseResponse<PutUserInfoRes> putUserInfo(@PathVariable Integer id,
 		@Valid @RequestBody PutUserInfoReq userInfoReq, @RequestHeader("Authorization") String token) {
+		jwtTokenProvider.verifySignature(token);
 		PutUserInfoRes putUserInfoRes = userService.updateUserInfo(id, userInfoReq, token);
 		if (putUserInfoRes.getIdx() == 0) {
 			return new BaseResponse<>(BaseResponseStatus.INVALID_USER_JWT); // 해당 유저 없음
@@ -45,6 +49,7 @@ public class UserController {
 	@GetMapping("/{id}")
 	public BaseResponse<GetUserInfoRes> getUserInfo(@PathVariable Integer id,
 		@RequestHeader("Authorization") String token) {
+		jwtTokenProvider.verifySignature(token);
 		GetUserInfoRes getUserInfoRes = userService.getUserInfo(id, token);
 		if (getUserInfoRes == null) {
 			return new BaseResponse<>(BaseResponseStatus.INVALID_USER_JWT); // 해당 유저 없음

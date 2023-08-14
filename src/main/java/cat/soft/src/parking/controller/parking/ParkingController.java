@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import cat.soft.src.oauth.auth.jwt.JwtTokenProvider;
 import cat.soft.src.oauth.util.BaseResponse;
 import cat.soft.src.oauth.util.BaseResponseStatus;
 import cat.soft.src.parking.model.parking.GetTimeRes;
@@ -27,6 +28,8 @@ public class ParkingController {
 
 	@Autowired
 	private ParkingService parkingService;
+	@Autowired
+	private JwtTokenProvider jwtTokenProvider;
 
 	@ExceptionHandler(MethodArgumentNotValidException.class)
 	public BaseResponse<MethodArgumentNotValidException> handleValidationExceptions(
@@ -37,6 +40,7 @@ public class ParkingController {
 
 	@GetMapping("")
 	public BaseResponse<List<GetTimeRes>> getTime(@RequestHeader("Authorization") String token) {
+		jwtTokenProvider.verifySignature(token);
 		List<GetTimeRes> getTimeRes = parkingService.getTime(token);
 		if (getTimeRes == null) {
 			return new BaseResponse<>(BaseResponseStatus.DATABASE_ERROR);
@@ -47,6 +51,7 @@ public class ParkingController {
 	@PostMapping("/time")
 	public BaseResponse<PostAddTimeRes> addTime(@Valid @RequestBody PostAddTimeReq req,
 		@RequestHeader("Authorization") String token) {
+		jwtTokenProvider.verifySignature(token);
 		PostAddTimeRes postAddTimeRes = parkingService.addTime(req, token);
 		if (postAddTimeRes == null) {
 			return new BaseResponse<>(BaseResponseStatus.DATABASE_ERROR);
@@ -57,6 +62,7 @@ public class ParkingController {
 	@PostMapping("/report")
 	public BaseResponse<PostReportRes> report(@Valid @RequestBody PostReportReq req,
 		@RequestHeader("Authorization") String token) {
+		jwtTokenProvider.verifySignature(token);
 		PostReportRes postReportRes = parkingService.report(req, token);
 		if (postReportRes == null) {
 			return new BaseResponse<>(BaseResponseStatus.DATABASE_ERROR);
