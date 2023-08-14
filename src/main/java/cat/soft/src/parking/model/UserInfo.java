@@ -1,5 +1,7 @@
 package cat.soft.src.parking.model;
 
+import org.hibernate.annotations.ColumnDefault;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -31,5 +33,7 @@ public class UserInfo {
 	@Column(name = "kakao", length = 8)
 	private String kakao;
 
+	@Column(name = "reporCount")
+	@ColumnDefault("0")
 	private Integer reportCount;
 }
