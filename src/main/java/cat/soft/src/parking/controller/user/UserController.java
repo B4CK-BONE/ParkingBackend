@@ -41,7 +41,7 @@ public class UserController {
 		jwtTokenProvider.verifySignature(token);
 		PutUserInfoRes putUserInfoRes = userService.updateUserInfo(id, userInfoReq, token);
 		if (putUserInfoRes.getIdx() == 0) {
-			return new BaseResponse<>(BaseResponseStatus.INVALID_USER_JWT); // 해당 유저 없음
+			return new BaseResponse<>(BaseResponseStatus.REQUEST_ERROR); // 해당 유저 없음
 		}
 		return new BaseResponse<>(putUserInfoRes);
 	}

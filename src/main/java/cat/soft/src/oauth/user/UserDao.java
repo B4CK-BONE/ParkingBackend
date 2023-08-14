@@ -1,16 +1,17 @@
 package cat.soft.src.oauth.user;
 
-import cat.soft.src.oauth.auth.dto.PostUserAuthRes;
-import cat.soft.src.oauth.user.model.User;
-import cat.soft.src.oauth.util.EncryptionUtils;
+import java.util.Objects;
+
+import javax.sql.DataSource;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
-import javax.sql.DataSource;
-import java.util.Objects;
+import cat.soft.src.oauth.auth.dto.PostUserAuthRes;
+import cat.soft.src.oauth.user.model.User;
+import cat.soft.src.oauth.util.EncryptionUtils;
 
 @Repository
 public class UserDao {
@@ -41,16 +42,16 @@ public class UserDao {
 
 		try {
 			return Objects.requireNonNull(this.jdbcTemplate.queryForObject(selectIdxByEmailQuery,
-					(rs, rowNum) ->
-							rs.getInt("idx"),
-					selectIdxByEmailParams));
+				(rs, rowNum) ->
+					rs.getInt("idx"),
+				selectIdxByEmailParams));
 		} catch (EmptyResultDataAccessException e) {
 			return null;
 		}
 	}
 
 	public void insertUserInfo(String email) {
-		String insertUserInfoQuery = "insert into user_info (idx) values (?)";
+		String insertUserInfoQuery = "insert into UserInfo (idx) values (?)";
 		Object[] insertUserInfoParams = new Object[] {this.selectIdxByEmail(email)};
 
 		this.jdbcTemplate.update(insertUserInfoQuery, insertUserInfoParams);
@@ -74,9 +75,9 @@ public class UserDao {
 		Object[] selectByEmailParams = new Object[] {email};
 		try {
 			return Objects.requireNonNull(this.jdbcTemplate.queryForObject(selectByEmailQuery,
-					(rs, rowNum) ->
-							rs.getString("refresh_token"),
-					selectByEmailParams)).toString();
+				(rs, rowNum) ->
+					rs.getString("refresh_token"),
+				selectByEmailParams)).toString();
 		} catch (EmptyResultDataAccessException e) {
 			return null;
 		}
