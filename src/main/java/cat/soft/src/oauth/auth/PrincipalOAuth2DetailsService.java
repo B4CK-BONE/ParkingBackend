@@ -43,6 +43,8 @@ public class PrincipalOAuth2DetailsService extends DefaultOAuth2UserService {
 				log.info("구글 로그인이 최초입니다. 회원가입을 진행합니다.");
 				user = new User(email);
 				usersService.createUser(user);
+				// user_info
+				usersService.createUserInfo(email);
 			} else {
 				log.info("구글 로그인 기록이 있습니다.");
 				user = userProvider.retrieveByEmail(email);
