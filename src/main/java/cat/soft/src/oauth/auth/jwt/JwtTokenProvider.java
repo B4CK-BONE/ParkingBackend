@@ -55,7 +55,7 @@ public class JwtTokenProvider {
 		return Jwts.builder()
 			.setClaims(claims) // 정보 저장
 			.setIssuedAt(now) // 토큰 발행 시간 정보
-			.setExpiration(new Date(System.currentTimeMillis() + JWT_ACCESS_TOKEN_EXPTIME)) // set Expire Time
+			.setExpiration(new Date(System.currentTimeMillis() + JWT_ACCESS_TOKEN_EXPTIME * 1000)) // set Expire Time
 			.signWith(accessKey, SignatureAlgorithm.HS256)  // 사용할 암호화 알고리즘과
 			// signature 에 들어갈 secret값 세팅
 			.compact();
@@ -70,7 +70,7 @@ public class JwtTokenProvider {
 		return Jwts.builder()
 			.setClaims(claims) // 정보 저장
 			.setIssuedAt(now) // 토큰 발행 시간 정보
-			.setExpiration(new Date(System.currentTimeMillis() + JWT_REFRESH_TOKEN_EXPTIME)) // set Expire Time
+			.setExpiration(new Date(System.currentTimeMillis() + JWT_REFRESH_TOKEN_EXPTIME * 1000)) // set Expire Time
 			.signWith(accessKey, SignatureAlgorithm.HS256) // 사용할 암호화 알고리즘과
 			// signature 에 들어갈 secret값 세팅
 			.compact();
