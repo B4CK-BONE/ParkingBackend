@@ -10,6 +10,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
 import javax.sql.DataSource;
+import java.util.Objects;
 
 @Repository
 public class UserDao {
@@ -51,10 +52,10 @@ public class UserDao {
 		String selectByEmailQuery = "select refresh_token from User where email = ?";
 		Object[] selectByEmailParams = new Object[] {email};
 		try {
-			return this.jdbcTemplate.queryForObject(selectByEmailQuery,
-				(rs, rowNum) ->
-					rs.getString("refresh_token"),
-				selectByEmailParams);
+			return Objects.requireNonNull(this.jdbcTemplate.queryForObject(selectByEmailQuery,
+					(rs, rowNum) ->
+							rs.getString("refresh_token"),
+					selectByEmailParams)).toString();
 		} catch (EmptyResultDataAccessException e) {
 			return null;
 		}
