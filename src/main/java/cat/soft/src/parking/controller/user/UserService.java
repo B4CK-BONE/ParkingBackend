@@ -23,6 +23,7 @@ public class UserService {
 	private UserRepository userRepository;
 	@Autowired
 	private UserInfoRepository userInfoRepository;
+	@Autowired
 	private JwtTokenProvider jwtTokenProvider;
 
 	public PutUserInfoRes updateUserInfo(@PathVariable Integer id, @RequestBody PutUserInfoReq userInfoReq,
@@ -41,7 +42,11 @@ public class UserService {
 		userInfo.setPhone(userInfoReq.getPhone());
 		userInfo.setAddress(userInfoReq.getAddress());
 		userInfo.setKakao(userInfoReq.getKakao());
-		userRepository.save(user);
+		if (user.getIdx() == -1) {
+			user.setRole(0L);
+			userRepository.save(user);
+		}
+		userInfoRepository.save(userInfo);
 		return new PutUserInfoRes(user.getIdx());
 	}
 

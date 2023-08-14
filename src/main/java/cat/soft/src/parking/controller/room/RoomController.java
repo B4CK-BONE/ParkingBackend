@@ -20,6 +20,7 @@ import cat.soft.src.parking.model.room.PostCreateRoomRes;
 import cat.soft.src.parking.model.room.PutJoinRoomRes;
 import cat.soft.src.parking.model.room.PutUserApproveReq;
 import cat.soft.src.parking.model.room.PutUserApproveRes;
+import jakarta.validation.Valid;
 
 @RestController
 @RequestMapping("/api/room")
@@ -72,7 +73,7 @@ public class RoomController {
 
 	@PutMapping("/{roomId}/admin")
 	public BaseResponse<PutUserApproveRes> approveUser(@PathVariable Integer roomId,
-		@RequestBody PutUserApproveReq req, @RequestHeader("Authorization") String token) {
+		@Valid @RequestBody PutUserApproveReq req, @RequestHeader("Authorization") String token) {
 		PutUserApproveRes putUserApproveRes = roomService.approveUser(roomId, req, token);
 		if (putUserApproveRes.getUserIdx() == null) {
 			return new BaseResponse<>(BaseResponseStatus.INVALID_USER_JWT); // 방정보 없음

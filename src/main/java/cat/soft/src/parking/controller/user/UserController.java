@@ -46,6 +46,9 @@ public class UserController {
 	public BaseResponse<GetUserInfoRes> getUserInfo(@PathVariable Integer id,
 		@RequestHeader("Authorization") String token) {
 		GetUserInfoRes getUserInfoRes = userService.getUserInfo(id, token);
+		if (getUserInfoRes == null) {
+			return new BaseResponse<>(BaseResponseStatus.INVALID_USER_JWT); // 해당 유저 없음
+		}
 		return new BaseResponse<>(getUserInfoRes);
 	}
 }
