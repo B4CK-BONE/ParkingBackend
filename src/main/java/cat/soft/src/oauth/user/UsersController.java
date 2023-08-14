@@ -12,10 +12,7 @@ import io.jsonwebtoken.Claims;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestHeader;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import cat.soft.src.oauth.util.BaseResponse;
 import jakarta.servlet.http.HttpServletRequest;
@@ -58,7 +55,7 @@ public class UsersController {
 	}
 
 	@GetMapping("/refresh")
-	public ResponseEntity<RefreshTokenRes> refRefreshToken(@RequestHeader("Authorization") String token) throws
+	public ResponseEntity<RefreshTokenRes> refRefreshToken(@CookieValue(name = "refreshToken") String token) throws
 		BaseException {
 		Claims claims = jwtTokenProvider.getJwtContents(token);
 		String email = String.valueOf(claims.get("email"));
