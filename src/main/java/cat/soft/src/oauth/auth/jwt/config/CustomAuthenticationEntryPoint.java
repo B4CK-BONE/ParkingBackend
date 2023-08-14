@@ -19,7 +19,7 @@ public class CustomAuthenticationEntryPoint implements AuthenticationEntryPoint 
 		AuthenticationException authException) throws IOException,
 		ServletException {
 		log.info("401 ERROR");
-		response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+		response.setStatus(HttpServletResponse.SC_OK);
 		response.setContentType("application/json;charset=UTF-8");
 		response.getWriter().write("{" + "\"isSuccess\":false, "
 			+ "\"code\":\"" + INVALID_AUTH.getCode() + "\","

@@ -19,7 +19,7 @@ public class CustomAccessDeniedHandler implements AccessDeniedHandler {
 		AccessDeniedException accessDeniedException) throws IOException,
 		ServletException {
 		log.info("403 ERROR");
-		response.setStatus(HttpServletResponse.SC_FORBIDDEN);
+		response.setStatus(HttpServletResponse.SC_OK);
 		response.setContentType("application/json;charset=UTF-8");
 		response.getWriter().write("{" + "\"isSuccess\":false, "
 			+ "\"code\":\"" + INVALID_USER_JWT.getCode() + "\","
