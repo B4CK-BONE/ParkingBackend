@@ -138,10 +138,10 @@ public class RoomService {
 			return new PutUserApproveRes(null);
 		}
 		if (req.getRole() == 0) { // 거절
-			user.setRole(req.getRole());
+			user.setRole(Long.valueOf(req.getRole()));
 			user.setRoomIdx(0);
 		} else if (req.getRole() == 1) { // 승인
-			user.setRole(req.getRole());
+			user.setRole(Long.valueOf(req.getRole()));
 		} else {
 			return new PutUserApproveRes(null);
 		}

@@ -52,7 +52,7 @@ public class RoomController {
 	}
 
 	@GetMapping("")
-	public BaseResponse<GetJoinRoomRes> joinRoom(@ModelAttribute GetJoinRoomReq req,
+	public BaseResponse<GetJoinRoomRes> joinRoom(@Valid @ModelAttribute GetJoinRoomReq req,
 		@RequestHeader("Authorization") String token) {
 		jwtTokenProvider.verifySignature(token);
 		GetJoinRoomRes getJoinRoomRes = roomService.joinRoom(req.getRoom_id(), token);
@@ -92,6 +92,8 @@ public class RoomController {
 	@PutMapping("/{roomId}/admin")
 	public BaseResponse<PutUserApproveRes> approveUser(@PathVariable Integer roomId,
 		@Valid @RequestBody PutUserApproveReq req, @RequestHeader("Authorization") String token) {
+		System.out.println("req.getRole() = " + req.getRole());
+		System.out.println("req.getUserIdx() = " + req.getUserIdx());
 		jwtTokenProvider.verifySignature(token);
 		PutUserApproveRes putUserApproveRes = roomService.approveUser(roomId, req, token);
 		if (putUserApproveRes.getUserIdx() == null) {
