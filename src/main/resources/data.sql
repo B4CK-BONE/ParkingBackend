@@ -1,17 +1,3 @@
--- INSERT INTO cat.users (email,  role, room_idx)
--- VALUES ('slknalsdknalkn@naver.com',  2, 1);
--- INSERT INTO cat.users (email,  role, room_idx)
--- VALUES ('qezxc@naver.com',  1, 1);
--- INSERT INTO cat.users (email, role, room_idx)
--- VALUES ('aqerdfc@naver.com',  DEFAULT, 1);
--- INSERT INTO cat.users (email, role, room_idx)
--- VALUES ('aqe123rdfc@naver.com', DEFAULT, DEFAULT);
---
--- INSERT INTO cat.user_info (address, car, kakao, phone, report_count) VALUES (null, null, null, null, null);
--- INSERT INTO cat.user_info (address, car, kakao, phone, report_count) VALUES (null, null, null, null, null);
--- INSERT INTO cat.user_info (address, car, kakao, phone, report_count) VALUES (null, null, null, null, null);
--- INSERT INTO cat.user_info (address, car, kakao, phone, report_count) VALUES (null, null, null, null, null);
-
 INSERT INTO cat.room (admin_idx)
 VALUES (1);
 
