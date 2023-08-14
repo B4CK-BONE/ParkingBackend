@@ -11,10 +11,10 @@ import cat.soft.src.oauth.auth.jwt.JwtTokenProvider;
 import cat.soft.src.parking.model.Room;
 import cat.soft.src.parking.model.User;
 import cat.soft.src.parking.model.UserInfo;
+import cat.soft.src.parking.model.room.GetJoinRoomRes;
 import cat.soft.src.parking.model.room.GetQrCheckRes;
 import cat.soft.src.parking.model.room.GetUserListByAdminRes;
 import cat.soft.src.parking.model.room.PostCreateRoomRes;
-import cat.soft.src.parking.model.room.PutJoinRoomRes;
 import cat.soft.src.parking.model.room.PutUserApproveReq;
 import cat.soft.src.parking.model.room.PutUserApproveRes;
 import cat.soft.src.parking.repository.ReportRepository;
@@ -55,24 +55,27 @@ public class RoomService {
 		return new PostCreateRoomRes(user.getIdx());
 	}
 
-	public PutJoinRoomRes joinRoom(Integer roomId, String token) {
+	public GetJoinRoomRes joinRoom(Integer roomId, String token) {
 		User user = userRepository.findUsersByEmail(jwtTokenProvider.getEmail(token));
-		Room room = roomRepository.findById(roomId).orElse(null);
 		if (user == null) {
 			return null; // 5000 불가능한 유저
 		}
 		if (user.getRole() != 0) {
-			return new PutJoinRoomRes(0); // [5001] 승인된 유저입니다.
+			return new GetJoinRoomRes(0); // [5001] 승인된 유저입니다.
 		}
 		if (user.getRoomIdx() != 0) {
-			return new PutJoinRoomRes(-1); // [5002] 승인 대기중 입니다.
+			return new GetJoinRoomRes(-1); // [5002] 승인 대기중 입니다.
 		}
+		if (roomId == null) {
+			return new GetJoinRoomRes(-2); // [5003] 존재하지 않는 방 입니다.
+		}
+		Room room = roomRepository.findById(roomId).orElse(null);
 		if (room == null) {
-			return new PutJoinRoomRes(-2); // [5003] 존재하지 않는 방 입니다.
+			return new GetJoinRoomRes(-2); // [5003] 존재하지 않는 방 입니다.
 		}
 		user.setRoomIdx(roomId);
 		userRepository.save(user);
-		return new PutJoinRoomRes(user.getRoomIdx());
+		return new GetJoinRoomRes(user.getRoomIdx());
 	}
 
 	public GetQrCheckRes joinRoom(String token) {

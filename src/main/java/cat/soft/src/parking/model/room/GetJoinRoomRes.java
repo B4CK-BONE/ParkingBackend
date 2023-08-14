@@ -7,6 +7,6 @@ import lombok.Setter;
 @AllArgsConstructor
 @Getter
 @Setter
-public class PutJoinRoomRes {
+public class GetJoinRoomRes {
 	private Integer roomIdx;
 }
