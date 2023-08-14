@@ -35,6 +35,6 @@ public class User {
 	private String refreshToken;
 
 	@Column(name = "role", nullable = false)
-	@ColumnDefault("0")
+	@ColumnDefault("-1")
 	private Long role;
 }
