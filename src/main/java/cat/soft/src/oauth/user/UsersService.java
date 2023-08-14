@@ -1,5 +1,6 @@
 package cat.soft.src.oauth.user;
 
+import com.fasterxml.jackson.databind.ser.Serializers;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -30,7 +31,17 @@ public class UsersService {
 			e.printStackTrace();
 			throw new BaseException(BaseResponseStatus.DATABASE_ERROR);
 		}
+	}
 
+	public void createUserInfo(String email) throws BaseException {
+		if (userProvider.checkEmail(email) == 0)
+			throw new BaseException(BaseResponseStatus.POST_USERS_EXISTS_EMAIL);
+		try {
+			this.userDao.insertUserInfo(email);
+		} catch (Exception e) {
+			e.printStackTrace();
+			throw new BaseException(BaseResponseStatus.DATABASE_ERROR);
+		}
 	}
 
 }
