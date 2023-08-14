@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -15,10 +16,11 @@ import org.springframework.web.bind.annotation.RestController;
 import cat.soft.src.oauth.auth.jwt.JwtTokenProvider;
 import cat.soft.src.oauth.util.BaseResponse;
 import cat.soft.src.oauth.util.BaseResponseStatus;
+import cat.soft.src.parking.model.room.GetJoinRoomReq;
+import cat.soft.src.parking.model.room.GetJoinRoomRes;
 import cat.soft.src.parking.model.room.GetQrCheckRes;
 import cat.soft.src.parking.model.room.GetUserListByAdminRes;
 import cat.soft.src.parking.model.room.PostCreateRoomRes;
-import cat.soft.src.parking.model.room.PutJoinRoomRes;
 import cat.soft.src.parking.model.room.PutUserApproveReq;
 import cat.soft.src.parking.model.room.PutUserApproveRes;
 import jakarta.validation.Valid;
@@ -44,20 +46,29 @@ public class RoomController {
 		jwtTokenProvider.verifySignature(token);
 		PostCreateRoomRes postCreateRoomRes = roomService.createRoom(token);
 		if (postCreateRoomRes.getRoom_idx() == 0) {
-			return new BaseResponse<>(BaseResponseStatus.AWS_ACCESS_DENIED); // 해당 유저 없음
+			return new BaseResponse<>(BaseResponseStatus.REQUEST_ERROR); // 해당 유저 없음
 		}
 		return new BaseResponse<>(postCreateRoomRes);
 	}
 
-	@PutMapping("/{roomId}")
-	public BaseResponse<PutJoinRoomRes> joinRoom(@PathVariable Integer roomId,
+	@GetMapping("")
+	public BaseResponse<GetJoinRoomRes> joinRoom(@Valid @ModelAttribute GetJoinRoomReq req,
 		@RequestHeader("Authorization") String token) {
 		jwtTokenProvider.verifySignature(token);
-		PutJoinRoomRes putJoinRoomRes = roomService.joinRoom(roomId, token);
-		if (putJoinRoomRes.getRoomIdx() == 0) {
-			return new BaseResponse<>(BaseResponseStatus.AWS_ACCESS_DENIED); // 해당 유저 없음
+		GetJoinRoomRes getJoinRoomRes = roomService.joinRoom(req.getRoom_id(), token);
+		if (getJoinRoomRes.getRoomIdx() == null) {
+			return new BaseResponse<>(BaseResponseStatus.UNKNOWN);
 		}
-		return new BaseResponse<>(putJoinRoomRes);
+		if (getJoinRoomRes.getRoomIdx() == 0) {
+			return new BaseResponse<>(BaseResponseStatus.ALREADY_ALLOWED);
+		}
+		if (getJoinRoomRes.getRoomIdx() == -1) {
+			return new BaseResponse<>(BaseResponseStatus.ALLOW_WAITING);
+		}
+		if (getJoinRoomRes.getRoomIdx() == -2) {
+			return new BaseResponse<>(BaseResponseStatus.ALLOW_DENIED);
+		}
+		return new BaseResponse<>(getJoinRoomRes);
 	}
 
 	@GetMapping("/qr")
@@ -81,10 +92,12 @@ public class RoomController {
 	@PutMapping("/{roomId}/admin")
 	public BaseResponse<PutUserApproveRes> approveUser(@PathVariable Integer roomId,
 		@Valid @RequestBody PutUserApproveReq req, @RequestHeader("Authorization") String token) {
+		System.out.println("req.getRole() = " + req.getRole());
+		System.out.println("req.getUserIdx() = " + req.getUserIdx());
 		jwtTokenProvider.verifySignature(token);
 		PutUserApproveRes putUserApproveRes = roomService.approveUser(roomId, req, token);
 		if (putUserApproveRes.getUserIdx() == null) {
-			return new BaseResponse<>(BaseResponseStatus.INVALID_USER_JWT); // 방정보 없음
+			return new BaseResponse<>(BaseResponseStatus.DELETE_USER_FAIL); // 방정보 없음
 		}
 		return new BaseResponse<>(putUserApproveRes);
 	}

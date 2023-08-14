@@ -7,9 +7,11 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 import lombok.Getter;
+import lombok.Setter;
 
 @Entity
 @Getter
+@Setter
 @Table(name = "ParkingLot")
 public class ParkingLot {
 	@Id
@@ -23,14 +25,14 @@ public class ParkingLot {
 	@Column(name = "slot", nullable = false)
 	private Integer slot;
 
-	@Column(name = "top", nullable = false)
-	private String top;
+	@Column(name = "height", nullable = false)
+	private String height;
 
 	@Column(name = "bottom", nullable = false)
 	private String bottom;
 
-	@Column(name = "left_side", nullable = false)
-	private String left;
+	@Column(name = "width", nullable = false)
+	private String width;
 
 	@Column(name = "right_side", nullable = false)
 	private String right;
