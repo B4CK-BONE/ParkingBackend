@@ -56,9 +56,11 @@ public enum BaseResponseStatus {
 	PASSWORD_ENCRYPTION_ERROR(false, 4011, "비밀번호 암호화에 실패하였습니다."),
 	PASSWORD_DECRYPTION_ERROR(false, 4012, "비밀번호 복호화에 실패하였습니다."),
 
-	// 5000 : AWS관련 오류
-	AWS_ACCESS_DENIED(false, 5001, "접근 권한이 없습니다."),
-	AWS_FILE_NOT_FOUND(false, 5002, "파일 키에 해당하는 파일이 존재하지 않습니다.");
+	// 5000 :
+	UNKNOWN(false, 5000, "사이트 관리자에게 문의하세요."),
+	ALREADY_ALLOWED(false, 5001, "이미 승인된 유저 입니다."),
+	ALLOW_WAITING(false, 5002, "방장의 승인을 대기중 입니다."),
+	ALLOW_DENIED(false, 5003, "승인이 거절 되었습니다.");
 	// 6000 : 필요시 만들어서 쓰세요
 
 	private final boolean isSuccess;

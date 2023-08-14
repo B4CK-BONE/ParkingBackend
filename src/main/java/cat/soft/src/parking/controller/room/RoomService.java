@@ -59,13 +59,16 @@ public class RoomService {
 		User user = userRepository.findUsersByEmail(jwtTokenProvider.getEmail(token));
 		Room room = roomRepository.findById(roomId).orElse(null);
 		if (user == null) {
-			return new PutJoinRoomRes(0);
+			return null; // 5000 불가능한 유저
 		}
-		if (user.getRoomIdx() != 0 || user.getRole() != 0) {
-			return new PutJoinRoomRes(0);
+		if (user.getRole() != 0) {
+			return new PutJoinRoomRes(0); // [5001] 승인된 유저입니다.
+		}
+		if (user.getRoomIdx() != 0) {
+			return new PutJoinRoomRes(-1); // [5002] 승인 대기중 입니다.
 		}
 		if (room == null) {
-			return new PutJoinRoomRes(0);
+			return new PutJoinRoomRes(-2); // [5003] 존재하지 않는 방 입니다.
 		}
 		user.setRoomIdx(roomId);
 		userRepository.save(user);

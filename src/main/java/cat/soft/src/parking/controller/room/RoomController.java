@@ -44,7 +44,7 @@ public class RoomController {
 		jwtTokenProvider.verifySignature(token);
 		PostCreateRoomRes postCreateRoomRes = roomService.createRoom(token);
 		if (postCreateRoomRes.getRoom_idx() == 0) {
-			return new BaseResponse<>(BaseResponseStatus.AWS_ACCESS_DENIED); // 해당 유저 없음
+			return new BaseResponse<>(BaseResponseStatus.REQUEST_ERROR); // 해당 유저 없음
 		}
 		return new BaseResponse<>(postCreateRoomRes);
 	}
@@ -54,8 +54,17 @@ public class RoomController {
 		@RequestHeader("Authorization") String token) {
 		jwtTokenProvider.verifySignature(token);
 		PutJoinRoomRes putJoinRoomRes = roomService.joinRoom(roomId, token);
+		if (putJoinRoomRes.getRoomIdx() == null) {
+			return new BaseResponse<>(BaseResponseStatus.UNKNOWN);
+		}
 		if (putJoinRoomRes.getRoomIdx() == 0) {
-			return new BaseResponse<>(BaseResponseStatus.AWS_ACCESS_DENIED); // 해당 유저 없음
+			return new BaseResponse<>(BaseResponseStatus.ALREADY_ALLOWED);
+		}
+		if (putJoinRoomRes.getRoomIdx() == -1) {
+			return new BaseResponse<>(BaseResponseStatus.ALLOW_WAITING);
+		}
+		if (putJoinRoomRes.getRoomIdx() == -2) {
+			return new BaseResponse<>(BaseResponseStatus.ALLOW_DENIED);
 		}
 		return new BaseResponse<>(putJoinRoomRes);
 	}
