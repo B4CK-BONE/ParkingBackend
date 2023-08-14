@@ -34,6 +34,7 @@ public class RoomService {
 	private UserInfoRepository userInfoRepository;
 	@Autowired
 	private ReportRepository reportRepository;
+	@Autowired
 	private JwtTokenProvider jwtTokenProvider;
 
 	public PostCreateRoomRes createRoom(String token) {
