@@ -54,6 +54,8 @@ public class SecurityConfig {
 			.authorizeHttpRequests()
 			.requestMatchers("/oauth2/authorization/google").permitAll()
 			.requestMatchers("/api/user/**").permitAll()
+			.requestMatchers("/api/room/**").permitAll()
+			.requestMatchers("/api/parking/**").permitAll()
 			.anyRequest().denyAll()
 
 			.and()
