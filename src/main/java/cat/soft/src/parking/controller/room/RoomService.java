@@ -61,7 +61,7 @@ public class RoomService {
 		if (user == null) {
 			return new PutJoinRoomRes(0);
 		}
-		if (user.getRoomIdx() != 0) {
+		if (user.getRoomIdx() != 0 || user.getRole() != 0) {
 			return new PutJoinRoomRes(0);
 		}
 		if (room == null) {
