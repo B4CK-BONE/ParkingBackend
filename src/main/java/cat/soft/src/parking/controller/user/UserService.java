@@ -23,6 +23,7 @@ public class UserService {
 	private UserRepository userRepository;
 	@Autowired
 	private UserInfoRepository userInfoRepository;
+	@Autowired
 	private JwtTokenProvider jwtTokenProvider;
 
 	public PutUserInfoRes updateUserInfo(@PathVariable Integer id, @RequestBody PutUserInfoReq userInfoReq,

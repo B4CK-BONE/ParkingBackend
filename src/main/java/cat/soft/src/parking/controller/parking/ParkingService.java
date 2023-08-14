@@ -42,7 +42,7 @@ public class ParkingService {
 	private ReportRepository reportRepository;
 	@Autowired
 	private UserInfoRepository userInfoRepository;
-
+	@Autowired
 	private JwtTokenProvider jwtTokenProvider;
 
 	public PostAddTimeRes addTime(PostAddTimeReq req, String token) {
