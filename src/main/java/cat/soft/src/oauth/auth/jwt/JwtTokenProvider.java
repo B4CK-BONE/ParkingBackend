@@ -99,6 +99,11 @@ public class JwtTokenProvider {
 		return claims;
 	}
 
+	public String getEmail(String token) {
+		Claims claims = getJwtContents(token);
+		return claims.get("email").toString();
+	}
+
 	public Long getExpiration(String accessToken) {
 		// accessToken 남은 유효시간
 		Date expiration = Jwts.parserBuilder()
@@ -112,8 +117,12 @@ public class JwtTokenProvider {
 		return expiration.getTime() - now;
 	}
 
-	public String getEmail(String token) {
-		Claims claims = getJwtContents(token);
-		return claims.get("email").toString();
+	public void verifySignature (String token){
+		Key key = accessKey;
+
+		Jwts.parserBuilder()
+				.setSigningKey(key)
+				.build()
+				.parseClaimsJws(token);
 	}
 }
