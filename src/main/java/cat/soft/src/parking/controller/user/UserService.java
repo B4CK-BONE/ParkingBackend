@@ -7,7 +7,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 
-import cat.soft.oauth.auth.jwt.JwtTokenProvider;
+import cat.soft.src.oauth.auth.jwt.JwtTokenProvider;
 import cat.soft.src.parking.model.User;
 import cat.soft.src.parking.model.UserInfo;
 import cat.soft.src.parking.model.user.GetUserInfoRes;

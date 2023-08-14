@@ -10,8 +10,8 @@ import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import cat.soft.oauth.util.BaseResponse;
-import cat.soft.oauth.util.BaseResponseStatus;
+import cat.soft.src.oauth.util.BaseResponse;
+import cat.soft.src.oauth.util.BaseResponseStatus;
 import cat.soft.src.parking.model.parking.GetTimeRes;
 import cat.soft.src.parking.model.parking.PostAddTimeReq;
 import cat.soft.src.parking.model.parking.PostAddTimeRes;
