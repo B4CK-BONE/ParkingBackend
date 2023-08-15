@@ -83,7 +83,7 @@ public class UsersController {
 	}
 
 	@GetMapping("/refresh")
-	public ResponseEntity<RefreshTokenRes> refRefreshToken(@CookieValue(name = "refreshToken") String token) throws
+	public ResponseEntity<RefreshTokenRes> refRefreshToken(@RequestHeader("Authorization") String token) throws
 		BaseException {
 		Claims claims = jwtTokenProvider.getJwtContents(token);
 		String email = String.valueOf(claims.get("email"));
