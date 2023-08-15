@@ -4,9 +4,9 @@ import static cat.soft.src.oauth.util.Constant.*;
 
 import java.util.List;
 
-import cat.soft.src.oauth.util.BaseException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.MethodArgumentNotValidException;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -16,8 +16,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import cat.soft.src.oauth.auth.jwt.JwtTokenProvider;
+import cat.soft.src.oauth.util.BaseException;
 import cat.soft.src.oauth.util.BaseResponse;
 import cat.soft.src.oauth.util.BaseResponseStatus;
+import cat.soft.src.parking.model.parking.DelTimeRes;
 import cat.soft.src.parking.model.parking.GetTimeRes;
 import cat.soft.src.parking.model.parking.PostAddTimeReq;
 import cat.soft.src.parking.model.parking.PostAddTimeRes;
@@ -62,8 +64,8 @@ public class ParkingController {
 		if (postAddTimeRes == null) {
 			return new BaseResponse<>(BaseResponseStatus.UNKNOWN3);
 		}
-		if (postAddTimeRes.getStart().getZone() == TIME_LATE) {
-			return new BaseResponse<>(BaseResponseStatus.DATABASE_ERROR);
+		if (postAddTimeRes.getStart().getZone() == USING_USER) {
+			return new BaseResponse<>(BaseResponseStatus.USING_USER);
 		}
 		if (postAddTimeRes.getStart().getZone() == NO_SLOT) {
 			return new BaseResponse<>(BaseResponseStatus.UNKNOWN4);
@@ -71,7 +73,22 @@ public class ParkingController {
 		if (postAddTimeRes.getStart().getZone() == USING_SLOT) {
 			return new BaseResponse<>(BaseResponseStatus.USING_LOT);
 		}
+		// if (postAddTimeRes.getStart().getZone() == NOT_MINE) {
+		// 	return new BaseResponse<>(BaseResponseStatus.NOT_MINE);
+		// }
 		return new BaseResponse<>(postAddTimeRes);
+	}
+
+	@DeleteMapping("/time")
+	public BaseResponse<DelTimeRes> deleteTime(@RequestHeader("Authorization") String token) throws BaseException {
+		jwtTokenProvider.verifySignature(token);
+		DelTimeRes delTimeRes = parkingService.delTime(token);
+		if (delTimeRes == null)
+			return new BaseResponse<>(BaseResponseStatus.UNKNOWN10);
+		if (delTimeRes.getUserIdx() == -1)
+			return new BaseResponse<>(BaseResponseStatus.NOT_USING);
+
+		return new BaseResponse<>(delTimeRes);
 	}
 
 	@PostMapping("/report")
