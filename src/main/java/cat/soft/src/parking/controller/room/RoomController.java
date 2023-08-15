@@ -65,7 +65,7 @@ public class RoomController {
 		jwtTokenProvider.verifySignature(token);
 		GetJoinRoomRes getJoinRoomRes = roomService.joinRoom(req.getRoom_id(), token);
 		if (getJoinRoomRes == null) {
-			return new BaseResponse<>(BaseResponseStatus.UNKNOWN);
+			return new BaseResponse<>(BaseResponseStatus.UNKNOWN24);
 		}
 		if (getJoinRoomRes.getRoomIdx() == 0) {
 			return new BaseResponse<>(BaseResponseStatus.ALREADY_ALLOWED);
