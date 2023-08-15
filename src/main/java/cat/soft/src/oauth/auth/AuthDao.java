@@ -5,6 +5,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
 import javax.sql.DataSource;
+import java.util.Objects;
 
 @Repository
 public class AuthDao {
@@ -34,11 +35,14 @@ public class AuthDao {
 	}
 
 	public boolean checkRefreshToken(String email) {
-		String checkRefreshTokenQuery = "select exists(select refresh_token from User where email = ?)";
+		String checkRefreshTokenQuery = "select refresh_token from User where email = ?";
+		Object[] checkRefreshTokenParams = new Object[] {email};
+		String result = Objects.requireNonNull(this.jdbcTemplate.queryForObject(checkRefreshTokenQuery,
+				(rs, rowNum) ->
+						rs.getString("refresh_token"),
+				checkRefreshTokenParams)).toString();
 
-		int result = this.jdbcTemplate.queryForObject(checkRefreshTokenQuery, int.class, email);
-
-		return result == 1;
+		return result != "NULL";
 	}
 
 	public boolean checkUser(String useremail) {
