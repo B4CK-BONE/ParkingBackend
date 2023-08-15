@@ -87,7 +87,7 @@ public class RoomController {
 	}
 
 	@GetMapping("/{roomId}/admin")
-	public BaseResponse<GetUserListByAdminRes> userListByAdmin(@PathVariable Integer roomId,
+	public BaseResponse<GetUserListByAdminRes> userListByAdmin(@PathVariable Long roomId,
 		@RequestHeader("Authorization") String token) throws BaseException {
 		jwtTokenProvider.verifySignature(token);
 		GetUserListByAdminRes getUserListByAdminRes = roomService.userListByAdmin(roomId, token);
@@ -98,7 +98,7 @@ public class RoomController {
 	}
 
 	@PutMapping("/{roomId}/admin")
-	public BaseResponse<PutUserApproveRes> approveUser(@PathVariable Integer roomId,
+	public BaseResponse<PutUserApproveRes> approveUser(@PathVariable Long roomId,
 		@Valid @RequestBody PutUserApproveReq req, @RequestHeader("Authorization") String token) throws BaseException {
 		jwtTokenProvider.verifySignature(token);
 		PutUserApproveRes putUserApproveRes = roomService.approveUser(roomId, req, token);

@@ -23,9 +23,9 @@ public class PostAddTimeReq {
 	@NotNull(message = "주차할 공간을 선택하세요.")
 	@Min(value = 1, message = "주차 공간 위치를 확인하세요.")
 	@Max(value = Integer.MAX_VALUE, message = "주차 공간 위치를 확인하세요.")
-	private Integer slot;
+	private Long slot;
 
-	public Time toEntity(int userIdx) {
+	public Time toEntity(Long userIdx) {
 		return Time.builder()
 			.parkingLotIdx(slot)
 			.userIdx(userIdx)

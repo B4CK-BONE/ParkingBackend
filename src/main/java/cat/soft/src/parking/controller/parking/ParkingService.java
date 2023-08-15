@@ -125,7 +125,7 @@ public class ParkingService {
 			return null;
 		Time time = timeRepository.findTimeByUserIdxAndEndAfter(user.getIdx(), ZonedDateTime.now());
 		if (time == null)
-			return new DelTimeRes(-1);
+			return new DelTimeRes(-1L);
 		timeRepository.delete(time);
 		return new DelTimeRes(user.getIdx());
 	}

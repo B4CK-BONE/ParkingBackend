@@ -6,8 +6,8 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 import cat.soft.src.parking.model.Report;
 
-public interface ReportRepository extends JpaRepository<Report, Integer> {
-	Report findReportByVictimAndSuspectAndTimeAfter(Integer victim, Integer suspect, ZonedDateTime time);
+public interface ReportRepository extends JpaRepository<Report, Long> {
+	Report findReportByVictimAndSuspectAndTimeAfter(Long victim, Long suspect, ZonedDateTime time);
 
-	Integer countBysuspect(Integer suspect);
+	Long countBysuspect(Long suspect);
 }

@@ -37,7 +37,7 @@ public class UserController {
 	}
 
 	@PutMapping("/{id}")
-	public BaseResponse<PutUserInfoRes> putUserInfo(@PathVariable Integer id,
+	public BaseResponse<PutUserInfoRes> putUserInfo(@PathVariable Long id,
 		@Valid @RequestBody PutUserInfoReq userInfoReq, @RequestHeader("Authorization") String token) throws
 		BaseException {
 		jwtTokenProvider.verifySignature(token);
@@ -52,7 +52,7 @@ public class UserController {
 	}
 
 	@GetMapping("/{id}")
-	public BaseResponse<GetUserInfoRes> getUserInfo(@PathVariable Integer id,
+	public BaseResponse<GetUserInfoRes> getUserInfo(@PathVariable Long id,
 		@RequestHeader("Authorization") String token) throws BaseException {
 		jwtTokenProvider.verifySignature(token);
 		GetUserInfoRes getUserInfoRes = userService.getUserInfo(id, token);

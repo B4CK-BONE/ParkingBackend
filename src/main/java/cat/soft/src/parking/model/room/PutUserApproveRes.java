@@ -8,5 +8,5 @@ import lombok.Setter;
 @Getter
 @Setter
 public class PutUserApproveRes {
-	private Integer userIdx;
+	private Long userIdx;
 }

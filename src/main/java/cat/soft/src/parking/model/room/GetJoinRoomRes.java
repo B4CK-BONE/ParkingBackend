@@ -8,5 +8,5 @@ import lombok.Setter;
 @Getter
 @Setter
 public class GetJoinRoomRes {
-	private Integer roomIdx;
+	private Long roomIdx;
 }

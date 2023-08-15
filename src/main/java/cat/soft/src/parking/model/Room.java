@@ -21,13 +21,13 @@ public class Room {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "idx", nullable = false)
-	private Integer idx;
+	private Long idx;
 
 	@Column(name = "admin_idx", nullable = false)
-	private Integer adminIdx;
+	private Long adminIdx;
 
 	@Builder
-	public Room(Integer idx) {
+	public Room(Long idx) {
 		this.adminIdx = idx;
 	}
 }
