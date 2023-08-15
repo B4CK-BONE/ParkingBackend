@@ -17,13 +17,13 @@ public class ParkingLot {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "idx", nullable = false)
-	private Integer idx;
+	private Long idx;
 
 	@Column(name = "room_idx", nullable = false)
-	private Integer roomIdx;
+	private Long roomIdx;
 
 	@Column(name = "slot", nullable = false)
-	private Integer slot;
+	private Long slot;
 
 	@Column(name = "height", nullable = false)
 	private String height;

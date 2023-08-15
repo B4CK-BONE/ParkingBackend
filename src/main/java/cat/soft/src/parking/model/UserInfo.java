@@ -19,7 +19,7 @@ public class UserInfo {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "idx", nullable = false)
-	private Integer idx;
+	private Long idx;
 
 	@Column(name = "car", length = 10)
 	private String car;
@@ -35,5 +35,5 @@ public class UserInfo {
 
 	@Column(name = "reporCount")
 	@ColumnDefault("0")
-	private Integer reportCount;
+	private Long reportCount;
 }

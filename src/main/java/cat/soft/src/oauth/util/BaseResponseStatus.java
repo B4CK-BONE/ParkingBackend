@@ -51,7 +51,7 @@ public enum BaseResponseStatus {
 	UNKNOWN14(false, 5019, "사이트 관리자에게 문의하세요."),
 	UNKNOWN15(false, 5020, "사이트 관리자에게 문의하세요."),
 	UNKNOWN16(false, 5021, "사이트 관리자에게 문의하세요."),
-	UNKNOWN17(false, 5022, "사이트 관리자에게 문의하세요."),
+	NO_ROOM(false, 5022, "존재하지 않는 방입니다."),
 	NO_PAGE_AUTH(false, 5023, "방장만 사용가능 합니다."),
 	UNKNOWN18(false, 5024, "사이트 관리자에게 문의하세요."),
 	UNKNOWN19(false, 5025, "사이트 관리자에게 문의하세요."),
