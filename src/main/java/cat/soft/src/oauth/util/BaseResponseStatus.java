@@ -60,7 +60,16 @@ public enum BaseResponseStatus {
 	UNKNOWN(false, 5000, "사이트 관리자에게 문의하세요."),
 	ALREADY_ALLOWED(false, 5001, "이미 승인된 유저 입니다."),
 	ALLOW_WAITING(false, 5002, "방장의 승인을 대기중 입니다."),
-	ALLOW_DENIED(false, 5003, "승인이 거절 되었습니다.");
+	ALLOW_DENIED(false, 5003, "승인이 거절 되었습니다."),
+	UNKNOWN2(false, 5004, "사이트 관리자에게 문의하세요."),
+	UNKNOWN3(false, 5005, "사이트 관리자에게 문의하세요."),
+	UNKNOWN4(false, 5006, "사이트 관리자에게 문의하세요."),
+	USING_LOT(false, 5007, "주차 공간이 이미 사용중 입니다."),
+	SAME_USER(false, 5008, "자기 자신을 신고할 수 없습니다."),
+	UNKNOWN7(false, 5009, "사이트 관리자에게 문의하세요."),
+	UNKNOWN8(false, 5010, "사이트 관리자에게 문의하세요."),
+	UNKNOWN9(false, 5011, "사이트 관리자에게 문의하세요."),
+	ALREADY_REPORT(false, 5012, "24시간에 한 번만 신고 가능합니다.");
 	// 6000 : 필요시 만들어서 쓰세요
 
 	private final boolean isSuccess;

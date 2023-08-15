@@ -1,5 +1,7 @@
 package cat.soft.src.parking.controller.parking;
 
+import static cat.soft.src.oauth.util.Constant.*;
+
 import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -48,7 +50,7 @@ public class ParkingService {
 	public PostAddTimeRes addTime(PostAddTimeReq req, String token) {
 		User user = userRepository.findUsersByEmail(jwtTokenProvider.getEmail(token));
 		if (ZonedDateTime.now().isAfter(req.getTime())) { //
-			return null;
+			return new PostAddTimeRes(ZonedDateTime.now(TIME_LATE));
 		}
 		if (user == null || user.getRole() == 0)
 			return null;
@@ -57,10 +59,10 @@ public class ParkingService {
 			return null;
 		ParkingLot parkingLot = parkingLotRepository.findBySlotAndRoomIdx(req.getSlot(), room.getIdx());
 		if (parkingLot == null) {
-			return null;
+			return new PostAddTimeRes(ZonedDateTime.now(NO_SLOT));
 		}
 		if (timeRepository.findTimeByParkingLotIdxAndEndAfter(req.getSlot(), ZonedDateTime.now()) != null) {
-			return null;
+			return new PostAddTimeRes(ZonedDateTime.now(USING_SLOT));
 		}
 		Time time = req.toEntity();
 		time.setRoomIdx(room.getIdx());
@@ -74,8 +76,9 @@ public class ParkingService {
 		if (user == null || user.getRole() == 0)
 			return null;
 		List<ParkingLot> parkingLotList = parkingLotRepository.findAllByRoomIdx(user.getRoomIdx());
-		if (parkingLotList == null)
-			return null;
+		if (parkingLotList == null) {
+			return getTimeRes;
+		}
 		for (ParkingLot parkingLot : parkingLotList) {
 			Time time = timeRepository.findTimeByParkingLotIdxAndEndAfter(parkingLot.getSlot(), ZonedDateTime.now());
 			UserInfo usingUser = null;
@@ -90,18 +93,18 @@ public class ParkingService {
 		User victim = userRepository.findUsersByEmail(jwtTokenProvider.getEmail(token));
 		User suspcet = userRepository.findById(req.getSuspect()).orElse(null);
 		if (Objects.equals(victim, suspcet))
-			return null;
-		if (victim == null || suspcet == null) { // 존재x 오류
+			return new PostReportRes(ZonedDateTime.now(SAME_USER));
+		if (victim == null || suspcet == null) {
 			return null;
 		}
-		if (!Objects.equals(victim.getRoomIdx(), suspcet.getRoomIdx())) // 같은 공간 아니면 신고 불가
-			return null;
+		if (!Objects.equals(victim.getRoomIdx(), suspcet.getRoomIdx()))
+			return new PostReportRes(ZonedDateTime.now(DIFF_ROOM));
 		Time parkingTime = timeRepository.findTimeByUserIdxAndEndAfter(suspcet.getIdx(), ZonedDateTime.now());
-		if (parkingTime == null) // 주차 안함
-			return null;
+		if (parkingTime == null)
+			return new PostReportRes(ZonedDateTime.now(NO_PARKING));
 		Report report = reportRepository.findReportByTimeAfter(ZonedDateTime.now().minusHours(24));
-		if (report != null) // 기존 신고
-			return null;
+		if (report != null)
+			return new PostReportRes(ZonedDateTime.now(ALREADY_REPORT));
 		return new PostReportRes(reportRepository.save(req.toEntity()).getTime());
 	}
 }

@@ -1,5 +1,7 @@
 package cat.soft.src.parking.controller.parking;
 
+import static cat.soft.src.oauth.util.Constant.*;
+
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -43,7 +45,10 @@ public class ParkingController {
 		jwtTokenProvider.verifySignature(token);
 		List<GetTimeRes> getTimeRes = parkingService.getTime(token);
 		if (getTimeRes == null) {
-			return new BaseResponse<>(BaseResponseStatus.DATABASE_ERROR);
+			return new BaseResponse<>(BaseResponseStatus.UNKNOWN);
+		}
+		if (getTimeRes.size() == 0) {
+			return new BaseResponse<>(BaseResponseStatus.UNKNOWN2);
 		}
 		return new BaseResponse<>(getTimeRes);
 	}
@@ -54,7 +59,16 @@ public class ParkingController {
 		jwtTokenProvider.verifySignature(token);
 		PostAddTimeRes postAddTimeRes = parkingService.addTime(req, token);
 		if (postAddTimeRes == null) {
+			return new BaseResponse<>(BaseResponseStatus.UNKNOWN3);
+		}
+		if (postAddTimeRes.getStart().getZone() == TIME_LATE) {
 			return new BaseResponse<>(BaseResponseStatus.DATABASE_ERROR);
+		}
+		if (postAddTimeRes.getStart().getZone() == NO_SLOT) {
+			return new BaseResponse<>(BaseResponseStatus.UNKNOWN4);
+		}
+		if (postAddTimeRes.getStart().getZone() == USING_SLOT) {
+			return new BaseResponse<>(BaseResponseStatus.USING_LOT);
 		}
 		return new BaseResponse<>(postAddTimeRes);
 	}
@@ -65,7 +79,19 @@ public class ParkingController {
 		jwtTokenProvider.verifySignature(token);
 		PostReportRes postReportRes = parkingService.report(req, token);
 		if (postReportRes == null) {
-			return new BaseResponse<>(BaseResponseStatus.DATABASE_ERROR);
+			return new BaseResponse<>(BaseResponseStatus.UNKNOWN7);
+		}
+		if (postReportRes.getTime().getZone() == SAME_USER) {
+			return new BaseResponse<>(BaseResponseStatus.SAME_USER);
+		}
+		if (postReportRes.getTime().getZone() == DIFF_ROOM) {
+			return new BaseResponse<>(BaseResponseStatus.UNKNOWN8);
+		}
+		if (postReportRes.getTime().getZone() == NO_PARKING) {
+			return new BaseResponse<>(BaseResponseStatus.UNKNOWN9);
+		}
+		if (postReportRes.getTime().getZone() == ALREADY_REPORT) {
+			return new BaseResponse<>(BaseResponseStatus.ALREADY_REPORT);
 		}
 		return new BaseResponse<>(postReportRes);
 	}
