@@ -116,7 +116,7 @@ public class JwtTokenProvider {
 			.getBody()
 			.getExpiration();
 		// 현재 시간
-		long now = new Date().getTime();
+		long now = Date.from(ZonedDateTime.now().toInstant()).getTime();
 		return expiration.getTime() - now;
 	}
 
