@@ -58,7 +58,7 @@ public class RoomController {
 		@RequestHeader("Authorization") String token) throws BaseException {
 		jwtTokenProvider.verifySignature(token);
 		GetJoinRoomRes getJoinRoomRes = roomService.joinRoom(req.getRoom_id(), token);
-		if (getJoinRoomRes.getRoomIdx() == null) {
+		if (getJoinRoomRes == null) {
 			return new BaseResponse<>(BaseResponseStatus.UNKNOWN);
 		}
 		if (getJoinRoomRes.getRoomIdx() == 0) {
@@ -69,6 +69,9 @@ public class RoomController {
 		}
 		if (getJoinRoomRes.getRoomIdx() == -2) {
 			return new BaseResponse<>(BaseResponseStatus.ALLOW_DENIED);
+		}
+		if (getJoinRoomRes.getRoomIdx() == -3) {
+			return new BaseResponse<>(BaseResponseStatus.NO_ROOM);
 		}
 		return new BaseResponse<>(getJoinRoomRes);
 	}

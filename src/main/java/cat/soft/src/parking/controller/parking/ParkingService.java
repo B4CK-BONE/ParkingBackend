@@ -111,7 +111,8 @@ public class ParkingService {
 		Time parkingTime = timeRepository.findTimeByUserIdxAndEndAfter(suspcet.getIdx(), ZonedDateTime.now());
 		if (parkingTime == null)
 			return new PostReportRes(ZonedDateTime.now(NO_PARKING));
-		Report report = reportRepository.findReportByTimeAfter(ZonedDateTime.now().minusHours(24));
+		Report report = reportRepository.findReportByVictimAndSuspectAndTimeAfter(
+			victim.getIdx(), suspcet.getIdx(), ZonedDateTime.now().minusHours(24));
 		if (report != null)
 			return new PostReportRes(ZonedDateTime.now(ALREADY_REPORT));
 		Report newReport = reportRepository.save(req.toEntity(victim.getIdx()));

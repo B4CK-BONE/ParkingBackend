@@ -76,7 +76,7 @@ public class RoomService {
 		}
 		Room room = roomRepository.findById(roomId).orElse(null);
 		if (room == null) {
-			return new GetJoinRoomRes(-2); // [5003] 존재하지 않는 방 입니다.
+			return new GetJoinRoomRes(-3); // [5003] 존재하지 않는 방 입니다.
 		}
 		user.setRoomIdx(roomId);
 		userRepository.save(user);
