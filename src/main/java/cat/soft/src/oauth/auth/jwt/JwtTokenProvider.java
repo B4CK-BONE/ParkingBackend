@@ -3,6 +3,10 @@ package cat.soft.src.oauth.auth.jwt;
 import java.security.Key;
 import java.util.Date;
 
+import cat.soft.src.oauth.auth.AuthDao;
+import cat.soft.src.oauth.user.UserDao;
+import cat.soft.src.oauth.util.BaseException;
+import cat.soft.src.oauth.util.BaseResponseStatus;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
@@ -15,6 +19,8 @@ import io.jsonwebtoken.security.Keys;
 import jakarta.annotation.PostConstruct;
 import lombok.Getter;
 
+import static cat.soft.src.oauth.util.BaseResponseStatus.USERS_EMPTY_USER_EMAIL;
+
 @Component
 @Getter
 public class JwtTokenProvider {
@@ -26,16 +32,21 @@ public class JwtTokenProvider {
 	private Key accessKey;
 	private Key refreshKey;
 
+	private final UserDao userDao;
+	private final AuthDao authDao;
+
 	@Autowired
 	public JwtTokenProvider(
-		@Value("${jwt.time.access}") long JWT_ACCESS_TOKEN_EXPTIME,
-		@Value("${jwt.time.refresh}") long JWT_REFRESH_TOKEN_EXPTIME,
-		@Value("${jwt.secret.access}") String JWT_ACCESS_SECRET_KEY,
-		@Value("${jwt.secret.refresh}") String JWT_REFRESH_SECRET_KEY) {
+			@Value("${jwt.time.access}") long JWT_ACCESS_TOKEN_EXPTIME,
+			@Value("${jwt.time.refresh}") long JWT_REFRESH_TOKEN_EXPTIME,
+			@Value("${jwt.secret.access}") String JWT_ACCESS_SECRET_KEY,
+			@Value("${jwt.secret.refresh}") String JWT_REFRESH_SECRET_KEY, UserDao userDao, AuthDao authDao) {
 		this.JWT_ACCESS_TOKEN_EXPTIME = JWT_ACCESS_TOKEN_EXPTIME;
 		this.JWT_REFRESH_TOKEN_EXPTIME = JWT_REFRESH_TOKEN_EXPTIME;
 		this.JWT_ACCESS_SECRET_KEY = JWT_ACCESS_SECRET_KEY;
 		this.JWT_REFRESH_SECRET_KEY = JWT_REFRESH_SECRET_KEY;
+		this.userDao = userDao;
+		this.authDao = authDao;
 	}
 
 	@PostConstruct
@@ -117,12 +128,20 @@ public class JwtTokenProvider {
 		return expiration.getTime() - now;
 	}
 
-	public void verifySignature (String token){
+	public void verifySignature (String token) throws BaseException {
 		Key key = accessKey;
+		Claims claims = this.getJwtContents(token);
+		String email = String.valueOf(claims.get("email"));
+		if (!authDao.checkRefreshToken(email))
+			throw new BaseException(USERS_EMPTY_USER_EMAIL);
+		try {
+			Jwts.parserBuilder()
+					.setSigningKey(key)
+					.build()
+					.parseClaimsJws(token);
+		} catch (Exception e) {
+			throw new BaseException(BaseResponseStatus.DATABASE_ERROR);
+		}
 
-		Jwts.parserBuilder()
-				.setSigningKey(key)
-				.build()
-				.parseClaimsJws(token);
 	}
 }
