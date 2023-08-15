@@ -4,6 +4,7 @@ import static cat.soft.src.oauth.util.Constant.*;
 
 import java.util.List;
 
+import cat.soft.src.oauth.util.BaseException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -41,7 +42,7 @@ public class ParkingController {
 	}
 
 	@GetMapping("")
-	public BaseResponse<List<GetTimeRes>> getTime(@RequestHeader("Authorization") String token) {
+	public BaseResponse<List<GetTimeRes>> getTime(@RequestHeader("Authorization") String token) throws BaseException {
 		jwtTokenProvider.verifySignature(token);
 		List<GetTimeRes> getTimeRes = parkingService.getTime(token);
 		if (getTimeRes == null) {
@@ -55,7 +56,7 @@ public class ParkingController {
 
 	@PostMapping("/time")
 	public BaseResponse<PostAddTimeRes> addTime(@Valid @RequestBody PostAddTimeReq req,
-		@RequestHeader("Authorization") String token) {
+		@RequestHeader("Authorization") String token) throws BaseException {
 		jwtTokenProvider.verifySignature(token);
 		PostAddTimeRes postAddTimeRes = parkingService.addTime(req, token);
 		if (postAddTimeRes == null) {
@@ -75,7 +76,7 @@ public class ParkingController {
 
 	@PostMapping("/report")
 	public BaseResponse<PostReportRes> report(@Valid @RequestBody PostReportReq req,
-		@RequestHeader("Authorization") String token) {
+		@RequestHeader("Authorization") String token) throws BaseException {
 		jwtTokenProvider.verifySignature(token);
 		PostReportRes postReportRes = parkingService.report(req, token);
 		if (postReportRes == null) {
