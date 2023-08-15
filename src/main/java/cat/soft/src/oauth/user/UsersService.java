@@ -1,6 +1,5 @@
 package cat.soft.src.oauth.user;
 
-import com.fasterxml.jackson.databind.ser.Serializers;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -29,7 +28,7 @@ public class UsersService {
 			return this.userDao.insertUser(user);
 		} catch (Exception e) {
 			e.printStackTrace();
-			throw new BaseException(BaseResponseStatus.DATABASE_ERROR);
+			throw new BaseException(BaseResponseStatus.DELETE_USER_FAIL);
 		}
 	}
 
@@ -40,7 +39,7 @@ public class UsersService {
 			this.userDao.insertUserInfo(email);
 		} catch (Exception e) {
 			e.printStackTrace();
-			throw new BaseException(BaseResponseStatus.DATABASE_ERROR);
+			throw new BaseException(BaseResponseStatus.DELETE_USER_FAIL);
 		}
 	}
 
