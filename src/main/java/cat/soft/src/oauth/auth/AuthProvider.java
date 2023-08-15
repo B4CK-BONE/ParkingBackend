@@ -15,12 +15,4 @@ public class AuthProvider {
 		this.authDao = authDao;
 		this.authenticationManagerBuilder = authenticationManagerBuilder;
 	}
-
-	public boolean isRefreshTokenEqual(String token) {
-		if (!authDao.checkRefreshToken(token))
-			return false;
-
-		return true;
-	}
-
 }
