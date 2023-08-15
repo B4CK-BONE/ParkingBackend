@@ -43,8 +43,7 @@ public enum BaseResponseStatus {
 	ALREADY_REPORT(false, 5012, "24시간에 한 번만 신고 가능합니다."),
 	USING_USER(false, 5013, "이미 주차를 했습니다."),
 	UNKNOWN10(false, 5014, "사이트 관리자에게 문의하세요."),
-	NOT_USING(false, 5014, "주차를 하지 않았습니다."),
-	NOT_MINE(false, 5015, "사이트 관리자에게 문의하세요."),
+	NOT_USING(false, 5015, "주차를 하지 않았습니다."),
 	UNKNOWN11(false, 5016, "사이트 관리자에게 문의하세요."),
 	UNKNOWN12(false, 5017, "사이트 관리자에게 문의하세요."),
 	UNKNOWN13(false, 5018, "사이트 관리자에게 문의하세요."),
@@ -56,7 +55,9 @@ public enum BaseResponseStatus {
 	UNKNOWN18(false, 5024, "사이트 관리자에게 문의하세요."),
 	UNKNOWN19(false, 5025, "사이트 관리자에게 문의하세요."),
 	UNKNOWN20(false, 5026, "사이트 관리자에게 문의하세요."),
-	UNKNOWN21(false, 5027, "사이트 관리자에게 문의하세요.");
+	UNKNOWN21(false, 5027, "사이트 관리자에게 문의하세요."),
+	UNKNOWN22(false, 5028, "사이트 관리자에게 문의하세요."),
+	UNKNOWN23(false, 5029, "사이트 관리자에게 문의하세요.");
 
 	private final boolean isSuccess;
 	private final int code;
