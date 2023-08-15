@@ -11,8 +11,11 @@ import cat.soft.src.oauth.util.BaseException;
 import com.fasterxml.jackson.databind.ser.Serializers;
 import io.jsonwebtoken.Claims;
 
+dimport jakarta.servlet.http.Cookie;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpCookie;
 import org.springframework.http.HttpHeaders;
+import org.springframework.http.ResponseCookie;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -103,14 +106,21 @@ public class UsersController {
 
 				authDao.updateRefreshToken(email, refreshToken);
 
-				HttpHeaders headers = new HttpHeaders();
-				headers.set("Set-Cookie", "refreshToken=" + refreshToken + "; HttpOnly");
+//				HttpHeaders headers = new HttpHeaders();
+//				headers.set("Set-Cookie", "refreshToken=" + refreshToken + "; HttpOnly");
 
 				RefreshTokenRes refreshTokenRes = new RefreshTokenRes();
 				refreshTokenRes.setAccessToken(accessToken);
 				refreshTokenRes.setRefreshToken((refreshToken));
 
-				return ResponseEntity.ok().headers(headers).body(refreshTokenRes);
+				ResponseCookie responseCookie = ResponseCookie.from("refreshToken",refreshToken)
+						.httpOnly(true)
+						.secure(true)
+						.path("/")
+						.maxAge(60*60*24*60)
+						.build();
+
+				return ResponseEntity.ok().header(HttpHeaders.SET_COOKIE, responseCookie.toString()).body(refreshTokenRes);
 			}
 		} catch (Exception e) {
 			throw new BaseException(DATABASE_ERROR);
