@@ -8,9 +8,11 @@ import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @AllArgsConstructor
+@NoArgsConstructor
 @Getter
 @Setter
 public class PostReportReq {
@@ -19,9 +21,10 @@ public class PostReportReq {
 	@Max(value = Integer.MAX_VALUE, message = "신고할 유저 정보를 확인하세요.")
 	private Integer suspect;
 
-	public Report toEntity() {
+	public Report toEntity(Integer victim) {
 		return Report.builder()
 			.suspect(suspect)
+			.victim(victim)
 			.time(ZonedDateTime.now())
 			.build();
 	}

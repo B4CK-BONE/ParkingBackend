@@ -1,6 +1,7 @@
 package cat.soft.src.oauth.auth.jwt;
 
 import java.security.Key;
+import java.time.ZonedDateTime;
 import java.util.Date;
 
 import cat.soft.src.oauth.auth.AuthDao;
@@ -66,7 +67,8 @@ public class JwtTokenProvider {
 		return Jwts.builder()
 			.setClaims(claims) // 정보 저장
 			.setIssuedAt(now) // 토큰 발행 시간 정보
-			.setExpiration(new Date(System.currentTimeMillis() + JWT_ACCESS_TOKEN_EXPTIME * 1000)) // set Expire Time
+			.setExpiration(
+				Date.from(ZonedDateTime.now().plusSeconds(JWT_ACCESS_TOKEN_EXPTIME).toInstant())) // set Expire Time
 			.signWith(accessKey, SignatureAlgorithm.HS256)  // 사용할 암호화 알고리즘과
 			// signature 에 들어갈 secret값 세팅
 			.compact();
@@ -81,7 +83,8 @@ public class JwtTokenProvider {
 		return Jwts.builder()
 			.setClaims(claims) // 정보 저장
 			.setIssuedAt(now) // 토큰 발행 시간 정보
-			.setExpiration(new Date(System.currentTimeMillis() + JWT_REFRESH_TOKEN_EXPTIME * 1000)) // set Expire Time
+			.setExpiration(
+				Date.from(ZonedDateTime.now().plusSeconds(JWT_REFRESH_TOKEN_EXPTIME).toInstant())) // set Expire Time
 			.signWith(accessKey, SignatureAlgorithm.HS256) // 사용할 암호화 알고리즘과
 			// signature 에 들어갈 secret값 세팅
 			.compact();
@@ -124,7 +127,7 @@ public class JwtTokenProvider {
 			.getBody()
 			.getExpiration();
 		// 현재 시간
-		long now = new Date().getTime();
+		long now = Date.from(ZonedDateTime.now().toInstant()).getTime();
 		return expiration.getTime() - now;
 	}
 
@@ -142,6 +145,5 @@ public class JwtTokenProvider {
 		} catch (Exception e) {
 			throw new BaseException(BaseResponseStatus.DATABASE_ERROR);
 		}
-
 	}
 }

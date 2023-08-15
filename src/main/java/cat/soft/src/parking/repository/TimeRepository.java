@@ -7,7 +7,8 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import cat.soft.src.parking.model.Time;
 
 public interface TimeRepository extends JpaRepository<Time, Integer> {
-	Time findTimeByParkingLotIdxAndEndAfter(Integer parkingLotIdx, ZonedDateTime time);
+
+	Time findTimeByParkingLotIdxAndRoomIdxAndEndAfter(Integer parkingLotIdx, Integer roomIdx, ZonedDateTime time);
 
 	Time findTimeByUserIdxAndEndAfter(Integer userIdx, ZonedDateTime time);
 }
