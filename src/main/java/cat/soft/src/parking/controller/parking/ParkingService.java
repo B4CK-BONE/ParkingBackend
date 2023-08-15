@@ -59,16 +59,21 @@ public class ParkingService {
 		if (parkingLot == null) {
 			return new PostAddTimeRes(ZonedDateTime.now(NO_SLOT));
 		}
-		if (timeRepository.findTimeByParkingLotIdxAndRoomIdxAndEndAfter(req.getSlot(), user.getRoomIdx(),
-			ZonedDateTime.now()) != null) {
+		Time usingTime = timeRepository.findTimeByParkingLotIdxAndRoomIdxAndEndAfter(req.getSlot(), user.getRoomIdx(),
+			ZonedDateTime.now());
+		if (usingTime != null && !Objects.equals(usingTime.getUserIdx(), user.getIdx())) {
 			return new PostAddTimeRes(ZonedDateTime.now(USING_SLOT));
 		}
-		if (timeRepository.findTimeByUserIdxAndEndAfter(user.getIdx(), ZonedDateTime.now()) != null) {
+		Time time = timeRepository.findTimeByUserIdxAndEndAfter(user.getIdx(), ZonedDateTime.now());
+		if (time != null && !Objects.equals(time.getParkingLotIdx(), req.getSlot())) {
 			return new PostAddTimeRes(ZonedDateTime.now(USING_USER));
 		}
-
-		Time time = req.toEntity(user.getIdx());
-		time.setRoomIdx(room.getIdx());
+		if (time == null) {
+			time = req.toEntity(user.getIdx());
+			time.setRoomIdx(room.getIdx());
+			time.setParkingLotIdx(req.getSlot());
+		}
+		time.setEnd(req.getTime());
 		timeRepository.save(time);
 		return new PostAddTimeRes(time.getStart());
 	}

@@ -72,6 +72,9 @@ public class ParkingController {
 		if (postAddTimeRes.getStart().getZone() == USING_SLOT) {
 			return new BaseResponse<>(BaseResponseStatus.USING_LOT);
 		}
+		// if (postAddTimeRes.getStart().getZone() == NOT_MINE) {
+		// 	return new BaseResponse<>(BaseResponseStatus.NOT_MINE);
+		// }
 		return new BaseResponse<>(postAddTimeRes);
 	}
 

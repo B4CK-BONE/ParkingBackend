@@ -43,7 +43,8 @@ public enum BaseResponseStatus {
 	ALREADY_REPORT(false, 5012, "24시간에 한 번만 신고 가능합니다."),
 	USING_USER(false, 5013, "이미 주차를 했습니다."),
 	UNKNOWN10(false, 5014, "사이트 관리자에게 문의하세요."),
-	NOT_USING(false, 5014, "주차를 하지 않았습니다.");
+	NOT_USING(false, 5014, "주차를 하지 않았습니다."),
+	NOT_MINE(false, 5015, "사이트 관리자에게 문의하세요.");
 
 	private final boolean isSuccess;
 	private final int code;
