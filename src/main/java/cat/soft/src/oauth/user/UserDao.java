@@ -4,6 +4,8 @@ import java.util.Objects;
 
 import javax.sql.DataSource;
 
+import cat.soft.src.oauth.util.BaseException;
+import com.fasterxml.jackson.databind.ser.Serializers;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -12,6 +14,8 @@ import org.springframework.stereotype.Repository;
 import cat.soft.src.oauth.auth.dto.PostUserAuthRes;
 import cat.soft.src.oauth.user.model.User;
 import cat.soft.src.oauth.util.EncryptionUtils;
+
+import static cat.soft.src.oauth.util.BaseResponseStatus.DATABASE_ERROR;
 
 @Repository
 public class UserDao {
@@ -70,7 +74,7 @@ public class UserDao {
 		}
 	}
 
-	public String tokenByEmail(String email) {
+	public String tokenByEmail(String email) throws BaseException{
 		String selectByEmailQuery = "select refresh_token from User where email = ?";
 		Object[] selectByEmailParams = new Object[] {email};
 		try {
@@ -79,7 +83,17 @@ public class UserDao {
 					rs.getString("refresh_token"),
 				selectByEmailParams)).toString();
 		} catch (EmptyResultDataAccessException e) {
-			return null;
+			throw new BaseException(DATABASE_ERROR);
+		}
+	}
+
+	public void LogoutUser(String email) throws BaseException {
+		String LogoutUserQuery = "delete refresh_token from User where email = ?";
+		Object[] LogoutUserParams = new Object[] {email};
+		try {
+			this.jdbcTemplate.update(LogoutUserQuery, LogoutUserParams);
+		} catch (EmptyResultDataAccessException e) {
+			throw new BaseException(DATABASE_ERROR);
 		}
 	}
 
