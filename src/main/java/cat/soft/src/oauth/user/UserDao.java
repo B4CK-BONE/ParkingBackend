@@ -88,7 +88,7 @@ public class UserDao {
 	}
 
 	public void LogoutUser(String email) throws BaseException {
-		String LogoutUserQuery = "delete refresh_token from User where email = ?";
+		String LogoutUserQuery = "update User set refresh_token = NULL where email = ?";
 		Object[] LogoutUserParams = new Object[] {email};
 		try {
 			this.jdbcTemplate.update(LogoutUserQuery, LogoutUserParams);
