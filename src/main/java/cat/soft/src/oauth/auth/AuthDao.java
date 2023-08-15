@@ -33,10 +33,10 @@ public class AuthDao {
 		return newRefreshToken;
 	}
 
-	public boolean checkRefreshToken(String token) {
-		String checkRefreshTokenQuery = "select exists(select refresh_token from User where refresh_token = ?)";
+	public boolean checkRefreshToken(String email) {
+		String checkRefreshTokenQuery = "select exists(select refresh_token from User where email = ?)";
 
-		int result = this.jdbcTemplate.queryForObject(checkRefreshTokenQuery, int.class, token);
+		int result = this.jdbcTemplate.queryForObject(checkRefreshTokenQuery, int.class, email);
 
 		return result == 1;
 	}

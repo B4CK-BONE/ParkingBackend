@@ -1,5 +1,6 @@
 package cat.soft.src.parking.controller.room;
 
+import cat.soft.src.oauth.util.BaseException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -42,7 +43,7 @@ public class RoomController {
 	}
 
 	@PostMapping("")
-	public BaseResponse<PostCreateRoomRes> createRoom(@RequestHeader("Authorization") String token) {
+	public BaseResponse<PostCreateRoomRes> createRoom(@RequestHeader("Authorization") String token) throws BaseException {
 		jwtTokenProvider.verifySignature(token);
 		PostCreateRoomRes postCreateRoomRes = roomService.createRoom(token);
 		if (postCreateRoomRes.getRoom_idx() == 0) {
@@ -53,7 +54,7 @@ public class RoomController {
 
 	@GetMapping("")
 	public BaseResponse<GetJoinRoomRes> joinRoom(@Valid @ModelAttribute GetJoinRoomReq req,
-		@RequestHeader("Authorization") String token) {
+		@RequestHeader("Authorization") String token) throws BaseException {
 		jwtTokenProvider.verifySignature(token);
 		GetJoinRoomRes getJoinRoomRes = roomService.joinRoom(req.getRoom_id(), token);
 		if (getJoinRoomRes.getRoomIdx() == null) {
@@ -72,7 +73,7 @@ public class RoomController {
 	}
 
 	@GetMapping("/qr")
-	public BaseResponse<GetQrCheckRes> qrCheck(@RequestHeader("Authorization") String token) {
+	public BaseResponse<GetQrCheckRes> qrCheck(@RequestHeader("Authorization") String token) throws BaseException {
 		jwtTokenProvider.verifySignature(token);
 		GetQrCheckRes getQrCheckRes = roomService.joinRoom(token);
 		if (getQrCheckRes.getRoomIdx() == 0) {
@@ -83,7 +84,7 @@ public class RoomController {
 
 	@GetMapping("/{roomId}/admin")
 	public BaseResponse<GetUserListByAdminRes> userListByAdmin(@PathVariable Integer roomId,
-		@RequestHeader("Authorization") String token) {
+		@RequestHeader("Authorization") String token) throws BaseException {
 		jwtTokenProvider.verifySignature(token);
 		GetUserListByAdminRes getUserListByAdminRes = roomService.userListByAdmin(roomId, token);
 		return new BaseResponse<>(getUserListByAdminRes);
@@ -91,7 +92,7 @@ public class RoomController {
 
 	@PutMapping("/{roomId}/admin")
 	public BaseResponse<PutUserApproveRes> approveUser(@PathVariable Integer roomId,
-		@Valid @RequestBody PutUserApproveReq req, @RequestHeader("Authorization") String token) {
+		@Valid @RequestBody PutUserApproveReq req, @RequestHeader("Authorization") String token) throws BaseException {
 		jwtTokenProvider.verifySignature(token);
 		PutUserApproveRes putUserApproveRes = roomService.approveUser(roomId, req, token);
 		if (putUserApproveRes.getUserIdx() == null) {

@@ -5,8 +5,10 @@ import cat.soft.src.oauth.auth.dto.PostUserAuthRes;
 import cat.soft.src.oauth.auth.dto.RefreshTokenRes;
 import cat.soft.src.oauth.auth.jwt.JwtTokenProvider;
 import cat.soft.src.oauth.user.dto.GetUserRes;
+import cat.soft.src.oauth.user.dto.LogoutRes;
 import cat.soft.src.oauth.user.model.User;
 import cat.soft.src.oauth.util.BaseException;
+import com.fasterxml.jackson.databind.ser.Serializers;
 import io.jsonwebtoken.Claims;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -47,11 +49,37 @@ public class UsersController {
 
 	@GetMapping("/auth")
 	public BaseResponse<PostUserAuthRes> UserAuth(@RequestHeader("Authorization") String token) throws BaseException {
+		jwtTokenProvider.verifySignature(token);
+
 		Claims claims = jwtTokenProvider.getJwtContents(token);
 
 		PostUserAuthRes postUserAuthRes = userProvider.UserInfoProvider(String.valueOf(claims.get("email")));
 
 		return new BaseResponse<>(postUserAuthRes);
+	}
+
+	@GetMapping("/logout")
+	public ResponseEntity<LogoutRes> UserLogout(@RequestHeader("Authorization") String token) throws BaseException {
+		jwtTokenProvider.verifySignature(token);
+		Claims claims = jwtTokenProvider.getJwtContents(token);
+		String email = String.valueOf(claims.get("email"));
+		if (userProvider.checkEmail(email) == 0)
+			throw new BaseException(USERS_EMPTY_USER_EMAIL);
+		try {
+			if (token == "undefined"){
+				throw new BaseException(EMPTY_JWT);
+			}
+			else {
+				userDao.LogoutUser(email);
+
+				LogoutRes logoutRes = new LogoutRes();
+				logoutRes.setIsSuccess("True");
+
+				return ResponseEntity.ok().body(logoutRes);
+			}
+		} catch (Exception e) {
+			throw new BaseException(DATABASE_ERROR);
+		}
 	}
 
 	@GetMapping("/refresh")
