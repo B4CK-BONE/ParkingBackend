@@ -17,6 +17,7 @@ import cat.soft.src.parking.model.Room;
 import cat.soft.src.parking.model.Time;
 import cat.soft.src.parking.model.User;
 import cat.soft.src.parking.model.UserInfo;
+import cat.soft.src.parking.model.parking.DelTimeRes;
 import cat.soft.src.parking.model.parking.GetTimeRes;
 import cat.soft.src.parking.model.parking.PostAddTimeReq;
 import cat.soft.src.parking.model.parking.PostAddTimeRes;
@@ -49,9 +50,6 @@ public class ParkingService {
 
 	public PostAddTimeRes addTime(PostAddTimeReq req, String token) {
 		User user = userRepository.findUsersByEmail(jwtTokenProvider.getEmail(token));
-		if (ZonedDateTime.now().isAfter(req.getTime())) { //
-			return new PostAddTimeRes(ZonedDateTime.now(TIME_LATE));
-		}
 		if (user == null || user.getRole() == 0)
 			return null;
 		Room room = roomRepository.findById(user.getRoomIdx()).orElse(null);
@@ -61,10 +59,15 @@ public class ParkingService {
 		if (parkingLot == null) {
 			return new PostAddTimeRes(ZonedDateTime.now(NO_SLOT));
 		}
-		if (timeRepository.findTimeByParkingLotIdxAndEndAfter(req.getSlot(), ZonedDateTime.now()) != null) {
+		if (timeRepository.findTimeByParkingLotIdxAndRoomIdxAndEndAfter(req.getSlot(), user.getRoomIdx(),
+			ZonedDateTime.now()) != null) {
 			return new PostAddTimeRes(ZonedDateTime.now(USING_SLOT));
 		}
-		Time time = req.toEntity();
+		if (timeRepository.findTimeByUserIdxAndEndAfter(user.getIdx(), ZonedDateTime.now()) != null) {
+			return new PostAddTimeRes(ZonedDateTime.now(USING_USER));
+		}
+
+		Time time = req.toEntity(user.getIdx());
 		time.setRoomIdx(room.getIdx());
 		timeRepository.save(time);
 		return new PostAddTimeRes(time.getStart());
@@ -80,7 +83,8 @@ public class ParkingService {
 			return getTimeRes;
 		}
 		for (ParkingLot parkingLot : parkingLotList) {
-			Time time = timeRepository.findTimeByParkingLotIdxAndEndAfter(parkingLot.getSlot(), ZonedDateTime.now());
+			Time time = timeRepository.findTimeByParkingLotIdxAndRoomIdxAndEndAfter(parkingLot.getSlot(),
+				user.getRoomIdx(), ZonedDateTime.now());
 			UserInfo usingUser = null;
 			if (time != null)
 				usingUser = userInfoRepository.findById(time.getUserIdx()).orElse(null);
@@ -106,5 +110,16 @@ public class ParkingService {
 		if (report != null)
 			return new PostReportRes(ZonedDateTime.now(ALREADY_REPORT));
 		return new PostReportRes(reportRepository.save(req.toEntity()).getTime());
+	}
+
+	public DelTimeRes delTime(String token) {
+		User user = userRepository.findUsersByEmail(jwtTokenProvider.getEmail(token));
+		if (user == null)
+			return null;
+		Time time = timeRepository.findTimeByUserIdxAndEndAfter(user.getIdx(), ZonedDateTime.now());
+		if (time == null)
+			return new DelTimeRes(-1);
+		timeRepository.delete(time);
+		return new DelTimeRes(user.getIdx());
 	}
 }

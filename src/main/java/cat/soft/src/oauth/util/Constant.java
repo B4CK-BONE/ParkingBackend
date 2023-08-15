@@ -3,7 +3,7 @@ package cat.soft.src.oauth.util;
 import java.time.ZoneId;
 
 public class Constant {
-	public static final ZoneId TIME_LATE = ZoneId.of("+00:01");
+	public static final ZoneId USING_USER = ZoneId.of("+00:01");
 	public static final ZoneId NO_SLOT = ZoneId.of("+00:02");
 	public static final ZoneId USING_SLOT = ZoneId.of("+00:03");
 	public static final ZoneId SAME_USER = ZoneId.of("+00:04");

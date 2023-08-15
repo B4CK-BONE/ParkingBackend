@@ -105,3 +105,9 @@
 2023-08-15 02:20:02\t302\tGET /oauth2/authorization/google HTTP/1.1\tMozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/16.6 Safari/605.1.15\t-\t0:0:0:0:0:0:0:1\t-
 2023-08-15 02:20:04\t302\tGET /login/oauth2/code/google?state=y4pEqdcdhulfTAEYgKw5nk1tmZuGrHC4GjaIe8jPv3w%3D&code=4%2F0Adeu5BVkg-jItufK-rcclXArtZYNFWOVEINampZXuw-cSAKIABUzrYq_DeU6LRAMQY-_0A&scope=email+profile+https%3A%2F%2Fwww.googleapis.com%2Fauth%2Fuserinfo.profile+https%3A%2F%2Fwww.googleapis.com%2Fauth%2Fuserinfo.email+openid&authuser=0&prompt=consent HTTP/1.1\tMozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/16.6 Safari/605.1.15\t-\t0:0:0:0:0:0:0:1\t-
 2023-08-15 02:20:15\t200\tGET /api/room?room_id=2 HTTP/1.1\tPostmanRuntime/7.32.2\t-\t0:0:0:0:0:0:0:1\t89
+2023-08-15 17:32:28 302 GET /oauth2/authorization/google HTTP/1.1 0:0:0:0:0:0:0:1 - -
+2023-08-15 17:32:31 302 GET /login/oauth2/code/google?state=6PN6nyDl5a2wHUoTLiLRkAr5zBEfaYjivdKXlSsOeT4%3D&code=4%2F0Adeu5BUv7IbvIvlcqeRhfINkZnC6IgZ124XgJZHoNf51Rec_YPA-3r7FWpTkEs3yNGXcYw&scope=email+profile+https%3A%2F%2Fwww.googleapis.com%2Fauth%2Fuserinfo.profile+https%3A%2F%2Fwww.googleapis.com%2Fauth%2Fuserinfo.email+openid&authuser=0&prompt=consent HTTP/1.1 0:0:0:0:0:0:0:1 - -
+2023-08-15 17:33:00 200 POST /api/parking/time HTTP/1.1 0:0:0:0:0:0:0:1 - -
+2023-08-15 17:33:33 200 POST /api/room/ HTTP/1.1 0:0:0:0:0:0:0:1 - -
+2023-08-15 17:33:36 200 POST /api/room/ HTTP/1.1 0:0:0:0:0:0:0:1 - -
+2023-08-15 17:33:40 200 POST /api/room HTTP/1.1 0:0:0:0:0:0:0:1 - -

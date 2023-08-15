@@ -25,9 +25,10 @@ public class PostAddTimeReq {
 	@Max(value = Integer.MAX_VALUE, message = "주차 공간 위치를 확인하세요.")
 	private Integer slot;
 
-	public Time toEntity() {
+	public Time toEntity(int userIdx) {
 		return Time.builder()
 			.parkingLotIdx(slot)
+			.userIdx(userIdx)
 			.start(ZonedDateTime.now())
 			.end(time)
 			.build();

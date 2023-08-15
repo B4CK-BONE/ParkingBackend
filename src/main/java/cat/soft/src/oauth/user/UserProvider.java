@@ -1,14 +1,13 @@
 package cat.soft.src.oauth.user;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
 import cat.soft.src.oauth.auth.dto.PostUserAuthRes;
 import cat.soft.src.oauth.user.model.User;
 import cat.soft.src.oauth.util.BaseException;
 import cat.soft.src.oauth.util.BaseResponseStatus;
-
 import lombok.extern.slf4j.Slf4j;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
 
 @Slf4j
 @Service
@@ -27,7 +26,7 @@ public class UserProvider {
 		try {
 			return userDao.selectByEmail(email);
 		} catch (Exception e) {
-			throw new BaseException(BaseResponseStatus.DATABASE_ERROR);
+			throw new BaseException(BaseResponseStatus.DELETE_USER_FAIL);
 		}
 	}
 
@@ -36,7 +35,7 @@ public class UserProvider {
 			return userDao.checkEmail(email);
 		} catch (Exception exception) {
 			log.warn(exception.getMessage());
-			throw new BaseException(BaseResponseStatus.DATABASE_ERROR);
+			throw new BaseException(BaseResponseStatus.DELETE_USER_FAIL);
 		}
 	}
 
@@ -46,7 +45,7 @@ public class UserProvider {
 		try {
 			return userDao.userInfo(email);
 		} catch (Exception e) {
-			throw new BaseException(BaseResponseStatus.DATABASE_ERROR);
+			throw new BaseException(BaseResponseStatus.DELETE_USER_FAIL);
 		}
 	}
 }

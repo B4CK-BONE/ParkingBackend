@@ -25,7 +25,6 @@ public enum BaseResponseStatus {
 	USERS_EMPTY_USER_EMAIL(false, 2011, "유저 이메일 값을 확인해주세요."),
 	POST_USERS_EXISTS_EMAIL(false, 2017, "중복된 이메일입니다."),
 	DATABASE_ERROR(false, 4000, "데이터베이스 연결에 실패하였습니다."),
-
 	DELETE_USER_FAIL(false, 4008, "유저 정보 삭제에 실패하였습니다."),
 
 	// 5000 :
@@ -41,7 +40,10 @@ public enum BaseResponseStatus {
 	UNKNOWN7(false, 5009, "사이트 관리자에게 문의하세요."),
 	UNKNOWN8(false, 5010, "사이트 관리자에게 문의하세요."),
 	UNKNOWN9(false, 5011, "사이트 관리자에게 문의하세요."),
-	ALREADY_REPORT(false, 5012, "24시간에 한 번만 신고 가능합니다.");
+	ALREADY_REPORT(false, 5012, "24시간에 한 번만 신고 가능합니다."),
+	USING_USER(false, 5013, "이미 주차를 했습니다."),
+	UNKNOWN10(false, 5014, "사이트 관리자에게 문의하세요."),
+	NOT_USING(false, 5014, "주차를 하지 않았습니다.");
 
 	private final boolean isSuccess;
 	private final int code;
