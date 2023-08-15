@@ -44,7 +44,11 @@ public enum BaseResponseStatus {
 	USING_USER(false, 5013, "이미 주차를 했습니다."),
 	UNKNOWN10(false, 5014, "사이트 관리자에게 문의하세요."),
 	NOT_USING(false, 5014, "주차를 하지 않았습니다."),
-	NOT_MINE(false, 5015, "사이트 관리자에게 문의하세요.");
+	NOT_MINE(false, 5015, "사이트 관리자에게 문의하세요."),
+	UNKNOWN11(false, 5016, "사이트 관리자에게 문의하세요."),
+	UNKNOWN12(false, 5017, "사이트 관리자에게 문의하세요."),
+	UNKNOWN13(false, 5018, "사이트 관리자에게 문의하세요."),
+	UNKNOWN14(false, 5019, "사이트 관리자에게 문의하세요.");
 
 	private final boolean isSuccess;
 	private final int code;
