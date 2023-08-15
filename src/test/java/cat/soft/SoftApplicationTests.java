@@ -12,7 +12,7 @@ class SoftApplicationTests {
 		StandardPBEStringEncryptor standardPBEStringEncryptor = new StandardPBEStringEncryptor();
 		standardPBEStringEncryptor.setAlgorithm("PBEWithMD5AndDES");
 		standardPBEStringEncryptor.setPassword("TEST_KEY");
-		String encodedPass = standardPBEStringEncryptor.encrypt("jdbc:mysql://localhost:3306/cat");
+		String encodedPass = standardPBEStringEncryptor.encrypt("12345678");
 		System.out.println("Encrypted Password for admin is : "+encodedPass);
 	}
 
