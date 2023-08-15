@@ -35,13 +35,13 @@ public class UserService {
 		String token) {
 		User user = userRepository.findUsersByEmail(jwtTokenProvider.getEmail(token));
 		if (user == null) {
-			return new PutUserInfoRes(0);
+			return null;
 		}
 		if (!Objects.equals(id, user.getIdx()))
 			return new PutUserInfoRes(0);
 		UserInfo userInfo = userInfoRepository.findById(user.getIdx()).orElse(null);
 		if (userInfo == null) {
-			return new PutUserInfoRes(0);
+			return null;
 		}
 		userInfo.setCar(userInfoReq.getCar());
 		userInfo.setPhone(userInfoReq.getPhone());
@@ -61,7 +61,7 @@ public class UserService {
 			return null;
 		}
 		if (!Objects.equals(user.getIdx(), id))
-			return null;
+			return new GetUserInfoRes(null, null, null, null, null);
 		UserInfo userInfo = userInfoRepository.findById(user.getIdx()).orElse(null);
 		if (userInfo == null) {
 			return null;
