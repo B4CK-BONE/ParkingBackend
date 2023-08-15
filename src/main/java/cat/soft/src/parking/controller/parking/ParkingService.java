@@ -114,7 +114,8 @@ public class ParkingService {
 		Report report = reportRepository.findReportByTimeAfter(ZonedDateTime.now().minusHours(24));
 		if (report != null)
 			return new PostReportRes(ZonedDateTime.now(ALREADY_REPORT));
-		return new PostReportRes(reportRepository.save(req.toEntity()).getTime());
+		Report newReport = reportRepository.save(req.toEntity(victim.getIdx()));
+		return new PostReportRes(newReport.getTime());
 	}
 
 	public DelTimeRes delTime(String token) {
