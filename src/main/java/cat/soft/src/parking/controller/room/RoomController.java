@@ -47,6 +47,12 @@ public class RoomController {
 		BaseException {
 		jwtTokenProvider.verifySignature(token);
 		PostCreateRoomRes postCreateRoomRes = roomService.createRoom(token);
+		if (postCreateRoomRes == null) {
+			return new BaseResponse<>(BaseResponseStatus.UNKNOWN22);
+		}
+		if (postCreateRoomRes.getRoom_idx() == -1) {
+			return new BaseResponse<>(BaseResponseStatus.UNKNOWN23);
+		}
 		if (postCreateRoomRes.getRoom_idx() == 0) {
 			return new BaseResponse<>(BaseResponseStatus.UNKNOWN15);
 		}

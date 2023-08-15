@@ -44,13 +44,13 @@ public class RoomService {
 	public PostCreateRoomRes createRoom(String token) {
 		User user = userRepository.findUsersByEmail(jwtTokenProvider.getEmail(token));
 		if (user == null) {
-			return new PostCreateRoomRes(0L);
+			return null;
 		}
 		if (user.getRoomIdx() != 0) {
 			return new PostCreateRoomRes(0L);
 		}
 		if (user.getRole() != 0) {
-			return new PostCreateRoomRes(0L);
+			return new PostCreateRoomRes(-1L);
 		}
 		Room room = roomRepository.save(Room.builder().idx(user.getIdx()).build());
 		user.setRoomIdx(room.getIdx());
@@ -143,10 +143,10 @@ public class RoomService {
 			return new PutUserApproveRes(-2L);
 		}
 		if (req.getRole() == 0) { // 거절
-			user.setRole(Long.valueOf(req.getRole()));
+			user.setRole(req.getRole());
 			user.setRoomIdx(0L);
 		} else if (req.getRole() == 1) { // 승인
-			user.setRole(Long.valueOf(req.getRole()));
+			user.setRole(req.getRole());
 		} else {
 			return new PutUserApproveRes(-3L);
 		}
