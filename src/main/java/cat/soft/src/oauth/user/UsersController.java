@@ -108,6 +108,7 @@ public class UsersController {
 
 				RefreshTokenRes refreshTokenRes = new RefreshTokenRes();
 				refreshTokenRes.setAccessToken(accessToken);
+				refreshTokenRes.setRefreshToken((refreshToken));
 
 				return ResponseEntity.ok().headers(headers).body(refreshTokenRes);
 			}
