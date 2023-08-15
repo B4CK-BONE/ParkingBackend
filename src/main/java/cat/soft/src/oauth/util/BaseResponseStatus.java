@@ -48,7 +48,15 @@ public enum BaseResponseStatus {
 	UNKNOWN11(false, 5016, "사이트 관리자에게 문의하세요."),
 	UNKNOWN12(false, 5017, "사이트 관리자에게 문의하세요."),
 	UNKNOWN13(false, 5018, "사이트 관리자에게 문의하세요."),
-	UNKNOWN14(false, 5019, "사이트 관리자에게 문의하세요.");
+	UNKNOWN14(false, 5019, "사이트 관리자에게 문의하세요."),
+	UNKNOWN15(false, 5020, "사이트 관리자에게 문의하세요."),
+	UNKNOWN16(false, 5021, "사이트 관리자에게 문의하세요."),
+	UNKNOWN17(false, 5022, "사이트 관리자에게 문의하세요."),
+	NO_PAGE_AUTH(false, 5023, "방장만 사용가능 합니다."),
+	UNKNOWN18(false, 5024, "사이트 관리자에게 문의하세요."),
+	UNKNOWN19(false, 5025, "사이트 관리자에게 문의하세요."),
+	UNKNOWN20(false, 5026, "사이트 관리자에게 문의하세요."),
+	UNKNOWN21(false, 5027, "사이트 관리자에게 문의하세요.");
 
 	private final boolean isSuccess;
 	private final int code;

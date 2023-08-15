@@ -86,10 +86,10 @@ public class RoomService {
 	public GetQrCheckRes joinRoom(String token) {
 		User user = userRepository.findUsersByEmail(jwtTokenProvider.getEmail(token));
 		if (user == null) {
-			return new GetQrCheckRes(0);
+			return null;
 		}
 		if (user.getRoomIdx() == 0) {
-			return new GetQrCheckRes(0);
+			return null;
 		}
 		return new GetQrCheckRes(user.getRoomIdx());
 	}
@@ -130,17 +130,17 @@ public class RoomService {
 		User admin = userRepository.findUsersByEmail(jwtTokenProvider.getEmail(token));
 		User user = userRepository.findById(req.getUserIdx()).orElse(null);
 		if (room == null || admin == null || user == null) {
-			return new PutUserApproveRes(null);
+			return null;
 		}
 		if (!Objects.equals(room.getAdminIdx(), admin.getIdx()) || !Objects.equals(room.getIdx(), admin.getRoomIdx())
 			|| admin.getRole() != 2) {
-			return new PutUserApproveRes(null);
+			return null;
 		}
 		if (Objects.equals(user.getIdx(), admin.getIdx())) { // 셀프 추방 금지
-			return new PutUserApproveRes(null);
+			return new PutUserApproveRes(-1);
 		}
 		if (!Objects.equals(user.getRoomIdx(), admin.getRoomIdx())) { // 신청하지 않은 유저 변경 금지
-			return new PutUserApproveRes(null);
+			return new PutUserApproveRes(-2);
 		}
 		if (req.getRole() == 0) { // 거절
 			user.setRole(Long.valueOf(req.getRole()));
@@ -148,7 +148,7 @@ public class RoomService {
 		} else if (req.getRole() == 1) { // 승인
 			user.setRole(Long.valueOf(req.getRole()));
 		} else {
-			return new PutUserApproveRes(null);
+			return new PutUserApproveRes(-3);
 		}
 		userRepository.save(user);
 		return new PutUserApproveRes(user.getIdx());
