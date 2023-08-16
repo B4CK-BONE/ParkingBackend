@@ -1,5 +1,6 @@
 package cat.soft.src.oauth.util;
 
+import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
@@ -40,6 +41,12 @@ public class BaseResponse<T> {
 		this.isSuccess = false;
 		this.message = exception.getBindingResult().getAllErrors().get(0).getDefaultMessage();
 		this.code = 400;
+	}
+
+	public BaseResponse(HttpMessageNotReadableException exception) {
+		this.isSuccess = false;
+		this.message = "사이트 관리자에게 문의하세요.";
+		this.code = 401;
 	}
 }
 

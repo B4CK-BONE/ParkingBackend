@@ -1,6 +1,7 @@
 package cat.soft.src.parking.controller.user;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -33,6 +34,12 @@ public class UserController {
 	public BaseResponse<MethodArgumentNotValidException> handleValidationExceptions(
 		MethodArgumentNotValidException ex) {
 
+		return new BaseResponse<>(ex);
+	}
+
+	@ExceptionHandler(HttpMessageNotReadableException.class)
+	public BaseResponse<HttpMessageNotReadableException> handleNotReadableException(
+		HttpMessageNotReadableException ex) {
 		return new BaseResponse<>(ex);
 	}
 
