@@ -50,10 +50,12 @@ java -jar soft-0.0.1-SNAPSHOT.jar
 👤 **marinesnow34**
 👤 **scott4935**
 👤 **greensnapback0229**
+👤 **1223v**
 
 * Github: [@marinesnow34](https://github.com/marinesnow34)
 * Github: [@scott4935](https://github.com/scott4935)
 * Github: [@greensnapback0229](https://github.com/greensnapback0229)
+* Github: [@1223v](https://github.com/1223v)
 
 ## Show your support
 
