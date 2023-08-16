@@ -10,6 +10,6 @@ public class Constant {
 	public static final ZoneId DIFF_ROOM = ZoneId.of("+00:05");
 	public static final ZoneId NO_PARKING = ZoneId.of("+00:06");
 	public static final ZoneId ALREADY_REPORT = ZoneId.of("+00:07");
-	public static final ZoneId NOT_MINE = ZoneId.of("+00:08");
+	public static final String ASK_ADMIN = "사이트 관리자에게 문의하세요.";
 
 }

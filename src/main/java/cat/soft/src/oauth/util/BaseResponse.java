@@ -6,6 +6,7 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
+import com.mysql.cj.jdbc.exceptions.MySQLTransactionRollbackException;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -47,6 +48,12 @@ public class BaseResponse<T> {
 		this.isSuccess = false;
 		this.message = "사이트 관리자에게 문의하세요.";
 		this.code = 401;
+	}
+
+	public BaseResponse(MySQLTransactionRollbackException exception) {
+		this.isSuccess = false;
+		this.message = "처리중 입니다.";
+		this.code = 402;
 	}
 }
 
