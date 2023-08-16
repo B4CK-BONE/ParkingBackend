@@ -19,8 +19,8 @@
 
 <p>
   <img src="https://img.shields.io/badge/-Java-red"/>&nbsp
-  <img src="https://img.shields.io/badge/-Spring_Boot-green"/>&nbsp
   <img src="https://img.shields.io/badge/-MySQL-orange"/>&nbsp
+  <img src="https://img.shields.io/badge/-Spring_Boot-green"/>&nbsp
 </p>
 
 ## 개발환경
