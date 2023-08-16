@@ -29,6 +29,7 @@ import cat.soft.src.parking.repository.RoomRepository;
 import cat.soft.src.parking.repository.TimeRepository;
 import cat.soft.src.parking.repository.UserInfoRepository;
 import cat.soft.src.parking.repository.UserRepository;
+import jakarta.transaction.Transactional;
 
 @Service
 public class ParkingService {
@@ -48,8 +49,9 @@ public class ParkingService {
 	@Autowired
 	private JwtTokenProvider jwtTokenProvider;
 
+	@Transactional
 	public PostAddTimeRes addTime(PostAddTimeReq req, String token) {
-		User user = userRepository.findUsersByEmail(jwtTokenProvider.getEmail(token));
+		User user = userRepository.findUserByEmail(jwtTokenProvider.getEmail(token));
 		if (user == null || user.getRole() == 0)
 			return null;
 		Room room = roomRepository.findById(user.getRoomIdx()).orElse(null);
@@ -64,7 +66,7 @@ public class ParkingService {
 		if (usingTime != null && !Objects.equals(usingTime.getUserIdx(), user.getIdx())) {
 			return new PostAddTimeRes(ZonedDateTime.now(USING_SLOT));
 		}
-		Time time = timeRepository.findTimeByUserIdxAndEndAfter(user.getIdx(), ZonedDateTime.now());
+		Time time = timeRepository.findByUserIdxAndEndAfter(user.getIdx(), ZonedDateTime.now());
 		if (time != null && !Objects.equals(time.getParkingLotIdx(), req.getSlot())) {
 			return new PostAddTimeRes(ZonedDateTime.now(USING_USER));
 		}
@@ -79,7 +81,7 @@ public class ParkingService {
 	}
 
 	public List<GetTimeRes> getTime(String token) {
-		User user = userRepository.findUsersByEmail(jwtTokenProvider.getEmail(token));
+		User user = userRepository.findUserByEmail(jwtTokenProvider.getEmail(token));
 		List<GetTimeRes> getTimeRes = new ArrayList<>();
 		if (user == null || user.getRole() == 0)
 			return null;
@@ -98,8 +100,9 @@ public class ParkingService {
 		return getTimeRes;
 	}
 
+	@Transactional
 	public PostReportRes report(PostReportReq req, String token) {
-		User victim = userRepository.findUsersByEmail(jwtTokenProvider.getEmail(token));
+		User victim = userRepository.findUserByEmail(jwtTokenProvider.getEmail(token));
 		User suspcet = userRepository.findById(req.getSuspect()).orElse(null);
 		if (Objects.equals(victim, suspcet))
 			return new PostReportRes(ZonedDateTime.now(SAME_USER));
@@ -120,7 +123,7 @@ public class ParkingService {
 	}
 
 	public DelTimeRes delTime(String token) {
-		User user = userRepository.findUsersByEmail(jwtTokenProvider.getEmail(token));
+		User user = userRepository.findUserByEmail(jwtTokenProvider.getEmail(token));
 		if (user == null)
 			return null;
 		Time time = timeRepository.findTimeByUserIdxAndEndAfter(user.getIdx(), ZonedDateTime.now());

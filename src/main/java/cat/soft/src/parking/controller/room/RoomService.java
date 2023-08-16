@@ -23,6 +23,7 @@ import cat.soft.src.parking.repository.ReportRepository;
 import cat.soft.src.parking.repository.RoomRepository;
 import cat.soft.src.parking.repository.UserInfoRepository;
 import cat.soft.src.parking.repository.UserRepository;
+import jakarta.transaction.Transactional;
 
 @Service
 public class RoomService {
@@ -41,8 +42,9 @@ public class RoomService {
 	@Autowired
 	private JwtTokenProvider jwtTokenProvider;
 
+	@Transactional
 	public PostCreateRoomRes createRoom(String token) {
-		User user = userRepository.findUsersByEmail(jwtTokenProvider.getEmail(token));
+		User user = userRepository.findByEmail(jwtTokenProvider.getEmail(token));
 		if (user == null) {
 			return null;
 		}
@@ -61,7 +63,7 @@ public class RoomService {
 	}
 
 	public GetJoinRoomRes joinRoom(Long roomId, String token) {
-		User user = userRepository.findUsersByEmail(jwtTokenProvider.getEmail(token));
+		User user = userRepository.findUserByEmail(jwtTokenProvider.getEmail(token));
 		if (user == null) {
 			return null; // 5000 불가능한 유저
 		}
@@ -84,7 +86,7 @@ public class RoomService {
 	}
 
 	public GetQrCheckRes joinRoom(String token) {
-		User user = userRepository.findUsersByEmail(jwtTokenProvider.getEmail(token));
+		User user = userRepository.findUserByEmail(jwtTokenProvider.getEmail(token));
 		if (user == null) {
 			return null;
 		}
@@ -95,7 +97,7 @@ public class RoomService {
 	}
 
 	public GetUserListByAdminRes userListByAdmin(Long roomId, String token) {
-		User admin = userRepository.findUsersByEmail(jwtTokenProvider.getEmail(token));
+		User admin = userRepository.findUserByEmail(jwtTokenProvider.getEmail(token));
 		Room room = roomRepository.findById(roomId).orElse(null);
 		if (admin == null || room == null) {
 			return new GetUserListByAdminRes(null, null);
@@ -127,7 +129,7 @@ public class RoomService {
 
 	public PutUserApproveRes approveUser(Long roomId, PutUserApproveReq req, String token) {
 		Room room = roomRepository.findById(roomId).orElse(null);
-		User admin = userRepository.findUsersByEmail(jwtTokenProvider.getEmail(token));
+		User admin = userRepository.findUserByEmail(jwtTokenProvider.getEmail(token));
 		User user = userRepository.findById(req.getUserIdx()).orElse(null);
 		if (room == null || admin == null || user == null) {
 			return null;

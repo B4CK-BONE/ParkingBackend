@@ -1,6 +1,7 @@
 package cat.soft.src.parking.controller.room;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -12,6 +13,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+
+import com.mysql.cj.jdbc.exceptions.MySQLTransactionRollbackException;
 
 import cat.soft.src.oauth.auth.jwt.JwtTokenProvider;
 import cat.soft.src.oauth.util.BaseException;
@@ -39,6 +42,18 @@ public class RoomController {
 	public BaseResponse<MethodArgumentNotValidException> handleValidationExceptions(
 		MethodArgumentNotValidException ex) {
 
+		return new BaseResponse<>(ex);
+	}
+
+	@ExceptionHandler(HttpMessageNotReadableException.class)
+	public BaseResponse<HttpMessageNotReadableException> handleNotReadableException(
+		HttpMessageNotReadableException ex) {
+		return new BaseResponse<>(ex);
+	}
+
+	@ExceptionHandler(MySQLTransactionRollbackException.class)
+	public BaseResponse<MySQLTransactionRollbackException> handleNotReadableException(
+		MySQLTransactionRollbackException ex) {
 		return new BaseResponse<>(ex);
 	}
 
