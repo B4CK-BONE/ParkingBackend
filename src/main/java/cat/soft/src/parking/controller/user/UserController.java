@@ -42,11 +42,11 @@ public class UserController {
 		BaseException {
 		jwtTokenProvider.verifySignature(token);
 		PutUserInfoRes putUserInfoRes = userService.updateUserInfo(id, userInfoReq, token);
-		if (putUserInfoRes.getIdx() == null) {
-			return new BaseResponse<>(BaseResponseStatus.UNKNOWN11); // 해당 유저 없음
+		if (putUserInfoRes == null) {
+			return new BaseResponse<>(BaseResponseStatus.UNKNOWN11);
 		}
 		if (putUserInfoRes.getIdx() == 0) {
-			return new BaseResponse<>(BaseResponseStatus.UNKNOWN12); // 해당 유저 없음
+			return new BaseResponse<>(BaseResponseStatus.UNKNOWN12);
 		}
 		return new BaseResponse<>(putUserInfoRes);
 	}
@@ -57,7 +57,7 @@ public class UserController {
 		jwtTokenProvider.verifySignature(token);
 		GetUserInfoRes getUserInfoRes = userService.getUserInfo(id, token);
 		if (getUserInfoRes == null) {
-			return new BaseResponse<>(BaseResponseStatus.UNKNOWN13); // 해당 유저 없음
+			return new BaseResponse<>(BaseResponseStatus.UNKNOWN13);
 		}
 		if (getUserInfoRes.getPhone() == null) {
 			return new BaseResponse<>(BaseResponseStatus.UNKNOWN14);

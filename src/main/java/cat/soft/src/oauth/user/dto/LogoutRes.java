@@ -8,5 +8,5 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class LogoutRes {
-    private String isSuccess;
+	private String isSuccess;
 }
