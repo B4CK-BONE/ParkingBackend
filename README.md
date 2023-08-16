@@ -29,8 +29,9 @@
   - JAVA 17
   - Spring-Boot 3.0.9
   - gradle
+## ERD
 
-
+<img src="https://img1.daumcdn.net/thumb/R1280x0/?scode=mtistory2&fname=https%3A%2F%2Fblog.kakaocdn.net%2Fdn%2Fc4DCu5%2Fbtsrr06Ghev%2FU8NOTQjJRfHtJ046sBHnD0%2Fimg.png"/>
 ## Usage
 
 Build
