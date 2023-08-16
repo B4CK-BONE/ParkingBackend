@@ -43,7 +43,7 @@ public class AuthDao {
 				rs.getString("refresh_token"),
 			checkRefreshTokenParams)).toString();
 
-		return result != "NULL";
+		return !result.equals("NULL");
 	}
 
 	public boolean checkUser(String useremail) {
