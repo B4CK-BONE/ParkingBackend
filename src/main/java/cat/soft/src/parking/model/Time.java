@@ -25,16 +25,16 @@ public class Time {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "idx", nullable = false)
-	private Integer idx;
+	private Long idx;
 
 	@Column(name = "user_idx", nullable = false)
-	private Integer userIdx;
+	private Long userIdx;
 
 	@Column(name = "room_idx", nullable = false)
-	private Integer roomIdx;
+	private Long roomIdx;
 
 	@Column(name = "parking_lot_idx", nullable = false)
-	private Integer parkingLotIdx;
+	private Long parkingLotIdx;
 
 	@CreationTimestamp
 	@Column(name = "start", nullable = false)
@@ -44,7 +44,7 @@ public class Time {
 	private ZonedDateTime end;
 
 	@Builder
-	public Time(Integer userIdx, Integer parkingLotIdx, ZonedDateTime start,
+	public Time(Long userIdx, Long parkingLotIdx, ZonedDateTime start,
 		ZonedDateTime end) {
 		this.userIdx = userIdx;
 		this.parkingLotIdx = parkingLotIdx;

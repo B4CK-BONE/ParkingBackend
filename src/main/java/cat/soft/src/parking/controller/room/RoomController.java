@@ -1,6 +1,5 @@
 package cat.soft.src.parking.controller.room;
 
-import cat.soft.src.oauth.util.BaseException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -15,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import cat.soft.src.oauth.auth.jwt.JwtTokenProvider;
+import cat.soft.src.oauth.util.BaseException;
 import cat.soft.src.oauth.util.BaseResponse;
 import cat.soft.src.oauth.util.BaseResponseStatus;
 import cat.soft.src.parking.model.room.GetJoinRoomReq;
@@ -43,11 +43,18 @@ public class RoomController {
 	}
 
 	@PostMapping("")
-	public BaseResponse<PostCreateRoomRes> createRoom(@RequestHeader("Authorization") String token) throws BaseException {
+	public BaseResponse<PostCreateRoomRes> createRoom(@RequestHeader("Authorization") String token) throws
+		BaseException {
 		jwtTokenProvider.verifySignature(token);
 		PostCreateRoomRes postCreateRoomRes = roomService.createRoom(token);
+		if (postCreateRoomRes == null) {
+			return new BaseResponse<>(BaseResponseStatus.UNKNOWN22);
+		}
+		if (postCreateRoomRes.getRoom_idx() == -1) {
+			return new BaseResponse<>(BaseResponseStatus.UNKNOWN23);
+		}
 		if (postCreateRoomRes.getRoom_idx() == 0) {
-			return new BaseResponse<>(BaseResponseStatus.REQUEST_ERROR); // 해당 유저 없음
+			return new BaseResponse<>(BaseResponseStatus.UNKNOWN15);
 		}
 		return new BaseResponse<>(postCreateRoomRes);
 	}
@@ -57,8 +64,8 @@ public class RoomController {
 		@RequestHeader("Authorization") String token) throws BaseException {
 		jwtTokenProvider.verifySignature(token);
 		GetJoinRoomRes getJoinRoomRes = roomService.joinRoom(req.getRoom_id(), token);
-		if (getJoinRoomRes.getRoomIdx() == null) {
-			return new BaseResponse<>(BaseResponseStatus.UNKNOWN);
+		if (getJoinRoomRes == null) {
+			return new BaseResponse<>(BaseResponseStatus.UNKNOWN24);
 		}
 		if (getJoinRoomRes.getRoomIdx() == 0) {
 			return new BaseResponse<>(BaseResponseStatus.ALREADY_ALLOWED);
@@ -69,6 +76,9 @@ public class RoomController {
 		if (getJoinRoomRes.getRoomIdx() == -2) {
 			return new BaseResponse<>(BaseResponseStatus.ALLOW_DENIED);
 		}
+		if (getJoinRoomRes.getRoomIdx() == -3) {
+			return new BaseResponse<>(BaseResponseStatus.NO_ROOM);
+		}
 		return new BaseResponse<>(getJoinRoomRes);
 	}
 
@@ -76,27 +86,39 @@ public class RoomController {
 	public BaseResponse<GetQrCheckRes> qrCheck(@RequestHeader("Authorization") String token) throws BaseException {
 		jwtTokenProvider.verifySignature(token);
 		GetQrCheckRes getQrCheckRes = roomService.joinRoom(token);
-		if (getQrCheckRes.getRoomIdx() == 0) {
-			return new BaseResponse<>(BaseResponseStatus.INVALID_USER_JWT); // 방정보 없음
+		if (getQrCheckRes.getRoomIdx() == null) {
+			return new BaseResponse<>(BaseResponseStatus.UNKNOWN16); // 방정보 없음
 		}
 		return new BaseResponse<>(getQrCheckRes);
 	}
 
 	@GetMapping("/{roomId}/admin")
-	public BaseResponse<GetUserListByAdminRes> userListByAdmin(@PathVariable Integer roomId,
+	public BaseResponse<GetUserListByAdminRes> userListByAdmin(@PathVariable Long roomId,
 		@RequestHeader("Authorization") String token) throws BaseException {
 		jwtTokenProvider.verifySignature(token);
 		GetUserListByAdminRes getUserListByAdminRes = roomService.userListByAdmin(roomId, token);
+		if (getUserListByAdminRes.getNewUser() == null && getUserListByAdminRes.getOldUser() == null) {
+			return new BaseResponse<>(BaseResponseStatus.NO_PAGE_AUTH);
+		}
 		return new BaseResponse<>(getUserListByAdminRes);
 	}
 
 	@PutMapping("/{roomId}/admin")
-	public BaseResponse<PutUserApproveRes> approveUser(@PathVariable Integer roomId,
+	public BaseResponse<PutUserApproveRes> approveUser(@PathVariable Long roomId,
 		@Valid @RequestBody PutUserApproveReq req, @RequestHeader("Authorization") String token) throws BaseException {
 		jwtTokenProvider.verifySignature(token);
 		PutUserApproveRes putUserApproveRes = roomService.approveUser(roomId, req, token);
-		if (putUserApproveRes.getUserIdx() == null) {
-			return new BaseResponse<>(BaseResponseStatus.DELETE_USER_FAIL); // 방정보 없음
+		if (putUserApproveRes == null) {
+			return new BaseResponse<>(BaseResponseStatus.UNKNOWN18); // 방정보 없음
+		}
+		if (putUserApproveRes.getUserIdx() == -1) {
+			return new BaseResponse<>(BaseResponseStatus.UNKNOWN19); // 방정보 없음
+		}
+		if (putUserApproveRes.getUserIdx() == -2) {
+			return new BaseResponse<>(BaseResponseStatus.UNKNOWN20); // 방정보 없음
+		}
+		if (putUserApproveRes.getUserIdx() == -3) {
+			return new BaseResponse<>(BaseResponseStatus.UNKNOWN21); // 방정보 없음
 		}
 		return new BaseResponse<>(putUserApproveRes);
 	}

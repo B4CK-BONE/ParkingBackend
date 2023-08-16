@@ -1,5 +1,16 @@
 package cat.soft.src.oauth.user;
 
+import static cat.soft.src.oauth.util.BaseResponseStatus.*;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.ResponseCookie;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestHeader;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
 import cat.soft.src.oauth.auth.AuthDao;
 import cat.soft.src.oauth.auth.dto.PostUserAuthRes;
 import cat.soft.src.oauth.auth.dto.RefreshTokenRes;
@@ -8,21 +19,10 @@ import cat.soft.src.oauth.user.dto.GetUserRes;
 import cat.soft.src.oauth.user.dto.LogoutRes;
 import cat.soft.src.oauth.user.model.User;
 import cat.soft.src.oauth.util.BaseException;
-import com.fasterxml.jackson.databind.ser.Serializers;
-import io.jsonwebtoken.Claims;
-import jakarta.servlet.http.Cookie;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpCookie;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.ResponseCookie;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
-
 import cat.soft.src.oauth.util.BaseResponse;
+import io.jsonwebtoken.Claims;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
-
-import static cat.soft.src.oauth.util.BaseResponseStatus.*;
 
 @Slf4j
 @RestController
@@ -33,8 +33,10 @@ public class UsersController {
 	private final UserDao userDao;
 
 	private final AuthDao authDao;
+
 	@Autowired
-	public UsersController(JwtTokenProvider jwtTokenProvider, UserProvider userProvider, UserDao userDao, AuthDao authDao) {
+	public UsersController(JwtTokenProvider jwtTokenProvider, UserProvider userProvider, UserDao userDao,
+		AuthDao authDao) {
 		this.jwtTokenProvider = jwtTokenProvider;
 		this.userProvider = userProvider;
 		this.userDao = userDao;
@@ -70,8 +72,7 @@ public class UsersController {
 		try {
 			if (token.equals("undefined")){
 				throw new BaseException(EMPTY_JWT);
-			}
-			else {
+			} else {
 				userDao.LogoutUser(email);
 
 				LogoutRes logoutRes = new LogoutRes();
@@ -93,33 +94,33 @@ public class UsersController {
 			throw new BaseException(USERS_EMPTY_USER_EMAIL);
 		try {
 			String beforeRefToken = userDao.tokenByEmail(email);
-			if (token == "undefined"){
+			if (token == "undefined") {
 				throw new BaseException(EMPTY_JWT);
-			}
-			else if (!beforeRefToken.equals(token)) {
+			} else if (!beforeRefToken.equals(token)) {
 				throw new BaseException(INVALID_JWT);
-			}
-			else {
+			} else {
 				String accessToken = jwtTokenProvider.createAccessToken(email);
 				String refreshToken = jwtTokenProvider.createRefreshToken(email);
 
 				authDao.updateRefreshToken(email, refreshToken);
 
-//				HttpHeaders headers = new HttpHeaders();
-//				headers.set("Set-Cookie", "refreshToken=" + refreshToken + "; HttpOnly");
+				//				HttpHeaders headers = new HttpHeaders();
+				//				headers.set("Set-Cookie", "refreshToken=" + refreshToken + "; HttpOnly");
 
 				RefreshTokenRes refreshTokenRes = new RefreshTokenRes();
 				refreshTokenRes.setAccessToken(accessToken);
 				refreshTokenRes.setRefreshToken((refreshToken));
 
-				ResponseCookie responseCookie = ResponseCookie.from("refreshToken",refreshToken)
-						.httpOnly(true)
-						.secure(true)
-						.path("/")
-						.maxAge(60*60*24*60)
-						.build();
+				ResponseCookie responseCookie = ResponseCookie.from("refreshToken", refreshToken)
+					.httpOnly(true)
+					.secure(true)
+					.path("/")
+					.maxAge(60 * 60 * 24 * 60)
+					.build();
 
-				return ResponseEntity.ok().header(HttpHeaders.SET_COOKIE, responseCookie.toString()).body(refreshTokenRes);
+				return ResponseEntity.ok()
+					.header(HttpHeaders.SET_COOKIE, responseCookie.toString())
+					.body(refreshTokenRes);
 			}
 		} catch (Exception e) {
 			throw new BaseException(DATABASE_ERROR);

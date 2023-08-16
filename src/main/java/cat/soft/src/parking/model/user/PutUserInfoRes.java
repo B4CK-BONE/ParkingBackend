@@ -8,5 +8,5 @@ import lombok.Setter;
 @Getter
 @Setter
 public class PutUserInfoRes {
-	private Integer idx;
+	private Long idx;
 }

@@ -8,5 +8,5 @@ import lombok.Setter;
 @Getter
 @Setter
 public class DelTimeRes {
-	private Integer userIdx;
+	private Long userIdx;
 }

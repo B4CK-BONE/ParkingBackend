@@ -21,8 +21,8 @@ public class GetTimeRes {
 	private String endTime;
 	private String car;
 
-	private Integer userIdx;
-	private Integer slot;
+	private Long userIdx;
+	private Long slot;
 	private Boolean use;
 
 	private String kakao;

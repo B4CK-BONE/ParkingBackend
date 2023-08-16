@@ -31,17 +31,17 @@ public class UserService {
 	@Autowired
 	private JwtTokenProvider jwtTokenProvider;
 
-	public PutUserInfoRes updateUserInfo(@PathVariable Integer id, @RequestBody PutUserInfoReq userInfoReq,
+	public PutUserInfoRes updateUserInfo(@PathVariable Long id, @RequestBody PutUserInfoReq userInfoReq,
 		String token) {
 		User user = userRepository.findUsersByEmail(jwtTokenProvider.getEmail(token));
 		if (user == null) {
-			return new PutUserInfoRes(0);
+			return null;
 		}
 		if (!Objects.equals(id, user.getIdx()))
-			return new PutUserInfoRes(0);
+			return new PutUserInfoRes(0L);
 		UserInfo userInfo = userInfoRepository.findById(user.getIdx()).orElse(null);
 		if (userInfo == null) {
-			return new PutUserInfoRes(0);
+			return null;
 		}
 		userInfo.setCar(userInfoReq.getCar());
 		userInfo.setPhone(userInfoReq.getPhone());
@@ -55,13 +55,13 @@ public class UserService {
 		return new PutUserInfoRes(user.getIdx());
 	}
 
-	public GetUserInfoRes getUserInfo(Integer id, String token) {
+	public GetUserInfoRes getUserInfo(Long id, String token) {
 		User user = userRepository.findUsersByEmail(jwtTokenProvider.getEmail(token));
 		if (user == null) {
 			return null;
 		}
 		if (!Objects.equals(user.getIdx(), id))
-			return null;
+			return new GetUserInfoRes(null, null, null, null, null);
 		UserInfo userInfo = userInfoRepository.findById(user.getIdx()).orElse(null);
 		if (userInfo == null) {
 			return null;

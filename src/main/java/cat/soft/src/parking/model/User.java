@@ -19,11 +19,11 @@ public class User {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "idx", nullable = false)
-	private Integer idx;
+	private Long idx;
 
 	@Column(name = "room_idx", nullable = false)
 	@ColumnDefault("0")
-	private Integer roomIdx;
+	private Long roomIdx;
 
 	@Column(name = "email", nullable = false)
 	private String email;
