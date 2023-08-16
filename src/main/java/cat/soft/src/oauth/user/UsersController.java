@@ -10,8 +10,7 @@ import cat.soft.src.oauth.user.model.User;
 import cat.soft.src.oauth.util.BaseException;
 import com.fasterxml.jackson.databind.ser.Serializers;
 import io.jsonwebtoken.Claims;
-
-dimport jakarta.servlet.http.Cookie;
+import jakarta.servlet.http.Cookie;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpCookie;
 import org.springframework.http.HttpHeaders;
@@ -69,7 +68,7 @@ public class UsersController {
 		if (userProvider.checkEmail(email) == 0)
 			throw new BaseException(USERS_EMPTY_USER_EMAIL);
 		try {
-			if (token == "undefined"){
+			if (token.equals("undefined")){
 				throw new BaseException(EMPTY_JWT);
 			}
 			else {
