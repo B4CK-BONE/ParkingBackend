@@ -14,6 +14,8 @@ import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.mysql.cj.jdbc.exceptions.MySQLTransactionRollbackException;
+
 import cat.soft.src.oauth.auth.jwt.JwtTokenProvider;
 import cat.soft.src.oauth.util.BaseException;
 import cat.soft.src.oauth.util.BaseResponse;
@@ -46,6 +48,12 @@ public class RoomController {
 	@ExceptionHandler(HttpMessageNotReadableException.class)
 	public BaseResponse<HttpMessageNotReadableException> handleNotReadableException(
 		HttpMessageNotReadableException ex) {
+		return new BaseResponse<>(ex);
+	}
+
+	@ExceptionHandler(MySQLTransactionRollbackException.class)
+	public BaseResponse<MySQLTransactionRollbackException> handleNotReadableException(
+		MySQLTransactionRollbackException ex) {
 		return new BaseResponse<>(ex);
 	}
 
