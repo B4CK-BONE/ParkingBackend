@@ -19,9 +19,9 @@ public class PostReportReq {
 	@NotNull(message = "신고할 유저를 선택하세요.")
 	@Min(value = 1, message = "신고할 유저 정보를 확인하세요.")
 	@Max(value = Integer.MAX_VALUE, message = "신고할 유저 정보를 확인하세요.")
-	private Integer suspect;
+	private Long suspect;
 
-	public Report toEntity(Integer victim) {
+	public Report toEntity(Long victim) {
 		return Report.builder()
 			.suspect(suspect)
 			.victim(victim)

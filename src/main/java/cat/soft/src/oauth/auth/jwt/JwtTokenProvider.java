@@ -1,17 +1,19 @@
 package cat.soft.src.oauth.auth.jwt;
 
+import static cat.soft.src.oauth.util.BaseResponseStatus.*;
+
 import java.security.Key;
 import java.time.ZonedDateTime;
 import java.util.Date;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Component;
 
 import cat.soft.src.oauth.auth.AuthDao;
 import cat.soft.src.oauth.user.UserDao;
 import cat.soft.src.oauth.util.BaseException;
 import cat.soft.src.oauth.util.BaseResponseStatus;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Component;
-
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
@@ -19,8 +21,6 @@ import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
 import jakarta.annotation.PostConstruct;
 import lombok.Getter;
-
-import static cat.soft.src.oauth.util.BaseResponseStatus.USERS_EMPTY_USER_EMAIL;
 
 @Component
 @Getter
@@ -38,10 +38,10 @@ public class JwtTokenProvider {
 
 	@Autowired
 	public JwtTokenProvider(
-			@Value("${jwt.time.access}") long JWT_ACCESS_TOKEN_EXPTIME,
-			@Value("${jwt.time.refresh}") long JWT_REFRESH_TOKEN_EXPTIME,
-			@Value("${jwt.secret.access}") String JWT_ACCESS_SECRET_KEY,
-			@Value("${jwt.secret.refresh}") String JWT_REFRESH_SECRET_KEY, UserDao userDao, AuthDao authDao) {
+		@Value("${jwt.time.access}") long JWT_ACCESS_TOKEN_EXPTIME,
+		@Value("${jwt.time.refresh}") long JWT_REFRESH_TOKEN_EXPTIME,
+		@Value("${jwt.secret.access}") String JWT_ACCESS_SECRET_KEY,
+		@Value("${jwt.secret.refresh}") String JWT_REFRESH_SECRET_KEY, UserDao userDao, AuthDao authDao) {
 		this.JWT_ACCESS_TOKEN_EXPTIME = JWT_ACCESS_TOKEN_EXPTIME;
 		this.JWT_REFRESH_TOKEN_EXPTIME = JWT_REFRESH_TOKEN_EXPTIME;
 		this.JWT_ACCESS_SECRET_KEY = JWT_ACCESS_SECRET_KEY;
@@ -63,7 +63,7 @@ public class JwtTokenProvider {
 	public String createAccessToken(String useremail) {
 		Claims claims = Jwts.claims().setSubject(useremail); // JWT payload 에 저장되는 정보단위, 보통 여기서 user를 식별하는 값을 넣는다.
 		claims.put("email", useremail);
-		Date now = new Date();
+		Date now = Date.from(ZonedDateTime.now().toInstant());
 		return Jwts.builder()
 			.setClaims(claims) // 정보 저장
 			.setIssuedAt(now) // 토큰 발행 시간 정보
@@ -79,7 +79,7 @@ public class JwtTokenProvider {
 
 		claims.put("email", useremail);
 
-		Date now = new Date();
+		Date now = Date.from(ZonedDateTime.now().toInstant());
 		return Jwts.builder()
 			.setClaims(claims) // 정보 저장
 			.setIssuedAt(now) // 토큰 발행 시간 정보
@@ -131,7 +131,7 @@ public class JwtTokenProvider {
 		return expiration.getTime() - now;
 	}
 
-	public void verifySignature (String token) throws BaseException {
+	public void verifySignature(String token) throws BaseException {
 		Key key = accessKey;
 		Claims claims = this.getJwtContents(token);
 		String email = String.valueOf(claims.get("email"));
@@ -139,9 +139,9 @@ public class JwtTokenProvider {
 			throw new BaseException(USERS_EMPTY_USER_EMAIL);
 		try {
 			Jwts.parserBuilder()
-					.setSigningKey(key)
-					.build()
-					.parseClaimsJws(token);
+				.setSigningKey(key)
+				.build()
+				.parseClaimsJws(token);
 		} catch (Exception e) {
 			throw new BaseException(BaseResponseStatus.DATABASE_ERROR);
 		}

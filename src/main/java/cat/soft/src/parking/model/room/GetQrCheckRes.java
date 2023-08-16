@@ -8,5 +8,5 @@ import lombok.Setter;
 @Getter
 @Setter
 public class GetQrCheckRes {
-	private Integer roomIdx;
+	private Long roomIdx;
 }

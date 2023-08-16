@@ -8,5 +8,5 @@ import lombok.Setter;
 @Getter
 @Setter
 public class PostCreateRoomRes {
-	private Integer room_idx;
+	private Long room_idx;
 }

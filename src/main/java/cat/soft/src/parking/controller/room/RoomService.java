@@ -44,13 +44,13 @@ public class RoomService {
 	public PostCreateRoomRes createRoom(String token) {
 		User user = userRepository.findUsersByEmail(jwtTokenProvider.getEmail(token));
 		if (user == null) {
-			return new PostCreateRoomRes(0);
+			return null;
 		}
 		if (user.getRoomIdx() != 0) {
-			return new PostCreateRoomRes(0);
+			return new PostCreateRoomRes(0L);
 		}
 		if (user.getRole() != 0) {
-			return new PostCreateRoomRes(0);
+			return new PostCreateRoomRes(-1L);
 		}
 		Room room = roomRepository.save(Room.builder().idx(user.getIdx()).build());
 		user.setRoomIdx(room.getIdx());
@@ -60,23 +60,23 @@ public class RoomService {
 		return new PostCreateRoomRes(user.getIdx());
 	}
 
-	public GetJoinRoomRes joinRoom(Integer roomId, String token) {
+	public GetJoinRoomRes joinRoom(Long roomId, String token) {
 		User user = userRepository.findUsersByEmail(jwtTokenProvider.getEmail(token));
 		if (user == null) {
 			return null; // 5000 불가능한 유저
 		}
 		if (user.getRole() != 0) {
-			return new GetJoinRoomRes(0); // [5001] 승인된 유저입니다.
+			return new GetJoinRoomRes(0L); // [5001] 승인된 유저입니다.
 		}
 		if (user.getRoomIdx() != 0) {
-			return new GetJoinRoomRes(-1); // [5002] 승인 대기중 입니다.
+			return new GetJoinRoomRes(-1L); // [5002] 승인 대기중 입니다.
 		}
 		if (roomId == null) {
-			return new GetJoinRoomRes(-2); // [5003] 존재하지 않는 방 입니다.
+			return new GetJoinRoomRes(-2L); // [5003] 존재하지 않는 방 입니다.
 		}
 		Room room = roomRepository.findById(roomId).orElse(null);
 		if (room == null) {
-			return new GetJoinRoomRes(-2); // [5003] 존재하지 않는 방 입니다.
+			return new GetJoinRoomRes(-3L); // [5003] 존재하지 않는 방 입니다.
 		}
 		user.setRoomIdx(roomId);
 		userRepository.save(user);
@@ -86,15 +86,15 @@ public class RoomService {
 	public GetQrCheckRes joinRoom(String token) {
 		User user = userRepository.findUsersByEmail(jwtTokenProvider.getEmail(token));
 		if (user == null) {
-			return new GetQrCheckRes(0);
+			return null;
 		}
 		if (user.getRoomIdx() == 0) {
-			return new GetQrCheckRes(0);
+			return null;
 		}
 		return new GetQrCheckRes(user.getRoomIdx());
 	}
 
-	public GetUserListByAdminRes userListByAdmin(Integer roomId, String token) {
+	public GetUserListByAdminRes userListByAdmin(Long roomId, String token) {
 		User admin = userRepository.findUsersByEmail(jwtTokenProvider.getEmail(token));
 		Room room = roomRepository.findById(roomId).orElse(null);
 		if (admin == null || room == null) {
@@ -125,30 +125,30 @@ public class RoomService {
 		return new GetUserListByAdminRes(newUserInfo, oldUserInfo);
 	}
 
-	public PutUserApproveRes approveUser(Integer roomId, PutUserApproveReq req, String token) {
+	public PutUserApproveRes approveUser(Long roomId, PutUserApproveReq req, String token) {
 		Room room = roomRepository.findById(roomId).orElse(null);
 		User admin = userRepository.findUsersByEmail(jwtTokenProvider.getEmail(token));
 		User user = userRepository.findById(req.getUserIdx()).orElse(null);
 		if (room == null || admin == null || user == null) {
-			return new PutUserApproveRes(null);
+			return null;
 		}
 		if (!Objects.equals(room.getAdminIdx(), admin.getIdx()) || !Objects.equals(room.getIdx(), admin.getRoomIdx())
 			|| admin.getRole() != 2) {
-			return new PutUserApproveRes(null);
+			return null;
 		}
 		if (Objects.equals(user.getIdx(), admin.getIdx())) { // 셀프 추방 금지
-			return new PutUserApproveRes(null);
+			return new PutUserApproveRes(-1L);
 		}
 		if (!Objects.equals(user.getRoomIdx(), admin.getRoomIdx())) { // 신청하지 않은 유저 변경 금지
-			return new PutUserApproveRes(null);
+			return new PutUserApproveRes(-2L);
 		}
 		if (req.getRole() == 0) { // 거절
-			user.setRole(Long.valueOf(req.getRole()));
-			user.setRoomIdx(0);
+			user.setRole(req.getRole());
+			user.setRoomIdx(0L);
 		} else if (req.getRole() == 1) { // 승인
-			user.setRole(Long.valueOf(req.getRole()));
+			user.setRole(req.getRole());
 		} else {
-			return new PutUserApproveRes(null);
+			return new PutUserApproveRes(-3L);
 		}
 		userRepository.save(user);
 		return new PutUserApproveRes(user.getIdx());
