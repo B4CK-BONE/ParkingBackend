@@ -70,7 +70,7 @@ public class UsersController {
 		if (userProvider.checkEmail(email) == 0)
 			throw new BaseException(USERS_EMPTY_USER_EMAIL);
 		try {
-			if (token == "undefined") {
+			if (token.equals("undefined")){
 				throw new BaseException(EMPTY_JWT);
 			} else {
 				userDao.LogoutUser(email);
