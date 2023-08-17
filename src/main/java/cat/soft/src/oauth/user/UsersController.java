@@ -2,39 +2,38 @@ package cat.soft.src.oauth.user;
 
 import static cat.soft.src.oauth.util.BaseResponseStatus.*;
 
-import cat.soft.src.oauth.auth.dto.RoomAdminVerify;
-import cat.soft.src.oauth.user.dto.GetSurveyReq;
-import cat.soft.src.oauth.user.dto.GetSurveyRes;
-import cat.soft.src.oauth.util.BaseResponseStatus;
-import cat.soft.src.parking.model.room.PutUserApproveReq;
-import cat.soft.src.parking.model.room.PutUserApproveRes;
-import jakarta.validation.Valid;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseCookie;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestHeader;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 import cat.soft.src.oauth.auth.AuthDao;
 import cat.soft.src.oauth.auth.dto.PostUserAuthRes;
 import cat.soft.src.oauth.auth.dto.RefreshTokenRes;
+import cat.soft.src.oauth.auth.dto.RoomAdminVerify;
 import cat.soft.src.oauth.auth.jwt.JwtTokenProvider;
-import cat.soft.src.oauth.user.dto.GetUserRes;
+import cat.soft.src.oauth.user.dto.GetSurveyReq;
+import cat.soft.src.oauth.user.dto.GetSurveyRes;
 import cat.soft.src.oauth.user.dto.LogoutRes;
-import cat.soft.src.oauth.user.model.User;
 import cat.soft.src.oauth.util.BaseException;
 import cat.soft.src.oauth.util.BaseResponse;
+import cat.soft.src.oauth.util.BaseResponseStatus;
 import io.jsonwebtoken.Claims;
-import jakarta.servlet.http.HttpServletRequest;
+import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.web.multipart.MultipartFile;
-
-import java.text.SimpleDateFormat;
-import java.time.LocalDateTime;
-import java.time.LocalTime;
-import java.time.format.DateTimeFormatter;
-import java.util.*;
 
 @Slf4j
 @RestController
@@ -46,12 +45,12 @@ public class UsersController {
 
 	private final AuthDao authDao;
 
-//	@ExceptionHandler(MethodArgumentNotValidException.class)
-//	public BaseResponse<MethodArgumentNotValidException> handleValidationExceptions(
-//			MethodArgumentNotValidException ex) {
-//
-//		return new BaseResponse<>(ex);
-//	}
+	@ExceptionHandler(MethodArgumentNotValidException.class)
+	public BaseResponse<MethodArgumentNotValidException> handleValidationExceptions(
+		MethodArgumentNotValidException ex) {
+
+		return new BaseResponse<>(ex);
+	}
 
 	@Autowired
 	public UsersController(JwtTokenProvider jwtTokenProvider, UserProvider userProvider, UserDao userDao,
@@ -81,7 +80,7 @@ public class UsersController {
 		if (userProvider.checkEmail(email) == 0)
 			throw new BaseException(USERS_EMPTY_USER_EMAIL);
 		try {
-			if (token.equals("undefined")){
+			if (token.equals("undefined")) {
 				throw new BaseException(EMPTY_JWT);
 			} else {
 				userDao.LogoutUser(email);
@@ -139,7 +138,8 @@ public class UsersController {
 	}
 
 	@PostMapping("/survey")
-	public BaseResponse<BaseResponseStatus> insertSurvey(@RequestHeader("Authorization") String token, @Valid @RequestBody GetSurveyReq contents) throws BaseException {
+	public BaseResponse<BaseResponseStatus> insertSurvey(@RequestHeader("Authorization") String token,
+		@Valid @RequestBody GetSurveyReq contents) throws BaseException {
 		jwtTokenProvider.verifySignature(token);
 		Claims claims = jwtTokenProvider.getJwtContents(token);
 		String email = String.valueOf(claims.get("email"));
@@ -152,34 +152,33 @@ public class UsersController {
 		String img = String.valueOf(contents.getImg());
 		// role != -1 검증 추가
 		// 1일 1회 검증 추가
-		if(userDao.selectSurveyRole(email) != -1) {
+		if (userDao.selectSurveyRole(email) != -1) {
 			String test = String.valueOf(userDao.selectSurveyDate(email));
-			if(!formatedNow.equals(test)) {
+			if (!formatedNow.equals(test)) {
 				userDao.insertSurvey(context, img, email);
 				return new BaseResponse<>(SUCCESS);
-			}
-			else{
+			} else {
 				return new BaseResponse<>(SURVEY_DAY);
 			}
-		}	else{
+		} else {
 			return new BaseResponse<>(INVALID_USER_JWT);
 		}
 	}
 
 	@PostMapping("/survey/{roomId}")
-	public BaseResponse<List<GetSurveyRes>> showSurvey(@PathVariable Long roomId, @RequestHeader("Authorization") String token) throws BaseException {
+	public BaseResponse<List<GetSurveyRes>> showSurvey(@PathVariable Long roomId,
+		@RequestHeader("Authorization") String token) throws BaseException {
 		jwtTokenProvider.verifySignature(token);
 		Claims claims = jwtTokenProvider.getJwtContents(token);
 		String email = String.valueOf(claims.get("email"));
 
 		RoomAdminVerify roomAdminVerify = userDao.getRoomInfo(email);
 
-		if( roomAdminVerify.getRoomIdx().equals(roomId.intValue()) && roomAdminVerify.getRole().equals(2)){
+		if (roomAdminVerify.getRoomIdx().equals(roomId.intValue()) && roomAdminVerify.getRole().equals(2)) {
 			log.info("test");
 			List<GetSurveyRes> getSurveyResList = userDao.selectSurveyList(email);
 			return new BaseResponse<>(getSurveyResList);
-		}
-		else{
+		} else {
 			throw new BaseException(INVALID_USER_JWT);
 		}
 	}
