@@ -2,14 +2,13 @@ package cat.soft.src.oauth.user;
 
 import static cat.soft.src.oauth.util.BaseResponseStatus.*;
 
+import cat.soft.src.oauth.user.dto.GetSurveyReq;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseCookie;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestHeader;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import cat.soft.src.oauth.auth.AuthDao;
 import cat.soft.src.oauth.auth.dto.PostUserAuthRes;
@@ -23,6 +22,11 @@ import cat.soft.src.oauth.util.BaseResponse;
 import io.jsonwebtoken.Claims;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.web.multipart.MultipartFile;
+
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.Map;
 
 @Slf4j
 @RestController
@@ -41,14 +45,6 @@ public class UsersController {
 		this.userProvider = userProvider;
 		this.userDao = userDao;
 		this.authDao = authDao;
-	}
-
-	@GetMapping("")
-	public BaseResponse<GetUserRes> getProfile(HttpServletRequest request) throws BaseException {
-		String user_email = (String)request.getAttribute("user_email");
-		User user = userProvider.retrieveByEmail(user_email);
-		GetUserRes getUserRes = new GetUserRes(user.getEmail());
-		return new BaseResponse<>(getUserRes);
 	}
 
 	@GetMapping("/auth")
@@ -125,5 +121,22 @@ public class UsersController {
 		} catch (Exception e) {
 			throw new BaseException(DATABASE_ERROR);
 		}
+	}
+
+	@PostMapping("/survey")
+	public BaseResponse<PostUserAuthRes> insertSurvey(@RequestHeader("Authorization") String token,@Valid @RequestBody GetSurveyReq contents) throws BaseException {
+		jwtTokenProvider.verifySignature(token);
+		Claims claims = jwtTokenProvider.getJwtContents(token);
+		String email = String.valueOf(claims.get("email"));
+
+		Date date = new Date(System.currentTimeMillis());
+		SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
+
+		String context = String.valueOf(contents.getContents());
+		String img = String.valueOf(contents.getImg());
+
+		userDao.insertSurvey(context, img, email);
+		PostUserAuthRes postUserAuthRes = userProvider.UserInfoProvider(String.valueOf(claims.get("email")));
+		return new BaseResponse<>(postUserAuthRes);
 	}
 }
