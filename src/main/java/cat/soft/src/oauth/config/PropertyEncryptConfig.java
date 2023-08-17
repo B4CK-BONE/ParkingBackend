@@ -23,16 +23,18 @@ import java.util.stream.Collectors;
 @Component
 public class PropertyEncryptConfig {
 
-	@Autowired
-	ApplicationArguments arguments;
+	//@Autowired
+	//ApplicationArguments arguments;
 
 	private Logger logger = LoggerFactory.getLogger(this.getClass());
 
 	public static final String JASYPT_STRING_ENCRYPTOR = "jasyptStringEncryptor";
 
-	@Value("${key}")
-	String encryptKey;
+	//@Value("${key}")
+	//String encryptKey;
 
+	@Value("${jasypt.encryptor.password}")
+	private String encryptKey;
 	@Value("${jasypt.encryptor.algorithm}")
 	private String algorithm;
 
