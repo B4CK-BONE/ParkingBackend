@@ -12,12 +12,11 @@ public class ParkingLotCreator {
 		List<ParkingLot> parkingLots = new ArrayList<>();
 		List<String> bottom = Arrays.asList("56vh", "50vh", "44vh", "56vh", "50vh", "44vh", "40vh", "51vh", "51vh",
 			"40vh", "28vh", "28vh");
-		List<String> rigth = Arrays.asList("70%", "70%", "70%", "12%", "12%", "12%", "40%", "55%", "40%",
-			"55%", "40%", "55%");
-		List<String> height = Arrays.asList("5vh", "5vh", "5vh", "5vh", "5vh", "5vh", "10vh", "10vh", "10vh", "10vh",
-			"10vh", "10vh");
-		List<String> width = Arrays.asList("20vw", "20vw", "20vw", "20vw", "20vw", "20vw", "5vh", "5vh", "5vh",
-			"5vh", "5vh", "5vh");
+		List<String> rigth = Arrays.asList("70%", "70%", "70%", "5%", "5%", "3%", "35%", "53%", "35%", "53%", "35%", "53%");
+		List<String> height = Arrays.asList("6%", "6%", "6%", "6%", "6%", "6%", "13%", "13%", "13%", "13%",
+			"13%", "13%");
+		List<String> width = Arrays.asList("25%", "25%", "25%", "25%", "25%", "25%", "12%", "12%", "12%",
+			"12%", "12%", "12%");
 		for (int i = 0; i < 12; i++) {
 			ParkingLot parkingLot = new ParkingLot();
 			parkingLot.setHeight(height.get(i));
