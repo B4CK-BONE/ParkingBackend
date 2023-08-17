@@ -22,7 +22,6 @@ public class BaseResponse<T> {
 	@JsonInclude(JsonInclude.Include.NON_NULL)
 	private T result;
 
-	// 요청에 성공한 경우
 	public BaseResponse(T result) {
 		this.isSuccess = BaseResponseStatus.SUCCESS.isSuccess();
 		this.message = BaseResponseStatus.SUCCESS.getMessage();
@@ -36,14 +35,12 @@ public class BaseResponse<T> {
 		this.code = BaseResponseStatus.SUCCESS.getCode();
 	}
 
-	// 요청에 실패한 경우
 	public BaseResponse(BaseResponseStatus status) {
 		this.isSuccess = status.isSuccess();
 		this.message = status.getMessage();
 		this.code = status.getCode();
 	}
 
-	// 요청에 실패한 경우
 	public BaseResponse(MethodArgumentNotValidException exception) {
 		this.isSuccess = false;
 		this.message = exception.getBindingResult().getAllErrors().get(0).getDefaultMessage();

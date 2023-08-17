@@ -114,9 +114,6 @@ public class UsersController {
 
 				authDao.updateRefreshToken(email, refreshToken);
 
-				//				HttpHeaders headers = new HttpHeaders();
-				//				headers.set("Set-Cookie", "refreshToken=" + refreshToken + "; HttpOnly");
-
 				RefreshTokenRes refreshTokenRes = new RefreshTokenRes();
 				refreshTokenRes.setAccessToken(accessToken);
 				refreshTokenRes.setRefreshToken((refreshToken));
@@ -150,11 +147,9 @@ public class UsersController {
 
 		String context = String.valueOf(contents.getContents());
 		String img = String.valueOf(contents.getImg());
-		// role != -1 검증 추가
-		// 1일 1회 검증 추가
+
 		if (userDao.selectSurveyRole(email) != -1) {
-			String test = String.valueOf(userDao.selectSurveyDate(email));
-			if (!formatedNow.equals(test)) {
+			if (!formatedNow.equals(String.valueOf(userDao.selectSurveyDate(email)))) {
 				userDao.insertSurvey(context, img, email);
 				return new BaseResponse<>(SUCCESS);
 			} else {
@@ -175,7 +170,6 @@ public class UsersController {
 		RoomAdminVerify roomAdminVerify = userDao.getRoomInfo(email);
 
 		if (roomAdminVerify.getRoomIdx().equals(roomId.intValue()) && roomAdminVerify.getRole().equals(2)) {
-			log.info("test");
 			List<GetSurveyRes> getSurveyResList = userDao.selectSurveyList(email);
 			return new BaseResponse<>(getSurveyResList);
 		} else {

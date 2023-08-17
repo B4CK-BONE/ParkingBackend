@@ -9,8 +9,6 @@ import java.util.Objects;
 
 import javax.sql.DataSource;
 
-import cat.soft.src.oauth.auth.dto.RoomAdminVerify;
-import cat.soft.src.oauth.user.dto.GetSurveyRes;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.dao.IncorrectResultSizeDataAccessException;
@@ -18,6 +16,8 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
 import cat.soft.src.oauth.auth.dto.PostUserAuthRes;
+import cat.soft.src.oauth.auth.dto.RoomAdminVerify;
+import cat.soft.src.oauth.user.dto.GetSurveyRes;
 import cat.soft.src.oauth.user.model.User;
 import cat.soft.src.oauth.util.BaseException;
 import cat.soft.src.oauth.util.EncryptionUtils;
@@ -43,7 +43,7 @@ public class UserDao {
 			user.setEmail(lastInsertEmail);
 
 			return user;
-		} catch (EmptyResultDataAccessException e){
+		} catch (EmptyResultDataAccessException e) {
 			throw new BaseException(DATABASE_ERROR);
 		}
 	}
@@ -67,7 +67,7 @@ public class UserDao {
 		Object[] insertUserInfoParams = new Object[] {this.selectIdxByEmail(email)};
 		try {
 			this.jdbcTemplate.update(insertUserInfoQuery, insertUserInfoParams);
-		} catch (EmptyResultDataAccessException e){
+		} catch (EmptyResultDataAccessException e) {
 			throw new BaseException(DATABASE_ERROR);
 		}
 	}
@@ -108,13 +108,13 @@ public class UserDao {
 		}
 	}
 
-	public int checkEmail(String email) throws BaseException{
+	public int checkEmail(String email) throws BaseException {
 		String checkEmailQuery = "select exists(select email from User where email = ?)";
 		Object[] checkEmailParams = new Object[] {email};
 		try {
 			return this.jdbcTemplate.queryForObject(checkEmailQuery, int.class, checkEmailParams);
-		} catch (EmptyResultDataAccessException e){
-			throw  new BaseException(DATABASE_ERROR);
+		} catch (EmptyResultDataAccessException e) {
+			throw new BaseException(DATABASE_ERROR);
 		}
 	}
 
@@ -130,75 +130,76 @@ public class UserDao {
 					rs.getInt("role")),
 				getUserInfoParams);
 		} catch (EmptyResultDataAccessException e) {
-			throw  new BaseException(DATABASE_ERROR);
+			throw new BaseException(DATABASE_ERROR);
 		}
 	}
+
 	public RoomAdminVerify getRoomInfo(String email) throws BaseException {
 		String getRoomInfoQuery = "select room_idx, role from User where email=?";
 		Object[] getRoomInfoParams = new Object[] {email};
 
 		try {
 			return this.jdbcTemplate.queryForObject(getRoomInfoQuery,
-					(rs, rowNum) -> new RoomAdminVerify(
-							rs.getInt("room_idx"),
-							rs.getInt("role")),
-					getRoomInfoParams);
+				(rs, rowNum) -> new RoomAdminVerify(
+					rs.getInt("room_idx"),
+					rs.getInt("role")),
+				getRoomInfoParams);
 		} catch (EmptyResultDataAccessException e) {
-			throw  new BaseException(DATABASE_ERROR);
-		}
-	}
-
-	public synchronized void insertSurvey(String context, String img, String email) throws BaseException{
-		String insertSurveyQuery1 = "insert into Survey (contents, img, user_idx, room_idx) values (?,?,(select idx from User where email=?),(select room_idx from User where email=?))";
-		Object[] insertSurveyParams1 = new Object[] {context, img, email, email};
-		try {
-			this.jdbcTemplate.update(insertSurveyQuery1, insertSurveyParams1);
-		} catch (EmptyResultDataAccessException e){
-			throw  new BaseException(DATABASE_ERROR);
-		}
-	}
-
-	public synchronized Integer selectSurveyRole(String email) throws BaseException{
-		String selectSurveyQuery = "select role from User where email=?";
-		Object[] selectSurveyParams = new Object[] {email};
-		try {
-			return this.jdbcTemplate.queryForObject(selectSurveyQuery,
-					(rs, rowNum) ->
-							rs.getInt("role"),
-					selectSurveyParams);
-		} catch (EmptyResultDataAccessException e){
 			throw new BaseException(DATABASE_ERROR);
 		}
 	}
 
-	public synchronized Date selectSurveyDate(String email) throws BaseException{
-		String selectSurveyQuery = "select idx, time from Survey where user_idx=(select idx from User where email=?) ORDER BY idx DESC LIMIT 1;";
-		Object[] selectSurveyParams = new Object[] {email};//'scott4935@gmail.\'com'
+	public synchronized void insertSurvey(String context, String img, String email) throws BaseException {
+		String insertSurveyQuery1 = "insert into Survey (contents, img, user_idx, room_idx) values (?,?,(select idx from User where email=?),(select room_idx from User where email=?))";
+		Object[] insertSurveyParams1 = new Object[] {context, img, email, email};
+		try {
+			this.jdbcTemplate.update(insertSurveyQuery1, insertSurveyParams1);
+		} catch (EmptyResultDataAccessException e) {
+			throw new BaseException(DATABASE_ERROR);
+		}
+	}
+
+	public synchronized Integer selectSurveyRole(String email) throws BaseException {
+		String selectSurveyQuery = "select role from User where email=?";
+		Object[] selectSurveyParams = new Object[] {email};
 		try {
 			return this.jdbcTemplate.queryForObject(selectSurveyQuery,
-					(rs, rowNum) ->
-							rs.getDate("time"),
-							selectSurveyParams);
-		} catch (IncorrectResultSizeDataAccessException error){
+				(rs, rowNum) ->
+					rs.getInt("role"),
+				selectSurveyParams);
+		} catch (EmptyResultDataAccessException e) {
+			throw new BaseException(DATABASE_ERROR);
+		}
+	}
+
+	public synchronized Date selectSurveyDate(String email) throws BaseException {
+		String selectSurveyQuery = "select idx, time from Survey where user_idx=(select idx from User where email=?) ORDER BY idx DESC LIMIT 1;";
+		Object[] selectSurveyParams = new Object[] {email};
+		try {
+			return this.jdbcTemplate.queryForObject(selectSurveyQuery,
+				(rs, rowNum) ->
+					rs.getDate("time"),
+				selectSurveyParams);
+		} catch (IncorrectResultSizeDataAccessException error) {
 			return null;
 		}
 	}
 
-	public synchronized List<GetSurveyRes> selectSurveyList(String email) throws BaseException{
+	public synchronized List<GetSurveyRes> selectSurveyList(String email) throws BaseException {
 		String selectSurveyListQuery = "select ROW_NUMBER() over (ORDER BY (SELECT 1)) as rownum, idx, contents, img, time from Survey where room_idx=(select room_idx from User where email=? AND role=2)";
-		Object[] selectSurveyListParams = new Object[] {email};//'scott4935@gmail.\'com'
+		Object[] selectSurveyListParams = new Object[] {email};
 		try {
 			List<GetSurveyRes> getSurveyRes = new ArrayList<>();
 			getSurveyRes = this.jdbcTemplate.query(selectSurveyListQuery,
-					(rs, rowNum) -> new GetSurveyRes(
-							rs.getInt("rownum")-1,
-							rs.getString("contents"),
-							rs.getString("img"),
-							rs.getDate("time")),
-					selectSurveyListParams);
+				(rs, rowNum) -> new GetSurveyRes(
+					rs.getInt("rownum") - 1,
+					rs.getString("contents"),
+					rs.getString("img"),
+					rs.getDate("time")),
+				selectSurveyListParams);
 			return getSurveyRes;
-		} catch (EmptyResultDataAccessException e){
-			throw  new BaseException(DATABASE_ERROR);
+		} catch (EmptyResultDataAccessException e) {
+			throw new BaseException(DATABASE_ERROR);
 		}
 	}
 }

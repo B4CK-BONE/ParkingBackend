@@ -5,34 +5,20 @@ import org.jasypt.encryption.pbe.StandardPBEStringEncryptor;
 import org.jasypt.encryption.pbe.config.SimpleStringPBEConfig;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.context.ApplicationListener;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.boot.ApplicationArguments;
-import com.ulisesbocchio.jasyptspringboot.annotation.EnableEncryptableProperties;
-import org.springframework.context.event.ContextRefreshedEvent;
 import org.springframework.stereotype.Component;
 
-import java.util.List;
-import java.util.stream.Collectors;
+import com.ulisesbocchio.jasyptspringboot.annotation.EnableEncryptableProperties;
 
 @Configuration
 @EnableEncryptableProperties
 @Component
 public class PropertyEncryptConfig {
-
-	//@Autowired
-	//ApplicationArguments arguments;
-
 	private Logger logger = LoggerFactory.getLogger(this.getClass());
 
 	public static final String JASYPT_STRING_ENCRYPTOR = "jasyptStringEncryptor";
-
-	//@Value("${key}")
-	//String encryptKey;
-
 	@Value("${jasypt.encryptor.password}")
 	private String encryptKey;
 	@Value("${jasypt.encryptor.algorithm}")
