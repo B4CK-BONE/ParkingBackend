@@ -2,8 +2,12 @@ package cat.soft.src.oauth.user;
 
 import static cat.soft.src.oauth.util.BaseResponseStatus.*;
 
+import cat.soft.src.oauth.auth.dto.RoomAdminVerify;
 import cat.soft.src.oauth.user.dto.GetSurveyReq;
+import cat.soft.src.oauth.user.dto.GetSurveyRes;
 import cat.soft.src.oauth.util.BaseResponseStatus;
+import cat.soft.src.parking.model.room.PutUserApproveReq;
+import cat.soft.src.parking.model.room.PutUserApproveRes;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
@@ -27,8 +31,10 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.Map;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
+import java.time.format.DateTimeFormatter;
+import java.util.*;
 
 @Slf4j
 @RestController
@@ -138,13 +144,43 @@ public class UsersController {
 		Claims claims = jwtTokenProvider.getJwtContents(token);
 		String email = String.valueOf(claims.get("email"));
 
-		Date date = new Date(System.currentTimeMillis());
-		SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
+		LocalDateTime now = LocalDateTime.now();
+		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+		String formatedNow = now.format(formatter);
 
 		String context = String.valueOf(contents.getContents());
 		String img = String.valueOf(contents.getImg());
+		// role != -1 검증 추가
+		// 1일 1회 검증 추가
+		if(userDao.selectSurveyRole(email) != -1) {
+			String test = String.valueOf(userDao.selectSurveyDate(email));
+			if(!formatedNow.equals(test)) {
+				userDao.insertSurvey(context, img, email);
+				return new BaseResponse<>(SUCCESS);
+			}
+			else{
+				return new BaseResponse<>(SURVEY_DAY);
+			}
+		}	else{
+			return new BaseResponse<>(INVALID_USER_JWT);
+		}
+	}
 
-		userDao.insertSurvey(context, img, email);
-		return new BaseResponse<>(SUCCESS);
+	@PostMapping("/survey/{roomId}")
+	public BaseResponse<List<GetSurveyRes>> showSurvey(@PathVariable Long roomId, @RequestHeader("Authorization") String token) throws BaseException {
+		jwtTokenProvider.verifySignature(token);
+		Claims claims = jwtTokenProvider.getJwtContents(token);
+		String email = String.valueOf(claims.get("email"));
+
+		RoomAdminVerify roomAdminVerify = userDao.getRoomInfo(email);
+
+		if( roomAdminVerify.getRoomIdx().equals(roomId.intValue()) && roomAdminVerify.getRole().equals(2)){
+			log.info("test");
+			List<GetSurveyRes> getSurveyResList = userDao.selectSurveyList(email);
+			return new BaseResponse<>(getSurveyResList);
+		}
+		else{
+			throw new BaseException(INVALID_USER_JWT);
+		}
 	}
 }
