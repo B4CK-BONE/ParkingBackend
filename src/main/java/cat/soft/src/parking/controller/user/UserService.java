@@ -33,7 +33,7 @@ public class UserService {
 
 	public PutUserInfoRes updateUserInfo(@PathVariable Long id, @RequestBody PutUserInfoReq userInfoReq,
 		String token) {
-		User user = userRepository.findUsersByEmail(jwtTokenProvider.getEmail(token));
+		User user = userRepository.findUserByEmail(jwtTokenProvider.getEmail(token));
 		if (user == null) {
 			return null;
 		}
@@ -56,7 +56,7 @@ public class UserService {
 	}
 
 	public GetUserInfoRes getUserInfo(Long id, String token) {
-		User user = userRepository.findUsersByEmail(jwtTokenProvider.getEmail(token));
+		User user = userRepository.findUserByEmail(jwtTokenProvider.getEmail(token));
 		if (user == null) {
 			return null;
 		}

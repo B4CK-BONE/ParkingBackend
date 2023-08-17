@@ -23,7 +23,7 @@ public class Room {
 	@Column(name = "idx", nullable = false)
 	private Long idx;
 
-	@Column(name = "admin_idx", nullable = false)
+	@Column(name = "admin_idx", nullable = false, unique = true)
 	private Long adminIdx;
 
 	@Builder

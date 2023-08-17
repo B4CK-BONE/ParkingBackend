@@ -1,6 +1,7 @@
 package cat.soft.src.parking.controller.user;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -36,17 +37,23 @@ public class UserController {
 		return new BaseResponse<>(ex);
 	}
 
+	@ExceptionHandler(HttpMessageNotReadableException.class)
+	public BaseResponse<HttpMessageNotReadableException> handleNotReadableException(
+		HttpMessageNotReadableException ex) {
+		return new BaseResponse<>(ex);
+	}
+
 	@PutMapping("/{id}")
 	public BaseResponse<PutUserInfoRes> putUserInfo(@PathVariable Long id,
 		@Valid @RequestBody PutUserInfoReq userInfoReq, @RequestHeader("Authorization") String token) throws
 		BaseException {
 		jwtTokenProvider.verifySignature(token);
 		PutUserInfoRes putUserInfoRes = userService.updateUserInfo(id, userInfoReq, token);
-		if (putUserInfoRes.getIdx() == null) {
-			return new BaseResponse<>(BaseResponseStatus.UNKNOWN11); // 해당 유저 없음
+		if (putUserInfoRes == null) {
+			return new BaseResponse<>(BaseResponseStatus.UNKNOWN11);
 		}
 		if (putUserInfoRes.getIdx() == 0) {
-			return new BaseResponse<>(BaseResponseStatus.UNKNOWN12); // 해당 유저 없음
+			return new BaseResponse<>(BaseResponseStatus.UNKNOWN12);
 		}
 		return new BaseResponse<>(putUserInfoRes);
 	}
@@ -57,7 +64,7 @@ public class UserController {
 		jwtTokenProvider.verifySignature(token);
 		GetUserInfoRes getUserInfoRes = userService.getUserInfo(id, token);
 		if (getUserInfoRes == null) {
-			return new BaseResponse<>(BaseResponseStatus.UNKNOWN13); // 해당 유저 없음
+			return new BaseResponse<>(BaseResponseStatus.UNKNOWN13);
 		}
 		if (getUserInfoRes.getPhone() == null) {
 			return new BaseResponse<>(BaseResponseStatus.UNKNOWN14);

@@ -1,11 +1,12 @@
 package cat.soft.src.oauth.auth;
 
+import java.util.Objects;
+
+import javax.sql.DataSource;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
-
-import javax.sql.DataSource;
-import java.util.Objects;
 
 @Repository
 public class AuthDao {
@@ -38,11 +39,11 @@ public class AuthDao {
 		String checkRefreshTokenQuery = "select refresh_token from User where email = ?";
 		Object[] checkRefreshTokenParams = new Object[] {email};
 		String result = Objects.requireNonNull(this.jdbcTemplate.queryForObject(checkRefreshTokenQuery,
-				(rs, rowNum) ->
-						rs.getString("refresh_token"),
-				checkRefreshTokenParams)).toString();
+			(rs, rowNum) ->
+				rs.getString("refresh_token"),
+			checkRefreshTokenParams)).toString();
 
-		return result != "NULL";
+		return !result.equals("NULL");
 	}
 
 	public boolean checkUser(String useremail) {

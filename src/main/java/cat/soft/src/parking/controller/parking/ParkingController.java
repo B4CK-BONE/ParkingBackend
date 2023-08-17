@@ -5,6 +5,7 @@ import static cat.soft.src.oauth.util.Constant.*;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -14,6 +15,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+
+import com.mysql.cj.jdbc.exceptions.MySQLTransactionRollbackException;
 
 import cat.soft.src.oauth.auth.jwt.JwtTokenProvider;
 import cat.soft.src.oauth.util.BaseException;
@@ -40,6 +43,18 @@ public class ParkingController {
 	public BaseResponse<MethodArgumentNotValidException> handleValidationExceptions(
 		MethodArgumentNotValidException ex) {
 
+		return new BaseResponse<>(ex);
+	}
+
+	@ExceptionHandler(HttpMessageNotReadableException.class)
+	public BaseResponse<HttpMessageNotReadableException> handleNotReadableException(
+		HttpMessageNotReadableException ex) {
+		return new BaseResponse<>(ex);
+	}
+
+	@ExceptionHandler(MySQLTransactionRollbackException.class)
+	public BaseResponse<MySQLTransactionRollbackException> handleNotReadableException(
+		MySQLTransactionRollbackException ex) {
 		return new BaseResponse<>(ex);
 	}
 
