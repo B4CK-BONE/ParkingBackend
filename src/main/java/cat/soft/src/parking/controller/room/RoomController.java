@@ -102,7 +102,7 @@ public class RoomController {
 		jwtTokenProvider.verifySignature(token);
 		GetQrCheckRes getQrCheckRes = roomService.joinRoom(token);
 		if (getQrCheckRes.getRoomIdx() == null) {
-			return new BaseResponse<>(BaseResponseStatus.UNKNOWN16); // 방정보 없음
+			return new BaseResponse<>(BaseResponseStatus.UNKNOWN16);
 		}
 		return new BaseResponse<>(getQrCheckRes);
 	}
@@ -124,16 +124,16 @@ public class RoomController {
 		jwtTokenProvider.verifySignature(token);
 		PutUserApproveRes putUserApproveRes = roomService.approveUser(roomId, req, token);
 		if (putUserApproveRes == null) {
-			return new BaseResponse<>(BaseResponseStatus.UNKNOWN18); // 방정보 없음
+			return new BaseResponse<>(BaseResponseStatus.UNKNOWN18);
 		}
 		if (putUserApproveRes.getUserIdx() == -1) {
-			return new BaseResponse<>(BaseResponseStatus.UNKNOWN19); // 방정보 없음
+			return new BaseResponse<>(BaseResponseStatus.UNKNOWN19);
 		}
 		if (putUserApproveRes.getUserIdx() == -2) {
-			return new BaseResponse<>(BaseResponseStatus.UNKNOWN20); // 방정보 없음
+			return new BaseResponse<>(BaseResponseStatus.UNKNOWN20);
 		}
 		if (putUserApproveRes.getUserIdx() == -3) {
-			return new BaseResponse<>(BaseResponseStatus.UNKNOWN21); // 방정보 없음
+			return new BaseResponse<>(BaseResponseStatus.UNKNOWN21);
 		}
 		return new BaseResponse<>(putUserApproveRes);
 	}

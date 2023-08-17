@@ -4,32 +4,17 @@ import static cat.soft.src.oauth.util.Constant.*;
 
 import lombok.Getter;
 
-/**
- * 에러 코드 관리
- */
 @Getter
 public enum BaseResponseStatus {
-	/**
-	 * 1000 : 요청 성공
-	 */
 	SUCCESS(true, 1000, "요청에 성공하였습니다."),
-
-	/**
-	 * 2000 : Request 오류
-	 */
-	// Common
-	REQUEST_ERROR(false, 2000, "입력값을 확인해주세요."),
 	EMPTY_JWT(false, 2001, "JWT를 입력해주세요."),
 	INVALID_JWT(false, 2002, "유효하지 않은 JWT입니다."),
 	INVALID_USER_JWT(false, 2004, "권한이 없는 유저의 접근입니다."),
 	INVALID_AUTH(false, 2005, "유효하지 않은 회원 정보입니다."),
-	// users
 	USERS_EMPTY_USER_EMAIL(false, 2011, "유저 이메일 값을 확인해주세요."),
 	POST_USERS_EXISTS_EMAIL(false, 2017, "중복된 이메일입니다."),
 	DATABASE_ERROR(false, 4000, "데이터베이스 연결에 실패하였습니다."),
 	DELETE_USER_FAIL(false, 4008, "유저 정보 삭제에 실패하였습니다."),
-
-	// 5000 :
 	UNKNOWN(false, 5000, ASK_ADMIN),
 	ALREADY_ALLOWED(false, 5001, "이미 승인된 유저 입니다."),
 	ALLOW_WAITING(false, 5002, "방장의 승인을 대기중 입니다."),

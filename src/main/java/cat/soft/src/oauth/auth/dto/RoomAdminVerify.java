@@ -8,6 +8,6 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class RoomAdminVerify {
-    private Integer roomIdx;
-    private Integer role;
+	private Integer roomIdx;
+	private Integer role;
 }

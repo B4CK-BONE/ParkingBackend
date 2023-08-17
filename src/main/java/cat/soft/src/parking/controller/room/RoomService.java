@@ -65,20 +65,20 @@ public class RoomService {
 	public GetJoinRoomRes joinRoom(Long roomId, String token) {
 		User user = userRepository.findUserByEmail(jwtTokenProvider.getEmail(token));
 		if (user == null) {
-			return null; // 5000 불가능한 유저
+			return null;
 		}
 		if (user.getRole() != 0) {
-			return new GetJoinRoomRes(0L); // [5001] 승인된 유저입니다.
+			return new GetJoinRoomRes(0L);
 		}
 		if (user.getRoomIdx() != 0) {
-			return new GetJoinRoomRes(-1L); // [5002] 승인 대기중 입니다.
+			return new GetJoinRoomRes(-1L);
 		}
 		if (roomId == null) {
-			return new GetJoinRoomRes(-2L); // [5003] 존재하지 않는 방 입니다.
+			return new GetJoinRoomRes(-2L);
 		}
 		Room room = roomRepository.findById(roomId).orElse(null);
 		if (room == null) {
-			return new GetJoinRoomRes(-3L); // [5003] 존재하지 않는 방 입니다.
+			return new GetJoinRoomRes(-3L);
 		}
 		user.setRoomIdx(roomId);
 		userRepository.save(user);
@@ -118,7 +118,7 @@ public class RoomService {
 
 		UserInfo adminInfo = userInfoRepository.findById(admin.getIdx()).get();
 		adminInfo.setReportCount(reportRepository.countBysuspect(admin.getIdx()));
-		oldUserInfo.add(adminInfo); // 방장 추가
+		oldUserInfo.add(adminInfo);
 		for (User findUser : oldUser) {
 			UserInfo userInfo = userInfoRepository.findById(findUser.getIdx()).get();
 			userInfo.setReportCount(reportRepository.countBysuspect(findUser.getIdx()));
@@ -138,16 +138,16 @@ public class RoomService {
 			|| admin.getRole() != 2) {
 			return null;
 		}
-		if (Objects.equals(user.getIdx(), admin.getIdx())) { // 셀프 추방 금지
+		if (Objects.equals(user.getIdx(), admin.getIdx())) {
 			return new PutUserApproveRes(-1L);
 		}
-		if (!Objects.equals(user.getRoomIdx(), admin.getRoomIdx())) { // 신청하지 않은 유저 변경 금지
+		if (!Objects.equals(user.getRoomIdx(), admin.getRoomIdx())) {
 			return new PutUserApproveRes(-2L);
 		}
-		if (req.getRole() == 0) { // 거절
+		if (req.getRole() == 0) {
 			user.setRole(req.getRole());
 			user.setRoomIdx(0L);
-		} else if (req.getRole() == 1) { // 승인
+		} else if (req.getRole() == 1) {
 			user.setRole(req.getRole());
 		} else {
 			return new PutUserApproveRes(-3L);

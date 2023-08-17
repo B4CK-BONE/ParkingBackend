@@ -1,15 +1,15 @@
 package cat.soft.src.oauth.auth.model;
 
-import cat.soft.src.oauth.user.model.User;
-import lombok.Getter;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Map;
 
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.oauth2.core.user.OAuth2User;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Map;
+import cat.soft.src.oauth.user.model.User;
+import lombok.Getter;
 
 @Getter
 public class PrincipalDetails implements UserDetails, OAuth2User {
@@ -26,7 +26,6 @@ public class PrincipalDetails implements UserDetails, OAuth2User {
 		this.attributes = attributes;
 	}
 
-	//UserDetails
 	@Override
 	public Collection<? extends GrantedAuthority> getAuthorities() {
 		return new ArrayList<>();
