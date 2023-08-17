@@ -60,7 +60,8 @@ public enum BaseResponseStatus {
 	UNKNOWN21(false, 5027, ASK_ADMIN),
 	UNKNOWN22(false, 5028, ASK_ADMIN),
 	UNKNOWN23(false, 5029, ASK_ADMIN),
-	UNKNOWN24(false, 5030, ASK_ADMIN);
+	UNKNOWN24(false, 5030, ASK_ADMIN),
+	SURVEY_DAY(false, 5031, "설문은 하루에 한 번만 가능 합니다.");;
 
 	private final boolean isSuccess;
 	private final int code;
