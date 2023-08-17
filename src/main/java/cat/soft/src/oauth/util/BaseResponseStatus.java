@@ -57,9 +57,12 @@ public enum BaseResponseStatus {
 	UNKNOWN20(false, 5026, "사이트 관리자에게 문의하세요."),
 	UNKNOWN21(false, 5027, "사이트 관리자에게 문의하세요."),
 	UNKNOWN22(false, 5028, "사이트 관리자에게 문의하세요."),
-	UNKNOWN23(false, 5029, "사이트 관리자에게 문의하세요.");
+	UNKNOWN23(false, 5029, "사이트 관리자에게 문의하세요."),
+	UNKNOWN24(false, 5029, "사이트 관리자에게 문의하세요.");
 
-	private final boolean isSuccess;
+
+
+    private final boolean isSuccess;
 	private final int code;
 	private final String message;
 
