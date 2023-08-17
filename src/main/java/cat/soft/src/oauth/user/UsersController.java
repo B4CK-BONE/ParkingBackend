@@ -3,11 +3,13 @@ package cat.soft.src.oauth.user;
 import static cat.soft.src.oauth.util.BaseResponseStatus.*;
 
 import cat.soft.src.oauth.user.dto.GetSurveyReq;
+import cat.soft.src.oauth.util.BaseResponseStatus;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseCookie;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.*;
 
 import cat.soft.src.oauth.auth.AuthDao;
@@ -37,6 +39,13 @@ public class UsersController {
 	private final UserDao userDao;
 
 	private final AuthDao authDao;
+
+//	@ExceptionHandler(MethodArgumentNotValidException.class)
+//	public BaseResponse<MethodArgumentNotValidException> handleValidationExceptions(
+//			MethodArgumentNotValidException ex) {
+//
+//		return new BaseResponse<>(ex);
+//	}
 
 	@Autowired
 	public UsersController(JwtTokenProvider jwtTokenProvider, UserProvider userProvider, UserDao userDao,
@@ -124,7 +133,7 @@ public class UsersController {
 	}
 
 	@PostMapping("/survey")
-	public BaseResponse<PostUserAuthRes> insertSurvey(@RequestHeader("Authorization") String token,@Valid @RequestBody GetSurveyReq contents) throws BaseException {
+	public BaseResponse<BaseResponseStatus> insertSurvey(@RequestHeader("Authorization") String token, @Valid @RequestBody GetSurveyReq contents) throws BaseException {
 		jwtTokenProvider.verifySignature(token);
 		Claims claims = jwtTokenProvider.getJwtContents(token);
 		String email = String.valueOf(claims.get("email"));
@@ -136,7 +145,6 @@ public class UsersController {
 		String img = String.valueOf(contents.getImg());
 
 		userDao.insertSurvey(context, img, email);
-		PostUserAuthRes postUserAuthRes = userProvider.UserInfoProvider(String.valueOf(claims.get("email")));
-		return new BaseResponse<>(postUserAuthRes);
+		return new BaseResponse<>(SUCCESS);
 	}
 }
