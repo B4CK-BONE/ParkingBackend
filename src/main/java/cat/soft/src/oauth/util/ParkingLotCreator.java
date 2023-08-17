@@ -12,7 +12,7 @@ public class ParkingLotCreator {
 		List<ParkingLot> parkingLots = new ArrayList<>();
 		List<String> bottom = Arrays.asList("56vh", "50vh", "44vh", "56vh", "50vh", "44vh", "40vh", "51vh", "51vh",
 			"40vh", "28vh", "28vh");
-		List<String> rigth = Arrays.asList("70%", "70%", "70%", "5%", "5%", "3%", "35%", "53%", "35%", "53%", "35%", "53%");
+		List<String> rigth = Arrays.asList("70%", "70%", "70%", "5%", "5%", "5%", "35%", "53%", "35%", "53%", "35%", "53%");
 		List<String> height = Arrays.asList("6%", "6%", "6%", "6%", "6%", "6%", "13%", "13%", "13%", "13%",
 			"13%", "13%");
 		List<String> width = Arrays.asList("25%", "25%", "25%", "25%", "25%", "25%", "12%", "12%", "12%",
