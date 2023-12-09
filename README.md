@@ -33,7 +33,7 @@
   - gradle
 ## ERD
 
-<img src="https://img1.daumcdn.net/thumb/R1280x0/?scode=mtistory2&fname=https%3A%2F%2Fblog.kakaocdn.net%2Fdn%2Fc4DCu5%2Fbtsrr06Ghev%2FU8NOTQjJRfHtJ046sBHnD0%2Fimg.png"/>
+![CAT-Shield](https://github.com/B4CK-BONE/ParkingBackend/assets/50243183/23b8db04-07fe-431d-8ed8-4a4a10de7207)
 ## Usage
 
 Build
