@@ -1,12 +1,14 @@
 <h1 align="center">Welcome to ParKING-WEB 👋</h1>
 
-> ParKING FRONT-End WEB Project
+> ParKING BACK-End WEB Project
 
 <div align=center>
   <img width="200" alt="123" src="https://img1.daumcdn.net/thumb/R1280x0/?scode=mtistory2&fname=https%3A%2F%2Fblog.kakaocdn.net%2Fdn%2FsTaJl%2FbtsrrSgwmfB%2FSXe0UCIJ8qg6lEIDKqdGL0%2Fimg.png">
 </div>
 <h2 align=center>내 주차장의 현황을 알려주는 서비스, ParKING</h2>
-
+<div align=center>
+  <img alt="123" src="https://img1.daumcdn.net/thumb/R1280x0/?scode=mtistory2&fname=https%3A%2F%2Fblog.kakaocdn.net%2Fdn%2FbEvnDt%2FbtsBCZE8g9F%2FxuV4nezJEi5cYpOnTlK4n0%2Fimg.png">
+</div>
 
 
 
