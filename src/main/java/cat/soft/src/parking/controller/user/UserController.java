@@ -19,10 +19,15 @@ import cat.soft.src.oauth.util.BaseResponseStatus;
 import cat.soft.src.parking.model.user.GetUserInfoRes;
 import cat.soft.src.parking.model.user.PutUserInfoReq;
 import cat.soft.src.parking.model.user.PutUserInfoRes;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import jakarta.validation.Valid;
 
 @RestController
-@RequestMapping("/api/user")
+@RequestMapping("/api/v1/user")
 public class UserController {
 
 	@Autowired
@@ -43,6 +48,14 @@ public class UserController {
 		return new BaseResponse<>(ex);
 	}
 
+	@Operation(summary = "유저 정보 입력 기능", description = "유저의 정보를 입력합니다.", tags = { "유저 정보" })
+	@ApiResponses({
+		@ApiResponse(responseCode = "200", description = "OK",
+			content = @Content(schema = @Schema(implementation = BaseResponse.class))),
+		@ApiResponse(responseCode = "400", description = "BAD REQUEST"),
+		@ApiResponse(responseCode = "404", description = "NOT FOUND"),
+		@ApiResponse(responseCode = "500", description = "INTERNAL SERVER ERROR")
+	})
 	@PutMapping("/{id}")
 	public BaseResponse<PutUserInfoRes> putUserInfo(@PathVariable Long id,
 		@Valid @RequestBody PutUserInfoReq userInfoReq, @RequestHeader("Authorization") String token) throws
@@ -58,6 +71,14 @@ public class UserController {
 		return new BaseResponse<>(putUserInfoRes);
 	}
 
+	@Operation(summary = "유저 정보 조회 기능", description = "유저의 정보를 조희합니다.", tags = { "유저 정보" })
+	@ApiResponses({
+		@ApiResponse(responseCode = "200", description = "OK",
+			content = @Content(schema = @Schema(implementation = BaseResponse.class))),
+		@ApiResponse(responseCode = "400", description = "BAD REQUEST"),
+		@ApiResponse(responseCode = "404", description = "NOT FOUND"),
+		@ApiResponse(responseCode = "500", description = "INTERNAL SERVER ERROR")
+	})
 	@GetMapping("/{id}")
 	public BaseResponse<GetUserInfoRes> getUserInfo(@PathVariable Long id,
 		@RequestHeader("Authorization") String token) throws BaseException {

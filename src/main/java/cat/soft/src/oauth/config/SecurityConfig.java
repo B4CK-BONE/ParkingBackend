@@ -53,9 +53,10 @@ public class SecurityConfig {
 
 			.authorizeHttpRequests()
 			.requestMatchers("/oauth2/authorization/google").permitAll()
-			.requestMatchers("/api/user/**").permitAll()
-			.requestMatchers("/api/room/**").permitAll()
-			.requestMatchers("/api/parking/**").permitAll()
+			.requestMatchers("/api/v1/user/**").permitAll()
+			.requestMatchers("/api/v1/room/**").permitAll()
+			.requestMatchers("/api/v1/parking/**").permitAll()
+			.requestMatchers("/swagger-ui/**", "/api/v1/api-docs/**","/v3/api-docs/**", "/swagger-resources/**", "/webjars/**").permitAll()
 			.anyRequest().denyAll()
 
 			.and()
