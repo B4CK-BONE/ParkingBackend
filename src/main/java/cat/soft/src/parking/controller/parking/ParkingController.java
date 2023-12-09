@@ -28,10 +28,15 @@ import cat.soft.src.parking.model.parking.PostAddTimeReq;
 import cat.soft.src.parking.model.parking.PostAddTimeRes;
 import cat.soft.src.parking.model.parking.PostReportReq;
 import cat.soft.src.parking.model.parking.PostReportRes;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import jakarta.validation.Valid;
 
 @RestController
-@RequestMapping("/api/parking")
+@RequestMapping("/api/v1/parking")
 public class ParkingController {
 
 	@Autowired
@@ -58,6 +63,14 @@ public class ParkingController {
 		return new BaseResponse<>(ex);
 	}
 
+	@Operation(summary = "주차장 사용자들 출차시간 조회 기능", description = "주차장 사용자들의 출차시간을 가져옵니다.", tags = { "주차장 출차시간 설정 및 조회" })
+	@ApiResponses({
+		@ApiResponse(responseCode = "200", description = "OK",
+			content = @Content(schema = @Schema(implementation = BaseResponse.class))),
+		@ApiResponse(responseCode = "400", description = "BAD REQUEST"),
+		@ApiResponse(responseCode = "404", description = "NOT FOUND"),
+		@ApiResponse(responseCode = "500", description = "INTERNAL SERVER ERROR")
+	})
 	@GetMapping("")
 	public BaseResponse<List<GetTimeRes>> getTime(@RequestHeader("Authorization") String token) throws BaseException {
 		jwtTokenProvider.verifySignature(token);
@@ -71,6 +84,14 @@ public class ParkingController {
 		return new BaseResponse<>(getTimeRes);
 	}
 
+	@Operation(summary = "주차장 사용자들 출차시간 설정 기능", description = "주차장 사용자들의 출차시간을 설정합니다.", tags = { "주차장 출차시간 설정 및 조회" })
+	@ApiResponses({
+		@ApiResponse(responseCode = "200", description = "OK",
+			content = @Content(schema = @Schema(implementation = BaseResponse.class))),
+		@ApiResponse(responseCode = "400", description = "BAD REQUEST"),
+		@ApiResponse(responseCode = "404", description = "NOT FOUND"),
+		@ApiResponse(responseCode = "500", description = "INTERNAL SERVER ERROR")
+	})
 	@PostMapping("/time")
 	public BaseResponse<PostAddTimeRes> addTime(@Valid @RequestBody PostAddTimeReq req,
 		@RequestHeader("Authorization") String token) throws BaseException {
@@ -91,6 +112,14 @@ public class ParkingController {
 		return new BaseResponse<>(postAddTimeRes);
 	}
 
+	@Operation(summary = "주차장에 사용자들이 설정한 출차시간 삭제 기능", description = "주차장 사용자들의 출차시간을 삭제합니다.", tags = { "주차장 출차시간 설정 및 조회" })
+	@ApiResponses({
+		@ApiResponse(responseCode = "200", description = "OK",
+			content = @Content(schema = @Schema(implementation = BaseResponse.class))),
+		@ApiResponse(responseCode = "400", description = "BAD REQUEST"),
+		@ApiResponse(responseCode = "404", description = "NOT FOUND"),
+		@ApiResponse(responseCode = "500", description = "INTERNAL SERVER ERROR")
+	})
 	@DeleteMapping("/time")
 	public BaseResponse<DelTimeRes> deleteTime(@RequestHeader("Authorization") String token) throws BaseException {
 		jwtTokenProvider.verifySignature(token);
@@ -103,6 +132,14 @@ public class ParkingController {
 		return new BaseResponse<>(delTimeRes);
 	}
 
+	@Operation(summary = "주차장 악성 유저 신고 기능", description = "주차장 악성 유저를 신고합니다.", tags = { "주차장 신고하기" })
+	@ApiResponses({
+		@ApiResponse(responseCode = "200", description = "OK",
+			content = @Content(schema = @Schema(implementation = BaseResponse.class))),
+		@ApiResponse(responseCode = "400", description = "BAD REQUEST"),
+		@ApiResponse(responseCode = "404", description = "NOT FOUND"),
+		@ApiResponse(responseCode = "500", description = "INTERNAL SERVER ERROR")
+	})
 	@PostMapping("/report")
 	public BaseResponse<PostReportRes> report(@Valid @RequestBody PostReportReq req,
 		@RequestHeader("Authorization") String token) throws BaseException {

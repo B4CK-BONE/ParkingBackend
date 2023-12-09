@@ -27,10 +27,15 @@ import cat.soft.src.parking.model.room.GetUserListByAdminRes;
 import cat.soft.src.parking.model.room.PostCreateRoomRes;
 import cat.soft.src.parking.model.room.PutUserApproveReq;
 import cat.soft.src.parking.model.room.PutUserApproveRes;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import jakarta.validation.Valid;
 
 @RestController
-@RequestMapping("/api/room")
+@RequestMapping("/api/v1/room")
 public class RoomController {
 
 	@Autowired
@@ -57,6 +62,14 @@ public class RoomController {
 		return new BaseResponse<>(ex);
 	}
 
+	@Operation(summary = "방(주차장) 생성 기능", description = "빌라, 아파트 등 입주민들의 주차장을 생성합니다.", tags = { "주차장 생성 및 입장" })
+	@ApiResponses({
+		@ApiResponse(responseCode = "200", description = "OK",
+			content = @Content(schema = @Schema(implementation = BaseResponse.class))),
+		@ApiResponse(responseCode = "400", description = "BAD REQUEST"),
+		@ApiResponse(responseCode = "404", description = "NOT FOUND"),
+		@ApiResponse(responseCode = "500", description = "INTERNAL SERVER ERROR")
+	})
 	@PostMapping("")
 	public BaseResponse<PostCreateRoomRes> createRoom(@RequestHeader("Authorization") String token) throws
 		BaseException {
@@ -74,6 +87,14 @@ public class RoomController {
 		return new BaseResponse<>(postCreateRoomRes);
 	}
 
+	@Operation(summary = "방(주차장) 입장 기능", description = "빌라, 아파트 등 입주민들의 주차장을 입장합니다.", tags = { "주차장 생성 및 입장" })
+	@ApiResponses({
+		@ApiResponse(responseCode = "200", description = "OK",
+			content = @Content(schema = @Schema(implementation = BaseResponse.class))),
+		@ApiResponse(responseCode = "400", description = "BAD REQUEST"),
+		@ApiResponse(responseCode = "404", description = "NOT FOUND"),
+		@ApiResponse(responseCode = "500", description = "INTERNAL SERVER ERROR")
+	})
 	@GetMapping("")
 	public BaseResponse<GetJoinRoomRes> joinRoom(@Valid @ModelAttribute GetJoinRoomReq req,
 		@RequestHeader("Authorization") String token) throws BaseException {
@@ -97,6 +118,14 @@ public class RoomController {
 		return new BaseResponse<>(getJoinRoomRes);
 	}
 
+	@Operation(summary = "방(주차장) 초대 기능", description = "빌라, 아파트 등 입주민들의 주차장을 초대합니다.", tags = { "주차장 생성 및 입장" })
+	@ApiResponses({
+		@ApiResponse(responseCode = "200", description = "OK",
+			content = @Content(schema = @Schema(implementation = BaseResponse.class))),
+		@ApiResponse(responseCode = "400", description = "BAD REQUEST"),
+		@ApiResponse(responseCode = "404", description = "NOT FOUND"),
+		@ApiResponse(responseCode = "500", description = "INTERNAL SERVER ERROR")
+	})
 	@GetMapping("/qr")
 	public BaseResponse<GetQrCheckRes> qrCheck(@RequestHeader("Authorization") String token) throws BaseException {
 		jwtTokenProvider.verifySignature(token);
@@ -107,6 +136,14 @@ public class RoomController {
 		return new BaseResponse<>(getQrCheckRes);
 	}
 
+	@Operation(summary = "방(주차장) 생성자 정보 조회 기능", description = "빌라, 아파트 등 입주민들의 주차장을 생성한 사람의 정보를 조회합니다.", tags = { "주차장 생성 및 입장" })
+	@ApiResponses({
+		@ApiResponse(responseCode = "200", description = "OK",
+			content = @Content(schema = @Schema(implementation = BaseResponse.class))),
+		@ApiResponse(responseCode = "400", description = "BAD REQUEST"),
+		@ApiResponse(responseCode = "404", description = "NOT FOUND"),
+		@ApiResponse(responseCode = "500", description = "INTERNAL SERVER ERROR")
+	})
 	@GetMapping("/{roomId}/admin")
 	public BaseResponse<GetUserListByAdminRes> userListByAdmin(@PathVariable Long roomId,
 		@RequestHeader("Authorization") String token) throws BaseException {
@@ -118,6 +155,14 @@ public class RoomController {
 		return new BaseResponse<>(getUserListByAdminRes);
 	}
 
+	@Operation(summary = "방(주차장) 입장 승인 기능", description = "빌라, 아파트 등 입주민들의 주차장 입장을 승인합니다.", tags = { "주차장 생성 및 입장" })
+	@ApiResponses({
+		@ApiResponse(responseCode = "200", description = "OK",
+			content = @Content(schema = @Schema(implementation = BaseResponse.class))),
+		@ApiResponse(responseCode = "400", description = "BAD REQUEST"),
+		@ApiResponse(responseCode = "404", description = "NOT FOUND"),
+		@ApiResponse(responseCode = "500", description = "INTERNAL SERVER ERROR")
+	})
 	@PutMapping("/{roomId}/admin")
 	public BaseResponse<PutUserApproveRes> approveUser(@PathVariable Long roomId,
 		@Valid @RequestBody PutUserApproveReq req, @RequestHeader("Authorization") String token) throws BaseException {
