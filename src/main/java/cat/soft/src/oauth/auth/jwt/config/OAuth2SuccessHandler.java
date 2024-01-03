@@ -34,7 +34,7 @@ public class OAuth2SuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
 
 		authService.registerRefreshToken(oAuth2User.getAttribute(email), refreshToken);
 
-		targetUrl = UriComponentsBuilder.fromUriString("https://backboneproject-okwcj.run.goorm.site/login")
+		targetUrl = UriComponentsBuilder.fromUriString("https://parking.marinesnow34.com/login")
 			.queryParam("accessToken", accessToken)
 			.queryParam("refreshToken", refreshToken)
 			.build().toUriString();
