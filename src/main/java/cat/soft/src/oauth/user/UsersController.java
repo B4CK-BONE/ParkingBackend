@@ -32,12 +32,18 @@ import cat.soft.src.oauth.util.BaseException;
 import cat.soft.src.oauth.util.BaseResponse;
 import cat.soft.src.oauth.util.BaseResponseStatus;
 import io.jsonwebtoken.Claims;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 @RestController
-@RequestMapping("/api/user")
+@RequestMapping("/api/v1/user")
 public class UsersController {
 	private final JwtTokenProvider jwtTokenProvider;
 	private final UserProvider userProvider;
@@ -61,8 +67,16 @@ public class UsersController {
 		this.authDao = authDao;
 	}
 
+	@Operation(summary = "유저 인증 기능", description = "유저를 인증 합니다.", tags = { "유저 정보" })
+	@ApiResponses({
+		@ApiResponse(responseCode = "200", description = "OK",
+			content = @Content(schema = @Schema(implementation = BaseResponse.class))),
+		@ApiResponse(responseCode = "400", description = "BAD REQUEST"),
+		@ApiResponse(responseCode = "404", description = "NOT FOUND"),
+		@ApiResponse(responseCode = "500", description = "INTERNAL SERVER ERROR")
+	})
 	@GetMapping("/auth")
-	public BaseResponse<PostUserAuthRes> UserAuth(@RequestHeader("Authorization") String token) throws BaseException {
+	public BaseResponse<PostUserAuthRes> UserAuth(@Parameter(hidden = true) @RequestHeader("Authorization") String token) throws BaseException {
 		jwtTokenProvider.verifySignature(token);
 
 		Claims claims = jwtTokenProvider.getJwtContents(token);
@@ -72,8 +86,16 @@ public class UsersController {
 		return new BaseResponse<>(postUserAuthRes);
 	}
 
+	@Operation(summary = "유저 로그아웃 기능", description = "유저를 로그아웃합니다.", tags = { "유저 정보" })
+	@ApiResponses({
+		@ApiResponse(responseCode = "200", description = "OK",
+			content = @Content(schema = @Schema(implementation = BaseResponse.class))),
+		@ApiResponse(responseCode = "400", description = "BAD REQUEST"),
+		@ApiResponse(responseCode = "404", description = "NOT FOUND"),
+		@ApiResponse(responseCode = "500", description = "INTERNAL SERVER ERROR")
+	})
 	@GetMapping("/logout")
-	public ResponseEntity<LogoutRes> UserLogout(@RequestHeader("Authorization") String token) throws BaseException {
+	public ResponseEntity<LogoutRes> UserLogout(@Parameter(hidden = true) @RequestHeader("Authorization") String token) throws BaseException {
 		jwtTokenProvider.verifySignature(token);
 		Claims claims = jwtTokenProvider.getJwtContents(token);
 		String email = String.valueOf(claims.get("email"));
@@ -95,8 +117,16 @@ public class UsersController {
 		}
 	}
 
+	@Operation(summary = "유저 refresh 재갱신 기능", description = "유저의 refresh 재갱신합니다.", tags = { "유저 정보" })
+	@ApiResponses({
+		@ApiResponse(responseCode = "200", description = "OK",
+			content = @Content(schema = @Schema(implementation = BaseResponse.class))),
+		@ApiResponse(responseCode = "400", description = "BAD REQUEST"),
+		@ApiResponse(responseCode = "404", description = "NOT FOUND"),
+		@ApiResponse(responseCode = "500", description = "INTERNAL SERVER ERROR")
+	})
 	@GetMapping("/refresh")
-	public ResponseEntity<RefreshTokenRes> refRefreshToken(@RequestHeader("Authorization") String token) throws
+	public ResponseEntity<RefreshTokenRes> refRefreshToken(@Parameter(hidden = true) @RequestHeader("Authorization") String token) throws
 		BaseException {
 		Claims claims = jwtTokenProvider.getJwtContents(token);
 		String email = String.valueOf(claims.get("email"));
@@ -134,8 +164,16 @@ public class UsersController {
 		}
 	}
 
+	@Operation(summary = "유저 설문 조사 기능", description = "유저의 설문 조사를 입력합니다.", tags = { "유저 정보" })
+	@ApiResponses({
+		@ApiResponse(responseCode = "200", description = "OK",
+			content = @Content(schema = @Schema(implementation = BaseResponse.class))),
+		@ApiResponse(responseCode = "400", description = "BAD REQUEST"),
+		@ApiResponse(responseCode = "404", description = "NOT FOUND"),
+		@ApiResponse(responseCode = "500", description = "INTERNAL SERVER ERROR")
+	})
 	@PostMapping("/survey")
-	public BaseResponse<BaseResponseStatus> insertSurvey(@RequestHeader("Authorization") String token,
+	public BaseResponse<BaseResponseStatus> insertSurvey(@Parameter(hidden = true) @RequestHeader("Authorization") String token,
 		@Valid @RequestBody GetSurveyReq contents) throws BaseException {
 		jwtTokenProvider.verifySignature(token);
 		Claims claims = jwtTokenProvider.getJwtContents(token);
@@ -160,9 +198,17 @@ public class UsersController {
 		}
 	}
 
+	@Operation(summary = "유저 설문 조사 확인 기능", description = "유저의 설문 조사를 확인합니다.", tags = { "유저 정보" })
+	@ApiResponses({
+		@ApiResponse(responseCode = "200", description = "OK",
+			content = @Content(schema = @Schema(implementation = BaseResponse.class))),
+		@ApiResponse(responseCode = "400", description = "BAD REQUEST"),
+		@ApiResponse(responseCode = "404", description = "NOT FOUND"),
+		@ApiResponse(responseCode = "500", description = "INTERNAL SERVER ERROR")
+	})
 	@PostMapping("/survey/{roomId}")
 	public BaseResponse<List<GetSurveyRes>> showSurvey(@PathVariable Long roomId,
-		@RequestHeader("Authorization") String token) throws BaseException {
+		@Parameter(hidden = true) @RequestHeader("Authorization") String token) throws BaseException {
 		jwtTokenProvider.verifySignature(token);
 		Claims claims = jwtTokenProvider.getJwtContents(token);
 		String email = String.valueOf(claims.get("email"));

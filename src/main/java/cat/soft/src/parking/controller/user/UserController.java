@@ -20,6 +20,7 @@ import cat.soft.src.parking.model.user.GetUserInfoRes;
 import cat.soft.src.parking.model.user.PutUserInfoReq;
 import cat.soft.src.parking.model.user.PutUserInfoRes;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -58,7 +59,7 @@ public class UserController {
 	})
 	@PutMapping("/{id}")
 	public BaseResponse<PutUserInfoRes> putUserInfo(@PathVariable Long id,
-		@Valid @RequestBody PutUserInfoReq userInfoReq, @RequestHeader("Authorization") String token) throws
+		@Valid @RequestBody PutUserInfoReq userInfoReq, @Parameter(hidden = true) @RequestHeader("Authorization") String token) throws
 		BaseException {
 		jwtTokenProvider.verifySignature(token);
 		PutUserInfoRes putUserInfoRes = userService.updateUserInfo(id, userInfoReq, token);
@@ -81,7 +82,7 @@ public class UserController {
 	})
 	@GetMapping("/{id}")
 	public BaseResponse<GetUserInfoRes> getUserInfo(@PathVariable Long id,
-		@RequestHeader("Authorization") String token) throws BaseException {
+		@Parameter(hidden = true) @RequestHeader("Authorization") String token) throws BaseException {
 		jwtTokenProvider.verifySignature(token);
 		GetUserInfoRes getUserInfoRes = userService.getUserInfo(id, token);
 		if (getUserInfoRes == null) {

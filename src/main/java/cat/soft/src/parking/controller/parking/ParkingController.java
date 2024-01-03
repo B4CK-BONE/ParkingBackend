@@ -29,6 +29,7 @@ import cat.soft.src.parking.model.parking.PostAddTimeRes;
 import cat.soft.src.parking.model.parking.PostReportReq;
 import cat.soft.src.parking.model.parking.PostReportRes;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -72,7 +73,7 @@ public class ParkingController {
 		@ApiResponse(responseCode = "500", description = "INTERNAL SERVER ERROR")
 	})
 	@GetMapping("")
-	public BaseResponse<List<GetTimeRes>> getTime(@RequestHeader("Authorization") String token) throws BaseException {
+	public BaseResponse<List<GetTimeRes>> getTime(@Parameter(hidden = true) @RequestHeader("Authorization") String token) throws BaseException {
 		jwtTokenProvider.verifySignature(token);
 		List<GetTimeRes> getTimeRes = parkingService.getTime(token);
 		if (getTimeRes == null) {
@@ -94,7 +95,7 @@ public class ParkingController {
 	})
 	@PostMapping("/time")
 	public BaseResponse<PostAddTimeRes> addTime(@Valid @RequestBody PostAddTimeReq req,
-		@RequestHeader("Authorization") String token) throws BaseException {
+		@Parameter(hidden = true) @RequestHeader("Authorization") String token) throws BaseException {
 		jwtTokenProvider.verifySignature(token);
 		PostAddTimeRes postAddTimeRes = parkingService.addTime(req, token);
 		if (postAddTimeRes == null) {
@@ -121,7 +122,7 @@ public class ParkingController {
 		@ApiResponse(responseCode = "500", description = "INTERNAL SERVER ERROR")
 	})
 	@DeleteMapping("/time")
-	public BaseResponse<DelTimeRes> deleteTime(@RequestHeader("Authorization") String token) throws BaseException {
+	public BaseResponse<DelTimeRes> deleteTime(@Parameter(hidden = true) @RequestHeader("Authorization") String token) throws BaseException {
 		jwtTokenProvider.verifySignature(token);
 		DelTimeRes delTimeRes = parkingService.delTime(token);
 		if (delTimeRes == null)
@@ -142,7 +143,7 @@ public class ParkingController {
 	})
 	@PostMapping("/report")
 	public BaseResponse<PostReportRes> report(@Valid @RequestBody PostReportReq req,
-		@RequestHeader("Authorization") String token) throws BaseException {
+		@Parameter(hidden = true) @RequestHeader("Authorization") String token) throws BaseException {
 		jwtTokenProvider.verifySignature(token);
 		PostReportRes postReportRes = parkingService.report(req, token);
 		if (postReportRes == null) {
