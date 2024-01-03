@@ -27,10 +27,12 @@
 
 ## 개발환경
 
-- frontend
-  - JAVA 17
+- Backend
+  - Java 17
   - Spring-Boot 3.0.9
   - gradle
+  - mysql
+  - JPA
 ## ERD
 
 ![CAT-Shield](https://github.com/B4CK-BONE/ParkingBackend/assets/50243183/23b8db04-07fe-431d-8ed8-4a4a10de7207)
