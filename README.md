@@ -14,7 +14,8 @@
 
 ## API Docs
 
-### 💎 [ParKING BACK-End WEB API DOCs](https://docs.google.com/spreadsheets/d/1YJ8Sd4-a11__bD16xVhjMOyaRQf1k_zU/edit#gid=990061567)
+### 💎 [ParKING BACK-End WEB API DOCs](https://parking.marinesnow34.com/swagger-ui/index.html#/)
+- [Swagger](https://parking.marinesnow34.com/swagger-ui/index.html#/)
 
 
 ## 기술스택
