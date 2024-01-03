@@ -28,6 +28,7 @@ import cat.soft.src.parking.model.room.PostCreateRoomRes;
 import cat.soft.src.parking.model.room.PutUserApproveReq;
 import cat.soft.src.parking.model.room.PutUserApproveRes;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -71,7 +72,7 @@ public class RoomController {
 		@ApiResponse(responseCode = "500", description = "INTERNAL SERVER ERROR")
 	})
 	@PostMapping("")
-	public BaseResponse<PostCreateRoomRes> createRoom(@RequestHeader("Authorization") String token) throws
+	public BaseResponse<PostCreateRoomRes> createRoom(@Parameter(hidden = true) @RequestHeader("Authorization") String token) throws
 		BaseException {
 		jwtTokenProvider.verifySignature(token);
 		PostCreateRoomRes postCreateRoomRes = roomService.createRoom(token);
@@ -97,7 +98,7 @@ public class RoomController {
 	})
 	@GetMapping("")
 	public BaseResponse<GetJoinRoomRes> joinRoom(@Valid @ModelAttribute GetJoinRoomReq req,
-		@RequestHeader("Authorization") String token) throws BaseException {
+		@Parameter(hidden = true) @RequestHeader("Authorization") String token) throws BaseException {
 		jwtTokenProvider.verifySignature(token);
 		GetJoinRoomRes getJoinRoomRes = roomService.joinRoom(req.getRoom_id(), token);
 		if (getJoinRoomRes == null) {
@@ -127,7 +128,7 @@ public class RoomController {
 		@ApiResponse(responseCode = "500", description = "INTERNAL SERVER ERROR")
 	})
 	@GetMapping("/qr")
-	public BaseResponse<GetQrCheckRes> qrCheck(@RequestHeader("Authorization") String token) throws BaseException {
+	public BaseResponse<GetQrCheckRes> qrCheck(@Parameter(hidden = true) @RequestHeader("Authorization") String token) throws BaseException {
 		jwtTokenProvider.verifySignature(token);
 		GetQrCheckRes getQrCheckRes = roomService.joinRoom(token);
 		if (getQrCheckRes.getRoomIdx() == null) {
@@ -146,7 +147,7 @@ public class RoomController {
 	})
 	@GetMapping("/{roomId}/admin")
 	public BaseResponse<GetUserListByAdminRes> userListByAdmin(@PathVariable Long roomId,
-		@RequestHeader("Authorization") String token) throws BaseException {
+		@Parameter(hidden = true) @RequestHeader("Authorization") String token) throws BaseException {
 		jwtTokenProvider.verifySignature(token);
 		GetUserListByAdminRes getUserListByAdminRes = roomService.userListByAdmin(roomId, token);
 		if (getUserListByAdminRes.getNewUser() == null && getUserListByAdminRes.getOldUser() == null) {
@@ -165,7 +166,7 @@ public class RoomController {
 	})
 	@PutMapping("/{roomId}/admin")
 	public BaseResponse<PutUserApproveRes> approveUser(@PathVariable Long roomId,
-		@Valid @RequestBody PutUserApproveReq req, @RequestHeader("Authorization") String token) throws BaseException {
+		@Valid @RequestBody PutUserApproveReq req, @Parameter(hidden = true) @RequestHeader("Authorization") String token) throws BaseException {
 		jwtTokenProvider.verifySignature(token);
 		PutUserApproveRes putUserApproveRes = roomService.approveUser(roomId, req, token);
 		if (putUserApproveRes == null) {
