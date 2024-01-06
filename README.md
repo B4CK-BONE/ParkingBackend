@@ -39,6 +39,7 @@
 ![CAT-Shield](https://github.com/B4CK-BONE/ParkingBackend/assets/50243183/23b8db04-07fe-431d-8ed8-4a4a10de7207)
 
 ## Architecture
+![parking drawio](https://github.com/B4CK-BONE/ParkingBackend/assets/50243183/64645db8-af51-47d2-8490-a5d7a5b9872d)
 
 ## Diagram
 ![KakaoTalk_Photo_2024-01-06-14-23-42](https://github.com/B4CK-BONE/ParkingBackend/assets/50243183/ea40cc57-caff-4cb6-88e8-d8301e3fc4be)
